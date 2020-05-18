@@ -1,22 +1,13 @@
 <template>
 	<view class="content">
-		<view v-if="hasLogin" class="hello">
-			<view class="title">
-				您好 {{userName}}，您已成功登录。
-			</view>
-			<view class="ul">
-				<view>这是 uni-app 带登录模板的示例App首页。</view>
-				<view>在 “我的” 中点击 “退出” 可以 “注销当前账户”</view>
-			</view>
-		</view>
-		<view v-if="!hasLogin" class="hello">
-			<view class="title">
-				您好 游客。
-			</view>
-			<view class="ul">
-				<view>这是 uni-app 带登录模板的示例App首页。</view>
-				<view>在 “我的” 中点击 “登录” 可以 “登录您的账户”</view>
-			</view>
+		<view class="flex column">
+			<block v-for="(item,i) in optionList">
+				<view class="flex row box" @tap="jump(item.url)">
+					<text class="test" v-html="item.icon"></text>
+					<text class="title">{{item.title}}</text>
+				</view>
+
+			</block>
 		</view>
 	</view>
 </template>
@@ -27,57 +18,95 @@
 	} from 'vuex'
 
 	export default {
-		computed: mapState(['forcedLogin', 'hasLogin', 'userName']),
-		onLoad() {
-			if (!this.hasLogin) {
-				uni.showModal({
-					title: '未登录',
-					content: '您未登录，需要登录后才能继续',
-					/**
-					 * 如果需要强制登录，不显示取消按钮
-					 */
-					showCancel: !this.forcedLogin,
-					success: (res) => {
-						if (res.confirm) {
-							/**
-							 * 如果需要强制登录，使用reLaunch方式
-							 */
-							if (this.forcedLogin) {
-								uni.reLaunch({
-									url: '../login/login'
-								});
-							} else {
-								uni.navigateTo({
-									url: '../login/login'
-								});
-							}
-						}
+		computed: mapState(['hasLogin', 'userName']),
+		data() {
+			return {
+				optionList: [{
+						url: '11111111111',
+						icon: '&#xe711;',
+						title: '调拨单'
+					},
+					{
+						url: '222222222222',
+						icon: '&#xe719;',
+						title: '进销存报表'
+					},
+					{
+						url: '需要跳转的url',
+						icon: '&#xe744;',
+						title: '新品发布'
+					},
+					{
+						url: '/pages/set/set',
+						icon: '&#xe6b4;',
+						title: '设置/管理'
 					}
-				});
+				]
+			}
+		},
+		onLoad() {},
+		created() {
+			// 根据用户 权限获得功能列表
+			// uni.request({
+			// 	url: '',
+			// 	data: {},
+			// 	success: (res) => {},
+			// 	fail: (err) => {}
+			// })
+		},
+		methods: {
+			// 跳转页面
+			jump(url) {
+				console.log(url)
+				// uni.showModal({
+				// 	content: url
+				// })
+				uni.navigateTo({
+					url: url
+				})
 			}
 		}
 	}
 </script>
 
 <style>
-	.hello {
+	@font-face {
+		font-family: 'iconfont';
+		/* project id 1825614 */
+		src: url('https://at.alicdn.com/t/font_1825614_wqjnnkv7ksm.eot');
+		src: url('https://at.alicdn.com/t/font_1825614_wqjnnkv7ksm.eot?#iefix') format('embedded-opentype'),
+			url('https://at.alicdn.com/t/font_1825614_wqjnnkv7ksm.woff2') format('woff2'),
+			url('https://at.alicdn.com/t/font_1825614_wqjnnkv7ksm.woff') format('woff'),
+			url('https://at.alicdn.com/t/font_1825614_wqjnnkv7ksm.ttf') format('truetype'),
+			url('https://at.alicdn.com/t/font_1825614_wqjnnkv7ksm.svg#iconfont') format('svg');
+	}
+
+	.test {
+		font-family: 'iconfont';
+		font-size: 160px;
+		font-style: normal;
+	}
+
+	.flex {
 		display: flex;
-		flex: 1;
+	}
+
+	.column {
 		flex-direction: column;
 	}
 
+	.row {
+		flex-direction: row;
+	}
+
 	.title {
-		color: #8f8f94;
-		margin-top: 25px;
+		text-align: center;
 	}
 
-	.ul {
-		font-size: 15px;
-		color: #8f8f94;
-		margin-top: 25px;
-	}
-
-	.ul>view {
-		line-height: 25px;
+	.box {
+		margin: 2px;
+		border: solid 2px #000000;
+		width: 350px;
+		align-items: center;
 	}
 </style>
