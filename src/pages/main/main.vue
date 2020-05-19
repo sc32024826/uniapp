@@ -1,8 +1,11 @@
 <template>
 	<view class="content">
-		<view class="flex column">
+		<view class="logo">
+			<image></image>
+		</view>
+		<view class="flex row">
 			<block v-for="(item,i) in optionList">
-				<view class="flex row box" @tap="jump(item.url)">
+				<view class="flex column box" @tap="jump(item.url)">
 					<text class="test" v-html="item.icon"></text>
 					<text class="title">{{item.title}}</text>
 				</view>
@@ -44,23 +47,9 @@
 				]
 			}
 		},
-		onLoad() {},
-		created() {
-			// 根据用户 权限获得功能列表
-			// uni.request({
-			// 	url: '',
-			// 	data: {},
-			// 	success: (res) => {},
-			// 	fail: (err) => {}
-			// })
-		},
 		methods: {
 			// 跳转页面
 			jump(url) {
-				console.log(url)
-				// uni.showModal({
-				// 	content: url
-				// })
 				uni.navigateTo({
 					url: url
 				})
@@ -83,12 +72,13 @@
 
 	.test {
 		font-family: 'iconfont';
-		font-size: 160px;
+		font-size: 100px;
 		font-style: normal;
 	}
 
 	.flex {
 		display: flex;
+		flex-wrap: wrap;
 	}
 
 	.column {
@@ -97,6 +87,7 @@
 
 	.row {
 		flex-direction: row;
+		justify-content: space-between;
 	}
 
 	.title {
@@ -104,9 +95,17 @@
 	}
 
 	.box {
-		margin: 2px;
+		margin-top: 4px;
+		margin-right: 4px;
 		border: solid 2px #000000;
-		width: 350px;
+		/* width: 31%; */
 		align-items: center;
+	}
+	.logo{
+		height: 100px;
+		background-color: #404040;
+	}
+	.content{
+		width: 375px;
 	}
 </style>

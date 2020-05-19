@@ -35,7 +35,7 @@
 						userName: user
 					})
 					// 跳转到 功能选择界面
-					uni.redirectTo({
+					uni.switchTab({
 						url: '../main/main'
 					})
 				}
