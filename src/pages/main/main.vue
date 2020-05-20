@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="logo">
-			<image></image>
+			<image class="logo"></image>
 		</view>
 		<view class="flex row">
 			<block v-for="(item,i) in optionList">
@@ -25,7 +25,7 @@
 		data() {
 			return {
 				optionList: [{
-						url: '11111111111',
+						url: '/pages/work/work',
 						icon: '&#xe711;',
 						title: '调拨单'
 					},
@@ -50,6 +50,8 @@
 		methods: {
 			// 跳转页面
 			jump(url) {
+				console.log('页面跳转')
+				console.log(url)
 				uni.navigateTo({
 					url: url
 				})
@@ -101,11 +103,13 @@
 		/* width: 31%; */
 		align-items: center;
 	}
-	.logo{
+
+	.logo {
 		height: 100px;
 		background-color: #404040;
 	}
-	.content{
+
+	.content {
 		width: 375px;
 	}
 </style>

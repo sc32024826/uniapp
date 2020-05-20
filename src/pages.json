@@ -9,7 +9,9 @@
 		{
 			"path": "pages/main/main",
 			"style": {
-				"navigationBarTitleText": "功能选择"
+				"app-plus": {
+					"titleNView": false
+				}
 			}
 		},
 		{
@@ -17,14 +19,35 @@
 			"style": {
 				"navigationBarTitleText": "设置"
 			}
+		},
+		{
+			"path": "pages/my/my",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/usual/usual",
+			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		}, {
+			"path": "pages/work/work",
+			"style": {
+				"navigationBarTitleText": "任务分配",
+				"enablePullDownRefresh": true
+			}
 		}
 	],
 	"tabBar": {
 		"color": "#7a7e83",
 		"selectedColor": "#0faeff",
 		"backgroundColor": "#ffffff",
-		"list": [
-			{
+		"list": [{
 				"pagePath": "pages/usual/usual",
 				"text": "常用",
 				"iconPath": "static/img/home.png",

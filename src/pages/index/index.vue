@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<view>正在获取用户信息...</view>
+		<view>等待用户数据返回...</view>
 	</div>
 </template>
 <script>
@@ -15,7 +15,6 @@
 			async _requestAwait(data) {
 				const [err, res] = await uni.request({
 					url: "http://dingtalk.servers.mchains.cn/api/Login/GetLoginfoByCode",
-					// url: "http://172.18.20.142/api/Login/GetLoginfoByCode",
 					data: data,
 					header: {
 						"Content-Type": "application/json; charset=utf-8"
@@ -51,7 +50,9 @@
 						that.code = result.code
 						that._requestAwait(result)
 					},
-					onFail: function(err) {}
+					onFail: function(err) {
+						console.log(err)
+					}
 				})
 			})
 		},
