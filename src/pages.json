@@ -3,7 +3,7 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "钉钉免登陆"
+				"navigationBarTitleText": "ShanYing"
 			}
 		},
 		{
@@ -39,10 +39,31 @@
 			"path": "pages/work/work",
 			"style": {
 				"navigationBarTitleText": "任务分配",
-				"enablePullDownRefresh": true
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/ProcessRecord/ProcessRecord",
+			"style": {
+				"navigationBarTitleText": "加工记录",
+				"app-plus": {
+					"titleNView": false
+				}
 			}
 		}
-	],
+
+	    ,{
+            "path" : "pages/ScanDev/ScanDev",
+            "style" : {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+        }
+    ],
 	"tabBar": {
 		"color": "#7a7e83",
 		"selectedColor": "#0faeff",

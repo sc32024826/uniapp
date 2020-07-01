@@ -24,25 +24,16 @@
 		computed: mapState(['hasLogin', 'userName']),
 		data() {
 			return {
-				optionList: [{
-						url: '/pages/work/work',
-						icon: '&#xe711;',
-						title: '调拨单'
-					},
+				optionList: [
 					{
-						url: '222222222222',
-						icon: '&#xe719;',
-						title: '进销存报表'
-					},
-					{
-						url: '需要跳转的url',
+						url: '/pages/ProcessRecord/ProcessRecord',
 						icon: '&#xe744;',
-						title: '新品发布'
+						title: '加工记录'
 					},
 					{
-						url: '/pages/set/set',
-						icon: '&#xe6b4;',
-						title: '设置/管理'
+						url: '/pages/ScanDev/ScanDev',
+						icon: '&#xe744;',
+						title: '扫码开发版'
 					}
 				]
 			}
@@ -52,7 +43,7 @@
 			jump(url) {
 				console.log('页面跳转')
 				console.log(url)
-				uni.navigateTo({
+				uni.redirectTo({
 					url: url
 				})
 			}
@@ -99,7 +90,7 @@
 	.box {
 		margin-top: 4px;
 		margin-right: 4px;
-		border: solid 2px #000000;
+		/* border: solid 2px #000000; */
 		/* width: 31%; */
 		align-items: center;
 	}
