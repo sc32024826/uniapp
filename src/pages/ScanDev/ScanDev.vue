@@ -20,9 +20,6 @@
 		</view>
 		<button type="primary" @click="showList">显示条码列表</button>
 		<view class="table">
-			<!-- <pl-table ref="plTable" :data="tableData" :row-height="rowHeight" size="mini" border stripe fit>
-					<pl-table-column v-for="item in columns" :key="item.id" :prop="item.prop" :label="item.label" :width="item.width" />
-				</pl-table> -->
 			<view class="flex row head">
 				<view class="cell station">站号</view>
 				<view class="flex column name">
@@ -35,7 +32,7 @@
 				<view class="cell count" @click="showList">数量</view>
 			</view>
 			<view class="data">
-				<view v-for="(item,key) in tableData" :key="key" class="tableLine">
+				<view v-for="(item,key) in tableData" :key="key" :class="fn(item.RecordType)">
 					<view class="flex row">
 						<!-- <view class="flex column station"> -->
 						<view class="cell station">{{item.StationID}}</view>
@@ -88,13 +85,6 @@
 			// this.scanCode()
 		},
 		methods: {
-			selectable(row, index) {
-				if (index === 1) {
-					return false
-				} else {
-					return true
-				}
-			},
 			scanCode() {
 				let _this = this
 				dd.biz.util.scan({
@@ -131,7 +121,7 @@
 					});
 				} else {
 					let target = res.data.response
-						
+
 					if (target.IsFinished) {
 						this.Qty = target.Qty
 						this.Mo = target.Mo
@@ -162,10 +152,17 @@
 			},
 			// 显示条码列表
 			showList() {
+				let list = this.BarCodes.toString()
+				let res = list.replace(/,/g, '\n')
 				uni.showModal({
-					content: this.BarCodes.toString(),
+					title: '条码列表',
+					content: res,
 					showCancel: false
 				})
+			},
+			// 根据type 返回css样式名
+			fn(type) {
+				return type == '进站' ? 'light' : ''
 			}
 		}
 	}
@@ -246,11 +243,14 @@
 		width: 11%;
 	}
 
-	.tableLine:nth-child(odd) {
-		background: white;
-	}
+	// .tableLine:nth-child(odd) {
+	// 	background: white;
+	// }
 
-	.tableLine:nth-child(even) {
+	// .tableLine:nth-child(even) {
+	// 	background: #2DB7F5;
+	// }
+	.light {
 		background: #2DB7F5;
 	}
 </style>

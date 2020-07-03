@@ -43,7 +43,7 @@
 			jump(url) {
 				console.log('页面跳转')
 				console.log(url)
-				uni.redirectTo({
+				uni.navigateTo({
 					url: url
 				})
 			}
