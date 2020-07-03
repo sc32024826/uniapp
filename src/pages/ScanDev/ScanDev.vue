@@ -1,24 +1,24 @@
 <template>
+
 	<view id="main">
-		<view class="flex column" v-if="haveScaned">
-			<view class="flex column ">
-				<view>衣架号:{{RackCode}}</view>
-				<view v-if="!IsFinished">
+		<view class="flex column top" v-if="haveScaned">
+			<view class="flex column margin">
+				<view class="flex row space">
+					<view>衣架号:{{RackCode}}</view>
+					<view v-if="IsFinished" class="red">该衣架已经完成加工</view>
+				</view>
+				<view v-if="Mo">
 					<view>生产单:{{Mo}}</view>
 				</view>
-				<view class="flex row border" v-if="!IsFinished">
-					<view class="Column_item">款号:{{StyleID}}</view>
-					<view class="Column_item">颜色:{{Color}}</view>
-					<view class="Column_item">尺码:{{SizeName}}</view>
-					<view class="Column_item">数量:{{Qty}}</view>
-				</view>
-				<view class="flex row" v-if="!IsFinished">
+				<view v-if="Mo">款色码:{{StyleID}} - {{Color}} - {{SizeName}}</view>
+				<view v-if="Mo" @click="showList">数量:{{Qty}}</view>
+				<view class="flex row" v-if="Mo">
 					<view class="Column_half">当前工序:{{SeqCode}}-{{SeqName}}</view>
 					<view class="Column_half">当前站:{{CurrentWorkLine}}-{{CurrentStationID}}</view>
 				</view>
 			</view>
 		</view>
-		<button type="primary" @click="showList">显示条码列表</button>
+		<button class="margin" type="primary" @click="nextScan">继续扫码</button>
 		<view class="table">
 			<view class="flex row head">
 				<view class="cell station">站号</view>
@@ -51,10 +51,7 @@
 					</view>
 				</view>
 			</view>
-
 		</view>
-
-		<button type="primary" @click="dircted">手动模式</button>
 	</view>
 </template>
 
@@ -62,7 +59,6 @@
 	import * as dd from "dingtalk-jsapi"
 	import { dateFormat, ISO8601 } from "../ProcessRecord/dateFormat.js"
 	export default {
-		components: {},
 		data() {
 			return {
 				tableData: [],
@@ -77,12 +73,12 @@
 				CurrentStationID: '', //站
 				RackCode: '', //衣架号
 				Qty: '',
-				haveScaned: true,
+				haveScaned: false,
 				BarCodes: []
 			}
 		},
 		onLoad: function() {
-			// this.scanCode()
+			this.scanCode()
 		},
 		methods: {
 			scanCode() {
@@ -100,8 +96,24 @@
 					}
 				})
 			},
-			dircted() {
-				this._requestAwait(9117464)
+			// 继续下个扫码
+			nextScan() {
+				this.tableData = []
+				this.Color = ''
+				this.StyleID = ''
+				this.SizeName = ''
+				this.Mo = ''
+				this.IsFinished = false
+				this.SeqName = ''
+				this.SeqCode = ''
+				this.CurrentWorkLine = ''
+				this.CurrentStationID = ''
+				this.RackCode = ''
+				this.Qty = ''
+				this.haveScaned = false
+				this.BarCodes = []
+				
+				this.scanCode()
 			},
 			async _requestAwait(Rackcode) {
 				const [err, res] = await uni.request({
@@ -121,18 +133,15 @@
 					});
 				} else {
 					let target = res.data.response
-
-					if (target.IsFinished) {
-						this.Qty = target.Qty
-						this.Mo = target.Mo
-						this.Color = target.Color
-						this.StyleID = target.StyleID
-						this.SizeName = target.SizeName
-						this.SeqName = target.SeqName
-						this.SeqCode = target.SeqCode
-						this.CurrentWorkLine = target.CurrentWorkLine
-						this.CurrentStationID = target.CurrentStationID
-					}
+					this.Qty = target.Qty
+					this.Mo = target.Mo
+					this.Color = target.Color
+					this.StyleID = target.StyleID
+					this.SizeName = target.SizeName
+					this.SeqName = target.SeqName
+					this.SeqCode = target.SeqCode
+					this.CurrentWorkLine = target.CurrentWorkLine
+					this.CurrentStationID = target.CurrentStationID
 					this.IsFinished = target.IsFinished
 					this.RackCode = target.RackCode
 					target.RackProcessingHistory.forEach(e => {
@@ -140,9 +149,6 @@
 						e.StationID = e.LineID + '-' + e.StationID
 						// 类型处理
 						e.RecordType = e.RecordType == 3 ? '出站' : '进站'
-						// 工序处理
-						// e.SeqCode = e.SeqCode + '-' + e.SeqName
-						// 时间格式处理
 						let temp = new Date(ISO8601(e.Timestamp))
 						e.Timestamp = dateFormat("YYYY-mm-dd HH:MM:SS", temp)
 					})
@@ -181,7 +187,7 @@
 		flex-direction: row;
 	}
 
-	.border {
+	.space {
 		justify-content: space-between;
 	}
 
@@ -197,7 +203,9 @@
 		width: 50%;
 		// border: solid 1px #DCDEE2;
 	}
-
+	.margin{
+		margin: 4px;
+	}
 	.head {
 		background-color: #F8F8F9;
 	}
@@ -243,14 +251,14 @@
 		width: 11%;
 	}
 
-	// .tableLine:nth-child(odd) {
-	// 	background: white;
-	// }
-
-	// .tableLine:nth-child(even) {
-	// 	background: #2DB7F5;
-	// }
 	.light {
 		background: #2DB7F5;
+	}
+
+	.red {
+		color: red;
+	}
+	.top{
+		font-size: 20px;
 	}
 </style>

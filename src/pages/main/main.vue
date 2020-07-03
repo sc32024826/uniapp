@@ -27,13 +27,13 @@
 				optionList: [
 					{
 						url: '/pages/ProcessRecord/ProcessRecord',
-						icon: '&#xe744;',
+						icon: '&#xe73b;',
 						title: '加工记录'
 					},
 					{
 						url: '/pages/ScanDev/ScanDev',
-						icon: '&#xe744;',
-						title: '扫码开发版'
+						icon: '&#xe6d4;',
+						title: '用于测试'
 					}
 				]
 			}

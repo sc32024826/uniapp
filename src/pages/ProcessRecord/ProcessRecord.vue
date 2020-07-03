@@ -1,8 +1,8 @@
 <template>
 
 	<view id="main">
-		<view class="flex column" v-if="haveScaned">
-			<view class="flex column ">
+		<view class="flex column top" v-if="haveScaned">
+			<view class="flex column margin">
 				<view class="flex row space">
 					<view>衣架号:{{RackCode}}</view>
 					<view v-if="IsFinished" class="red">该衣架已经完成加工</view>
@@ -10,22 +10,15 @@
 				<view v-if="Mo">
 					<view>生产单:{{Mo}}</view>
 				</view>
-				<view class="flex row space" v-if="Mo">
-					<view class="Column_item">款号:{{StyleID}}</view>
-					<view class="Column_item">颜色:{{Color}}</view>
-					<view class="Column_item">尺码:{{SizeName}}</view>
-					<view class="Column_item">数量:{{Qty}}</view>
-				</view>
+				<view v-if="Mo">款色码:{{StyleID}} - {{Color}} - {{SizeName}}</view>
+				<view v-if="Mo" @click="showList">数量:{{Qty}}(...)</view>
 				<view class="flex row" v-if="Mo">
 					<view class="Column_half">当前工序:{{SeqCode}}-{{SeqName}}</view>
 					<view class="Column_half">当前站:{{CurrentWorkLine}}-{{CurrentStationID}}</view>
 				</view>
 			</view>
 		</view>
-		<view class="flex row space margin">
-			<button type="primary" @click="nextScan">继续扫码</button>
-			<button type="primary" @click="showList" v-if="BarCodes.length > 0">条码列表</button>
-		</view>
+		<button class="margin" type="primary" @click="nextScan">继续扫码</button>
 		<view class="table">
 			<view class="flex row head">
 				<view class="cell station">站号</view>
@@ -264,5 +257,8 @@
 
 	.red {
 		color: red;
+	}
+	.top{
+		font-size: 20px;
 	}
 </style>
