@@ -1,9 +1,9 @@
 <template>
-	<view>
+	<view id="main">
 		<view class="flex column" v-if="haveScaned">
-			<view class="flex column border">
+			<view class="flex column ">
 				<view>衣架号:{{RackCode}}</view>
-				<view class="border" v-if="!IsFinished">
+				<view v-if="!IsFinished">
 					<view>生产单:{{Mo}}</view>
 				</view>
 				<view class="flex row border" v-if="!IsFinished">
@@ -12,46 +12,63 @@
 					<view class="Column_item">尺码:{{SizeName}}</view>
 					<view class="Column_item">数量:{{Qty}}</view>
 				</view>
-				<view class="flex row border" v-if="!IsFinished">
-					<view class="Column_item">当前工序:{{SeqCode}}-{{SeqName}}</view>
-					<view class="Column_item">当前站:{{CurrentWorkLine}}-{{CurrentStationID}}</view>
+				<view class="flex row" v-if="!IsFinished">
+					<view class="Column_half">当前工序:{{SeqCode}}-{{SeqName}}</view>
+					<view class="Column_half">当前站:{{CurrentWorkLine}}-{{CurrentStationID}}</view>
 				</view>
 			</view>
-			<view>
-				<pl-table ref="plTable" :data="tableData" :row-height="rowHeight" size="mini" border stripe fit>
-					<pl-table-column v-for="item in columns" :key="item.id" :prop="item.prop" :label="item.label" :width="item.width" />
-				</pl-table>
-			</view>
 		</view>
-		<!-- <button type="primary" @click="dircted">手动模式</button> -->
+		<button type="primary" @click="showList">显示条码列表</button>
+		<view class="table">
+			<!-- <pl-table ref="plTable" :data="tableData" :row-height="rowHeight" size="mini" border stripe fit>
+					<pl-table-column v-for="item in columns" :key="item.id" :prop="item.prop" :label="item.label" :width="item.width" />
+				</pl-table> -->
+			<view class="flex row head">
+				<view class="cell station">站号</view>
+				<view class="flex column name">
+					<view class="cell">工号</view>
+					<view class="cell">姓名</view>
+				</view>
+				<view class="cell time">时间</view>
+				<view class="cell type">类型</view>
+				<view class="cell seq">工序</view>
+				<view class="cell count" @click="showList">数量</view>
+			</view>
+			<view class="data">
+				<view v-for="(item,key) in tableData" :key="key" class="tableLine">
+					<view class="flex row">
+						<!-- <view class="flex column station"> -->
+						<view class="cell station">{{item.StationID}}</view>
+						<!-- </view> -->
+						<view class="flex column name">
+							<view class="cell">{{item.EmployeeID}}</view>
+							<view class="cell">{{item.Name}}</view>
+						</view>
+						<view class="cell time">{{item.Timestamp}}</view>
+						<view class="cell type">{{item.RecordType}}</view>
+						<view class="flex column seq">
+							<view class="cell">{{item.SeqCode}}</view>
+							<view class="cell">{{item.SeqName}}</view>
+						</view>
+						<view class="cell count">{{item.Qty}}</view>
+					</view>
+				</view>
+			</view>
+
+		</view>
+
+		<button type="primary" @click="dircted">手动模式</button>
 	</view>
 </template>
 
 <script>
 	import * as dd from "dingtalk-jsapi"
-	import { PlTable, PlTableColumn, PlxTableGrid, PlxTableColumn } from 'pl-table'
 	import { dateFormat, ISO8601 } from "../ProcessRecord/dateFormat.js"
-	var _self
-	var page = 1
 	export default {
-		components: {
-			PlTable,
-			PlTableColumn
-		},
+		components: {},
 		data() {
 			return {
-				log: '',
-				rowHeight: 50,
 				tableData: [],
-				columns: [
-					{ prop: 'StationID', label: '站号', width: '70' },
-					{ prop: 'EmployeeID', label: '工号', width: '50' },
-					{ prop: 'Name', label: '姓名', width: '59' },
-					{ prop: 'Timestamp', label: '时间', width: '150' },
-					{ prop: 'RecordType', label: '类型', width: '50' },
-					{ prop: 'SeqCode', label: '工序', width: '90' },
-					{ prop: 'Qty', label: '数量', width: '30' }
-				],
 				Color: '', //颜色
 				StyleID: '', //款号
 				SizeName: '', //尺码
@@ -63,11 +80,12 @@
 				CurrentStationID: '', //站
 				RackCode: '', //衣架号
 				Qty: '',
-				haveScaned: true
+				haveScaned: true,
+				BarCodes: []
 			}
 		},
 		onLoad: function() {
-			this.scanCode()
+			// this.scanCode()
 		},
 		methods: {
 			selectable(row, index) {
@@ -113,8 +131,8 @@
 					});
 				} else {
 					let target = res.data.response
-
-					if (!target.IsFinished) {
+						
+					if (target.IsFinished) {
 						this.Qty = target.Qty
 						this.Mo = target.Mo
 						this.Color = target.Color
@@ -133,25 +151,40 @@
 						// 类型处理
 						e.RecordType = e.RecordType == 3 ? '出站' : '进站'
 						// 工序处理
-						e.SeqCode = e.SeqCode + '-' + e.SeqName
+						// e.SeqCode = e.SeqCode + '-' + e.SeqName
 						// 时间格式处理
 						let temp = new Date(ISO8601(e.Timestamp))
 						e.Timestamp = dateFormat("YYYY-mm-dd HH:MM:SS", temp)
 					})
 					this.tableData = target.RackProcessingHistory
+					this.BarCodes = target.BarCodes
 				}
+			},
+			// 显示条码列表
+			showList() {
+				uni.showModal({
+					content: this.BarCodes.toString(),
+					showCancel: false
+				})
 			}
 		}
 	}
 </script>
 
-<style>
+<style scoped lang="less">
+	#main {
+		width: 100%;
+	}
+
 	.flex {
 		display: flex;
 	}
 
 	.row {
 		flex-direction: row;
+	}
+
+	.border {
 		justify-content: space-between;
 	}
 
@@ -159,9 +192,65 @@
 		flex-direction: column;
 	}
 
-	.border {
-		margin: 1px;
+	.Column_item {
+		// border: solid 1px #DCDEE2;
 	}
 
-	.Column_item {}
+	.Column_half {
+		width: 50%;
+		// border: solid 1px #DCDEE2;
+	}
+
+	.head {
+		background-color: #F8F8F9;
+	}
+
+	.cell {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		border: solid 1px #DCDEE2;
+	}
+
+	.table {
+		text-align: center;
+	}
+
+	//站号格
+	.station {
+		width: 16%;
+	}
+
+	// 姓名格
+	.name {
+		width: 16%;
+	}
+
+	// 时间格
+	.time {
+		width: 35%;
+	}
+
+	// 类型格
+	.type {
+		width: 10%;
+	}
+
+	// 工序
+	.seq {
+		width: 12%;
+	}
+
+	// 数量
+	.count {
+		width: 11%;
+	}
+
+	.tableLine:nth-child(odd) {
+		background: white;
+	}
+
+	.tableLine:nth-child(even) {
+		background: #2DB7F5;
+	}
 </style>

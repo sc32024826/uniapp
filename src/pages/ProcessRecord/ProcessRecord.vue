@@ -63,7 +63,7 @@
 				CurrentStationID: '', //站
 				RackCode: '', //衣架号
 				Qty: '',
-				haveScaned: true
+				haveScaned: false
 			}
 		},
 		onLoad: function() {
