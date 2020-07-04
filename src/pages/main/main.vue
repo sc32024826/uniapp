@@ -34,6 +34,11 @@
 						url: '/pages/ScanDev/ScanDev',
 						icon: '&#xe6d4;',
 						title: '用于测试'
+					},
+					{
+						url: '/pages/nfc/nfc',
+						icon: '&#xe6d4;',
+						title: 'NFC'
 					}
 				]
 			}

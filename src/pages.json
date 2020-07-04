@@ -63,6 +63,10 @@
 				}
 			}
         }
+        ,{
+            "path" : "pages/nfc/nfc",
+            "style" : {}
+        }
     ],
 	"tabBar": {
 		"color": "#7a7e83",
