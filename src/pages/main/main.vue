@@ -24,22 +24,31 @@
 		computed: mapState(['hasLogin', 'userName']),
 		data() {
 			return {
-				optionList: [
-					{
+				optionList: [{
 						url: '/pages/ProcessRecord/ProcessRecord',
 						icon: '&#xe73b;',
 						title: '加工记录'
 					},
 					{
-						url: '/pages/ScanDev/ScanDev',
-						icon: '&#xe6d4;',
-						title: '用于测试'
+						url: '/pages/nfc/nfc',
+						icon: '&#xe6e4;',
+						title: 'NFC'
 					},
 					{
-						url: '/pages/nfc/nfc',
-						icon: '&#xe6d4;',
-						title: 'NFC'
-					}
+						url: '/pages/ProInfo/ProInfo',
+						icon: '&#xe771;',
+						title: '当日生产情况'
+					},
+					{
+						url: '/pages/offline/offline',
+						icon: '&#xe6bb;',
+						title: '衣架下线'
+					},
+					{
+						url: '/pages/ScanDev/ScanDev',
+						icon: '&#xe73b;',
+						title: '加工记录DEV'
+					},
 				]
 			}
 		},

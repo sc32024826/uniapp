@@ -11,7 +11,7 @@
 					<view>生产单:{{Mo}}</view>
 				</view>
 				<view v-if="Mo">款色码:{{StyleID}} - {{Color}} - {{SizeName}}</view>
-				<view v-if="Mo" @click="showList">数量:{{Qty}}</view>
+				<view v-if="Mo" @click="showList">数量:{{Qty}}(...)</view>
 				<view class="flex row" v-if="Mo">
 					<view class="Column_half">当前工序:{{SeqCode}}-{{SeqName}}</view>
 					<view class="Column_half">当前站:{{CurrentWorkLine}}-{{CurrentStationID}}</view>
@@ -52,12 +52,15 @@
 				</view>
 			</view>
 		</view>
+		<button class="margin" type="primary" @click="direct">手动模式</button>
 	</view>
 </template>
 
 <script>
 	import * as dd from "dingtalk-jsapi"
 	import { dateFormat, ISO8601 } from "../ProcessRecord/dateFormat.js"
+
+	import { QueryProcessingHistoryByRackCode } from '@/api/api.js'
 	export default {
 		data() {
 			return {
@@ -73,12 +76,12 @@
 				CurrentStationID: '', //站
 				RackCode: '', //衣架号
 				Qty: '',
-				haveScaned: false,
+				haveScaned: true,
 				BarCodes: []
 			}
 		},
 		onLoad: function() {
-			this.scanCode()
+			// this.scanCode()
 		},
 		methods: {
 			scanCode() {
@@ -112,19 +115,11 @@
 				this.Qty = ''
 				this.haveScaned = false
 				this.BarCodes = []
-				
+
 				this.scanCode()
 			},
 			async _requestAwait(Rackcode) {
-				const [err, res] = await uni.request({
-					url: "http://test-api.servers.mchains.cn/api/MESInterfaces/QueryProcessingHistoryByRackCode",
-					data: {
-						"Rackcode": Rackcode
-					},
-					header: {
-						"Content-Type": "application/json; charset=utf-8"
-					}
-				});
+				const [err, res] = await QueryProcessingHistoryByRackCode(Rackcode)
 				if (err) {
 					console.log(err)
 					uni.showModal({
@@ -169,6 +164,39 @@
 			// 根据type 返回css样式名
 			fn(type) {
 				return type == '进站' ? 'light' : ''
+			},
+			async direct() {
+				const [err, res] = await QueryProcessingHistoryByRackCode(8624676)
+				if (err) {
+					console.log(err)
+					uni.showModal({
+						content: err.errMsg,
+						showCancel: false
+					});
+				} else {
+					let target = res.data.response
+					this.Qty = target.Qty
+					this.Mo = target.Mo
+					this.Color = target.Color
+					this.StyleID = target.StyleID
+					this.SizeName = target.SizeName
+					this.SeqName = target.SeqName
+					this.SeqCode = target.SeqCode
+					this.CurrentWorkLine = target.CurrentWorkLine
+					this.CurrentStationID = target.CurrentStationID
+					this.IsFinished = target.IsFinished
+					this.RackCode = target.RackCode
+					target.RackProcessingHistory.forEach(e => {
+						// 站号处理
+						e.StationID = e.LineID + '-' + e.StationID
+						// 类型处理
+						e.RecordType = e.RecordType == 3 ? '出站' : '进站'
+						let temp = new Date(ISO8601(e.Timestamp))
+						e.Timestamp = dateFormat("YYYY-mm-dd HH:MM:SS", temp)
+					})
+					this.tableData = target.RackProcessingHistory
+					this.BarCodes = target.BarCodes
+				}
 			}
 		}
 	}
@@ -195,17 +223,15 @@
 		flex-direction: column;
 	}
 
-	.Column_item {
-		// border: solid 1px #DCDEE2;
-	}
-
 	.Column_half {
 		width: 50%;
 		// border: solid 1px #DCDEE2;
 	}
-	.margin{
-		margin: 4px;
+
+	.margin {
+		margin: 4rpx;
 	}
+
 	.head {
 		background-color: #F8F8F9;
 	}
@@ -214,7 +240,8 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		border: solid 1px #DCDEE2;
+		border: solid 1rpx #DCDEE2;
+		min-height: 50rpx;
 	}
 
 	.table {
@@ -258,7 +285,8 @@
 	.red {
 		color: red;
 	}
-	.top{
-		font-size: 20px;
+
+	.top {
+		font-size: 40rpx;
 	}
 </style>

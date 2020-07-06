@@ -1,65 +1,10 @@
 <template>
 	<view class="warp">
-		<view class="box">
-			<t-table class="table">
-				<t-tr font-size="20">
-					<t-th>生产单</t-th>
-					<t-th>款号</t-th>
-					<t-th>颜色</t-th>
-				</t-tr>
-				<t-tr v-for="(v,i) in tableData" :key="i" font-size="20">
-					<view class="flex row" @click="ontab(v.MO)">
-						<t-td>{{v.MO}}</t-td>
-						<t-td>{{v.styleNO}}</t-td>
-						<t-td>{{v.color}}</t-td>
-					</view>
-				</t-tr>
-			</t-table>
-			<text class="loading-text" v-if="showMore">
-				{{loadingType === 0 ? contentText.contentdown : (loadingType === 1 ? contentText.contentrefresh : contentText.contentnomore)}}
-			</text>
-		</view>
-		<e-modal :visible.sync="visible" @cancel="handleCancel" class="modal">
-			<view class="container">
-				<view class="title">为生产单号:{{modal.mo}}指派任务</view>
-				<uniList class="uni-list">
-					<checkbox-group @change="checkboxChange">
-						<label class="uni-list-cell uni-list-cell-pd" v-for="(item,i) in modal.items" :key="i">
-							<uni-list-item>
-								<view>
-									<checkbox :value="item.value" :checked="item.checked" />
-								</view>
-								<view>{{item.name}}</view>
-							</uni-list-item>
-						</label>
-					</checkbox-group>
-				</uniList>
-				<button type="primary" @click="submit">确认</button>
-			</view>
-		</e-modal>
 	</view>
 </template>
 
 <script>
-	import tTable from '@/components/t-table/t-table.vue';
-	import tTh from '@/components/t-table/t-th.vue';
-	import tTr from '@/components/t-table/t-tr.vue';
-	import tTd from '@/components/t-table/t-td.vue';
-	import uniList from "@/components/uni-list/uni-list.vue"
-	import uniListItem from "@/components/uni-list-item/uni-list-item.vue"
-	
-	var _self
-	var page = 1
-	
 	export default {
-		components: {
-			tTable,
-			tTh,
-			tTr,
-			tTd,
-			uniList,
-			uniListItem
-		},
 		data() {
 			return {
 				tableData: [{

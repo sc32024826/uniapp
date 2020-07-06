@@ -65,7 +65,20 @@
         }
         ,{
             "path" : "pages/nfc/nfc",
+            "style" : {
+				"navigationBarTitleText": "扫码"
+			}
+        }
+        ,{
+            "path" : "pages/ProInfo/ProInfo",
             "style" : {}
+        }
+        ,{
+            "path" : "pages/offline/offline",
+            "style" : {
+				"navigationBarTitleText": "衣架下线",
+				"enablePullDownRefresh": true
+			}
         }
     ],
 	"tabBar": {

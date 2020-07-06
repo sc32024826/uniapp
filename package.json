@@ -40,10 +40,10 @@
     "@dcloudio/uni-quickapp-light": "^2.0.0-26920200424005",
     "@dcloudio/uni-quickapp-vue": "^2.0.0-26920200424005",
     "@dcloudio/uni-stat": "^2.0.0-27920200618002",
+    "@dcloudio/uni-ui": "^1.2.1",
     "core-js": "^3.6.4",
     "dingtalk-jsapi": "^2.11.2",
     "flyio": "^0.6.2",
-    "pl-table": "^2.7.5",
     "regenerator-runtime": "^0.12.1",
     "vue": "^2.6.11",
     "vuex": "^3.5.1"

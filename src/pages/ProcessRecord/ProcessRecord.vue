@@ -195,16 +195,12 @@
 		flex-direction: column;
 	}
 
-	.Column_item {
-		// border: solid 1px #DCDEE2;
-	}
-
 	.Column_half {
 		width: 50%;
 		// border: solid 1px #DCDEE2;
 	}
 	.margin{
-		margin: 4px;
+		margin: 4rpx;
 	}
 	.head {
 		background-color: #F8F8F9;
@@ -214,7 +210,8 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		border: solid 1px #DCDEE2;
+		border: solid 1rpx #DCDEE2;
+		min-height: 50rpx;
 	}
 
 	.table {
@@ -259,6 +256,6 @@
 		color: red;
 	}
 	.top{
-		font-size: 20px;
+		font-size: 40rpx;
 	}
 </style>
