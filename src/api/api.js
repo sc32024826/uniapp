@@ -1,6 +1,15 @@
+export const GetLoginfoByCode = param => {
+	return uni.request({
+		url: "/api2/Login/GetLoginfoByCode",
+		data: param,
+		header: {
+			"Content-Type": "application/json; charset=utf-8"
+		}
+	})
+}
 export const QueryProcessingHistoryByRackCode = param => {
 	return uni.request({
-		url: "http://test-api.servers.mchains.cn/api/MESInterfaces/QueryProcessingHistoryByRackCode",
+		url: "/api/MESInterfaces/QueryProcessingHistoryByRackCode",
 		data: {
 			"Rackcode": param
 		},
