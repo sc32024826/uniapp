@@ -58,6 +58,8 @@
 <script>
 	import * as dd from "dingtalk-jsapi"
 	import { dateFormat, ISO8601 } from "./dateFormat.js"
+	import { QueryProcessingHistoryByRackCode } from '@/api/api.js'
+	
 	export default {
 		data() {
 			return {
@@ -116,15 +118,7 @@
 				this.scanCode()
 			},
 			async _requestAwait(Rackcode) {
-				const [err, res] = await uni.request({
-					url: "http://test-api.servers.mchains.cn/api/MESInterfaces/QueryProcessingHistoryByRackCode",
-					data: {
-						"Rackcode": Rackcode
-					},
-					header: {
-						"Content-Type": "application/json; charset=utf-8"
-					}
-				});
+				const [err, res] = await QueryProcessingHistoryByRackCode(Rackcode)
 				if (err) {
 					console.log(err)
 					uni.showModal({
