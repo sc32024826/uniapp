@@ -1,7 +1,7 @@
 <template>
 	<view id="container">
 		<view id="toolbar" class="flex center">
-			<checkbox-group @change="checkboxChange">
+			<checkbox-group @change="requestType">
 				<label>
 					<checkbox value="color" />区分颜色
 				</label>
@@ -11,21 +11,20 @@
 			</checkbox-group>
 		</view>
 		<view id="title" class="flex row vertical-center">
-			<view style="width: 50rpx;"></view>
-			<view class="white" style="width: 400rpx;">生产单-颜色-尺码</view>
+			<checkbox-group @change="selectAll">
+				<checkbox value="chooseAll"></checkbox>
+			</checkbox-group>
+			<view class="white" style="width: 400rpx;">生产单-款号-颜色-尺码</view>
 			<view class="white" style="width: 80rpx;">线上</view>
-			<view class="white">下线数</view>
+			<view class="white" style="width: 100rpx;">下线数</view>
 		</view>
 		<view id="list" class="uni-list">
-			<checkbox-group @change="checkboxChange2">
+			<checkbox-group @change="checkboxChange">
 				<view class="stripe" v-for="(item,i) in items" :key="i">
 					<view class="flex row test vertical-center ">
 						<checkbox :value="item.id" :checked="item.Check" />
-						<!-- <view class="mo">{{format(item.Mo,item.Color,item.Size)}}</view> -->
 						<view class="mo">
-							<view>{{item.Mo}}</view>
-							<view v-if="isShowColor"> -{{item.Color}} </view>
-							<view v-if="isShowSize"> -{{item.Size}} </view>
+							<view>{{item.content}}</view>
 						</view>
 						<view class="count">{{item.Count}}</view>
 						<input placeholder="0" type="number" adjust-position :disabled="!item.Check"></input>
@@ -41,63 +40,69 @@
 </template>
 
 <script>
+	import { tempfunction } from '@/api/api.js'
+
 	export default {
 		data() {
 			return {
-				items: [
-					{ id: '1', Mo: '1', Color: '1', Size: '1', Count: '1', Check: false },
-					{ id: '2', Mo: '123123', Color: 'red', Size: 'XXL', Count: '50', Check: false },
-					{ id: '3', Mo: '121211123123', Color: 'reasasd', Size: 'XXL', Count: '50000', Check: false }
-				],
-				choose: [], // 选中的衣服衣架
-				isShowColor: false,
-				isShowSize: false
+				items: [],
+				choose: [] // 选中的衣服衣架
 			}
 		},
 		methods: {
-			checkboxChange(e) {
-				// console.log(e.detail.value) // array
-				let showItem = e.detail.value
-				if (showItem.indexOf('color') > -1) {
-					this.isShowColor = true
+			// 全选 全不选
+			selectAll(e) {
+				// 全选
+				if (this.items.length === 0) return
+				if (e.detail.value == 'chooseAll') {
+					let choose = []
+					this.items.forEach(element => {
+						element = Object.assign(element, { Check: true })
+						choose.push(element.id)
+					})
+					this.choose = choose
 				} else {
-					this.isShowColor = false
-				}
-				
-				if (showItem.indexOf('size') > -1) {
-					this.isShowSize = true
-				} else {
-					this.isShowSize = false
+					this.items.forEach(element => {
+						element = Object.assign(element, { Check: false })
+					})
+					this.choose = []
 				}
 			},
-			checkboxChange2(e) {
-				// console.log(e.detail.value);
-				// 天选之子s
+			// 区分尺码 区分颜色
+			async requestType(e) {
+				let param = e.detail.value
+				this.items = await this.getDate(param)
+			},
+			// 勾选列表行
+			checkboxChange(e) {
 				let chooseList = e.detail.value
 				this.choose = chooseList
 				if (chooseList.length == 0) return
 				this.items.forEach(element => {
 					if (chooseList.indexOf(element.id) > -1) {
 						element.Check = true
-
 					} else {
 						element.Check = false
 					}
 				})
 			},
 			offline() {
-				// console.log('下线id为', this.choose);
+				console.log('下线id为', this.choose);
 			},
 			offlineByUser() {
 
 			},
-			async getDate() {
-
+			async getDate(param) {
+				const { res, err, data } = await tempfunction(param)
+				return data
 			}
 		},
 		async onPullDownRefresh() {
 			await this.getDate()
 			uni.stopPullDownRefresh();
+		},
+		watch:{
+			
 		}
 	}
 </script>
@@ -110,9 +115,9 @@
 		min-height: 80rpx;
 		margin-bottom: 10rpx;
 
-		// view {
-		// 	border: solid 1rpx red;
-		// }
+		view {
+			// border: solid 1rpx red;
+		}
 
 		.mo {
 			width: 400rpx;
@@ -166,9 +171,9 @@
 		background-color: #53B4DF;
 		margin-bottom: 20rpx;
 
-		// view {
-		// 	border: solid 1rpx red;
-		// }
+		view {
+			// border: solid 1rpx red;
+		}
 	}
 
 	.white {
