@@ -1,5 +1,4 @@
 <template>
-
 	<view id="main">
 		<view class="flex column top" v-if="haveScaned">
 			<view class="flex column margin">
@@ -13,8 +12,8 @@
 				<view v-if="Mo">款色码:{{StyleID}} - {{Color}} - {{SizeName}}</view>
 				<view v-if="Mo" @click="showList">数量:{{Qty}}(...)</view>
 				<view class="flex row" v-if="Mo">
-					<view class="Column_half">当前工序:{{SeqCode}}-{{SeqName}}</view>
-					<view class="Column_half">当前站:{{CurrentWorkLine}}-{{CurrentStationID}}</view>
+					<view class="currentSeq">当前工序:{{SeqCode}}-{{SeqName}}</view>
+					<view class="currentCustation">当前站:{{CurrentWorkLine}}-{{CurrentStationID}}</view>
 				</view>
 			</view>
 		</view>
@@ -168,88 +167,6 @@
 	}
 </script>
 
-<style scoped lang="less">
-	#main {
-		width: 100%;
-	}
-
-	.flex {
-		display: flex;
-	}
-
-	.row {
-		flex-direction: row;
-	}
-
-	.space {
-		justify-content: space-between;
-	}
-
-	.column {
-		flex-direction: column;
-	}
-
-	.Column_half {
-		width: 50%;
-		// border: solid 1px #DCDEE2;
-	}
-	.margin{
-		margin: 4rpx;
-	}
-	.head {
-		background-color: #F8F8F9;
-	}
-
-	.cell {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		border: solid 1rpx #DCDEE2;
-		min-height: 50rpx;
-	}
-
-	.table {
-		text-align: center;
-	}
-
-	//站号格
-	.station {
-		width: 16%;
-	}
-
-	// 姓名格
-	.name {
-		width: 16%;
-	}
-
-	// 时间格
-	.time {
-		width: 35%;
-	}
-
-	// 类型格
-	.type {
-		width: 10%;
-	}
-
-	// 工序
-	.seq {
-		width: 12%;
-	}
-
-	// 数量
-	.count {
-		width: 11%;
-	}
-
-	.light {
-		background: #2DB7F5;
-	}
-
-	.red {
-		color: red;
-	}
-	.top{
-		font-size: 40rpx;
-	}
+<style>
+	@import url("./style.less");
 </style>
