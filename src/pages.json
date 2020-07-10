@@ -71,7 +71,9 @@
         }
         ,{
             "path" : "pages/ProInfo/ProInfo",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "生产情况"
+			}
         }
         ,{
             "path" : "pages/offline/offline",

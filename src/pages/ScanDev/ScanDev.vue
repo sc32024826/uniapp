@@ -17,7 +17,7 @@
 				</view>
 			</view>
 		</view>
-		<button class="margin" type="primary" @click="nextScan">继续扫码</button>
+		<button class="margin" type="primary" @click="nextScan" disabled="true">继续扫码</button>
 		<view class="table">
 			<view class="flex row head">
 				<view class="cell station">站号</view>
@@ -32,7 +32,7 @@
 			</view>
 			<view class="data">
 				<uni-collapse>
-					<uni-collapse-item v-for="(item,key) in tableData" :key="key" :title="item.RackCode" open="true">
+					<uni-collapse-item v-for="(item,key) in tableData" :key="key" title="衣架号" open="true" >
 						<view class="flex row">
 								<view class="cell station">{{item.StationID}}</view>
 							<view class="flex column name">

@@ -1,19 +1,19 @@
 <template>
 	<view class="container">
 		<uni-collapse>
-			<uni-collapse-item :title="item.line" open="true" v-for="(item,i) in data" :key="i">
-				<view class="flex row wrap">
+			<uni-collapse-item :title="item.line" open="true" v-for="(item,i) in data" :key="i" class="collapseitem">
+				<view class="flex row wrap item">
 					<view class="box" v-for="(v,k) in item.list" :key="k">
 						<view class="flex row">
 							<view class="light"></view>
-							<view>线号-站号{{v.lineNo}}{{v.stationNo}}</view>
-							<view>工序{{v.seqName}}</view>
+							<view>{{v.LineNo}}-{{v.StationNo}}</view>
+							<view>{{v.SeqName}}</view>
 						</view>
 						<view class="flex row">
-							<view>工号-姓名</view>
-							<view>当日产量</view>
+							<view>{{v.EmpID}}-{{v.EmpName}}</view>
+							<view>{{v.Count}}</view>
 						</view>
-						<view class="flex row">款号</view>
+						<view class="flex row">{{v.Style}}</view>
 					</view>
 				</view>
 			</uni-collapse-item>
@@ -29,14 +29,67 @@
 			return {
 				data: [{
 					line: '1号线',
-					list: [
+					list: [{
+							LineNo: 1,
+							StationNo: 2,
+							SeqName: 'asdada',
+							EmpID: 1231,
+							EmpName: '张三',
+							Count: 1231,
+							Style: '1231231'
+						},
+						{
+							LineNo: 1,
+							StationNo: 2,
+							SeqName: 'asdada',
+							EmpID: 1231,
+							EmpName: '张三',
+							Count: 1231,
+							Style: '1231231'
+						}
 					]
 				}, {
 					line: '2号线',
-					list: []
+					list: [{
+							LineNo: 1,
+							StationNo: 2,
+							SeqName: 'asdada',
+							EmpID: 1231,
+							EmpName: '张三',
+							Count: 1231,
+							Style: '1231231'
+						},
+						{
+							LineNo: 1,
+							StationNo: 2,
+							SeqName: 'asdada',
+							EmpID: 1231,
+							EmpName: '张三',
+							Count: 1231,
+							Style: '1231231'
+						}
+					]
 				}, {
 					line: '3号线',
-					list: []
+					list: [{
+							LineNo: 1,
+							StationNo: 2,
+							SeqName: 'asdada',
+							EmpID: 1231,
+							EmpName: '张三',
+							Count: 1231,
+							Style: '1231231'
+						},
+						{
+							LineNo: 1,
+							StationNo: 2,
+							SeqName: 'asdada',
+							EmpID: 1231,
+							EmpName: '张三',
+							Count: 1231,
+							Style: '1231231'
+						}
+					]
 				}]
 			}
 		},
@@ -48,14 +101,15 @@
 
 <style lang="less" scopde>
 	//调试 规则
-	// view {
-	// 	border: solid 1px red;
-	// }
+	.debug {
+		border: solid 1px red;
+	}
 
 	// 正式规则
 	.container {
 		width: 100%;
 		text-align: center;
+		text-align: left;
 		// font-size: 10rpx;
 
 		// display: flex;
@@ -72,7 +126,7 @@
 
 	.box {
 		width: 48%;
-		border: solid 1rpx red;
+		border: solid 2rpx #DCDEE2;
 		height: 200rpx;
 		margin: 2rpx;
 	}
@@ -98,5 +152,22 @@
 		background: yellow;
 		border: solid 1rpx green;
 		margin-top: 10rpx;
+	}
+	.collapseitem{
+		.item{
+			padding: 10rpx 0rpx 10rpx 0rpx;
+		}
+	}
+	.collapseitem:nth-child(even){
+		.item{
+			background-color: #666699;
+			color: white;
+		}
+	}
+	.collapseitem:nth-child(odd){
+		.item{
+			background-color: #CCCCCC;
+			
+		}
 	}
 </style>
