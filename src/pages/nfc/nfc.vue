@@ -1,9 +1,8 @@
 <template>
-	<view>
-		请靠近您的ID卡
+	<view class="flex column">
+		<view>请靠近您的ID卡</view>
 		<view>{{state}}</view>
 		<view>{{log}}</view>
-		<!-- <button type="primary" @click="nfc">读取数据</button> -->
 	</view>
 </template>
 
@@ -17,28 +16,6 @@
 			}
 		},
 		methods: {
-			// nfc() {
-			// 	let _this = this
-			// 	_this.log = 'ready'
-			// 	dd.ready(function() {
-			// 		dd.device.nfc.nfcRead({
-			// 			onSuccess: function(data) {
-			// 				_this.state = 'success'
-			// 				_this.log = data
-			// 				uni.showModal({
-			// 					content: JSON.stringify(data)
-			// 				})
-			// 			},
-			// 			onFail: function(err) {
-			// 				_this.state = 'ERROR'
-			// 				_this.log = err
-			// 				uni.showModal({
-			// 					content: JSON.stringify(err)
-			// 				})
-			// 			}
-			// 		})
-			// 	})
-			// }
 		},
 		onShow() {
 			let _this = this
@@ -71,5 +48,13 @@
 </script>
 
 <style>
-
+	.flex{
+		display: flex;
+		width: 100%;
+		text-align: center;
+	}
+	.column{
+		flex-direction: column;
+		justify-content: center;
+	}
 </style>

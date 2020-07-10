@@ -66,19 +66,26 @@
         ,{
             "path" : "pages/nfc/nfc",
             "style" : {
-				"navigationBarTitleText": "扫码"
+				// "navigationBarTitleText": "扫码"
+				"app-plus": {
+					"titleNView": false
+				}
 			}
         }
         ,{
             "path" : "pages/ProInfo/ProInfo",
             "style" : {
-				"navigationBarTitleText": "生产情况"
+				"app-plus": {
+					"titleNView": false
+				}
 			}
         }
         ,{
             "path" : "pages/offline/offline",
             "style" : {
-				"navigationBarTitleText": "衣架下线",
+				"app-plus": {
+					"titleNView": false
+				},
 				"enablePullDownRefresh": true
 			}
         }
