@@ -1,6 +1,9 @@
 <template>
 	<div id="Container">
 		<view>等待用户数据返回...</view>
+		<view class="">
+			{{log}}
+		</view>
 	</div>
 </template>
 <script>
@@ -11,10 +14,12 @@
 	export default {
 		data() {
 			return {
+				log:''
 			}
 		},
 		methods: {
 			async _requestAwait(data) {
+				this.log = data
 				const { err, res } = await GetLoginfoByCode(data)
 
 				if (err) {
@@ -42,14 +47,15 @@
 			let that = this
 			dd.ready(function() {
 				dd.runtime.permission.requestAuthCode({
-					// corpId:"ding18de7d49f5d6bdf1acaaa37764f94726",
-					corpId: "ding04dfeb3807df4a9d35c2f4657eb6378f",
+					corpId:"ding18de7d49f5d6bdf1acaaa37764f94726",  // 山英001
+					// corpId: "ding04dfeb3807df4a9d35c2f4657eb6378f",
 					onSuccess: function(result) {
-						that.code = result.code
+						// that.code = result.code
 						that._requestAwait(result)
 					},
 					onFail: function(err) {
 						console.log(err)
+						that.log = err
 					}
 				})
 			})

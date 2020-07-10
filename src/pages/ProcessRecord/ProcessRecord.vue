@@ -33,9 +33,7 @@
 			<view class="data">
 				<view v-for="(item,key) in tableData" :key="key" :class="fn(item.RecordType)">
 					<view class="flex row">
-						<!-- <view class="flex column station"> -->
 						<view class="cell station">{{item.StationID}}</view>
-						<!-- </view> -->
 						<view class="flex column name">
 							<view class="cell">{{item.EmployeeID}}</view>
 							<view class="cell">{{item.Name}}</view>

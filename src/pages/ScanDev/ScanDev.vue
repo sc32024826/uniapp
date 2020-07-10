@@ -31,11 +31,29 @@
 				<view class="cell count" @click="showList">数量</view>
 			</view>
 			<view class="data">
-				<view v-for="(item,key) in tableData" :key="key" :class="fn(item.RecordType)">
+				<uni-collapse>
+					<uni-collapse-item v-for="(item,key) in tableData" :key="key" :title="item.RackCode" open="true">
+						<view class="flex row">
+								<view class="cell station">{{item.StationID}}</view>
+							<view class="flex column name">
+								<view class="cell">{{item.EmployeeID}}</view>
+								<view class="cell">{{item.Name}}</view>
+							</view>
+							<view class="cell time">{{item.Timestamp}}</view>
+							<view class="cell type">{{item.RecordType}}</view>
+							<view class="flex column seq">
+								<view class="cell">{{item.SeqCode}}</view>
+								<view class="cell">{{item.SeqName}}</view>
+							</view>
+							<view class="cell count">{{item.Qty}}</view>
+						</view>
+					</uni-collapse-item>
+				</uni-collapse>
+				<!-- 	<view v-for="(item,key) in tableData" :key="key" :class="fn(item.RecordType)">
 					<view class="flex row">
-						<!-- <view class="flex column station"> -->
+						<view class="flex column station"> 
 						<view class="cell station">{{item.StationID}}</view>
-						<!-- </view> -->
+					 </view> 
 						<view class="flex column name">
 							<view class="cell">{{item.EmployeeID}}</view>
 							<view class="cell">{{item.Name}}</view>
@@ -48,7 +66,7 @@
 						</view>
 						<view class="cell count">{{item.Qty}}</view>
 					</view>
-				</view>
+				</view> -->
 			</view>
 		</view>
 		<button class="margin" type="primary" @click="direct">手动模式</button>
@@ -58,9 +76,11 @@
 <script>
 	import * as dd from "dingtalk-jsapi"
 	import { dateFormat, ISO8601 } from "../ProcessRecord/dateFormat.js"
-
 	import { QueryProcessingHistoryByRackCode } from '@/api/api.js'
+	import { uniCollapse, uniCollapseItem } from '@dcloudio/uni-ui'
+	
 	export default {
+		components: { uniCollapse, uniCollapseItem },
 		data() {
 			return {
 				tableData: [],
