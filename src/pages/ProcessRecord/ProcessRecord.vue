@@ -33,7 +33,7 @@
 			<view class="data">
 				<uni-collapse>
 					<block v-for="(item,key) in tableData" :key="key">
-						<uni-collapse-item :open="true" :title="item.RackCode.toString()" :class="colorController(item.RackCode)">
+						<uni-collapse-item :open="isOpen(item.RackCode)" :title="title(key,item.RackCode)" :class="colorController(item.RackCode)">
 							<view v-for="(v,k) in item.ProcessRecords" :key="k">
 								<view :class="fn(v.RecordType)">
 									<view class="cell station">{{v.StationID}}</view>
@@ -175,6 +175,17 @@
 			colorController(val){
 				if(val.toString() == this.RackCode){
 					return 'item'
+				}
+			},
+			// 控制title 显示
+			title(key,rack) {
+				let no = key + 1
+				return '衣架' + no + ': ' + rack.toString()
+			},
+			// 控制折叠框 是否打开
+			isOpen(rack){
+				if(rack.toString() == this.RackCode){
+					return true
 				}
 			}
 		}
