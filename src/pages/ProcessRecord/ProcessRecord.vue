@@ -4,7 +4,8 @@
 			<view class="flex column margin">
 				<view class="flex row space">
 					<view>衣架号:{{RackCode}}</view>
-					<view v-if="IsFinished" class="red">该衣架已经完成加工</view>
+					<view v-if="IsFinished" class="red">已完成</view>
+					<view v-if="InStation" class="red">站内</view>
 				</view>
 				<view v-if="Mo">
 					<view>生产单:{{Mo}}</view>
@@ -74,6 +75,7 @@
 				SizeName: '', //尺码
 				Mo: '', // 生产单
 				IsFinished: false, //已经完成
+				InStation: false,
 				SeqName: '', //工序
 				SeqCode: '', //工序号
 				CurrentWorkLine: '', //线
@@ -111,6 +113,7 @@
 				this.SizeName = ''
 				this.Mo = ''
 				this.IsFinished = false
+				this.InStation = false
 				this.SeqName = ''
 				this.SeqCode = ''
 				this.CurrentWorkLine = ''
@@ -142,6 +145,7 @@
 					this.CurrentWorkLine = target.CurrentWorkLine
 					this.CurrentStationID = target.CurrentStationID
 					this.IsFinished = target.IsFinished
+					this.InStation = target.InStation
 					this.RackCode = target.RackCode
 					target.RackProcessingHistory.forEach(e => {
 						e.ProcessRecords.forEach(item => {
@@ -172,19 +176,19 @@
 				return type == '进站' ? 'light' : 'flex row'
 			},
 			// 控制title 颜色
-			colorController(val){
-				if(val.toString() == this.RackCode){
+			colorController(val) {
+				if (val.toString() == this.RackCode) {
 					return 'item'
 				}
 			},
 			// 控制title 显示
-			title(key,rack) {
+			title(key, rack) {
 				let no = key + 1
 				return '衣架' + no + ': ' + rack.toString()
 			},
 			// 控制折叠框 是否打开
-			isOpen(rack){
-				if(rack.toString() == this.RackCode){
+			isOpen(rack) {
+				if (rack.toString() == this.RackCode) {
 					return true
 				}
 			}

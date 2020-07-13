@@ -4,7 +4,8 @@
 			<view class="flex column margin">
 				<view class="flex row space">
 					<view>衣架号:{{RackCode}}</view>
-					<view v-if="IsFinished" class="red">该衣架已经完成加工</view>
+					<view v-if="IsFinished" class="red debug">已完成</view>
+					<view v-if="InStation" class="red debug">站内</view>
 				</view>
 				<view v-if="Mo">
 					<view>生产单:{{Mo}}</view>
@@ -75,6 +76,7 @@
 				SizeName: '', //尺码
 				Mo: '', // 生产单
 				IsFinished: false, //已经完成
+				InStation: false,
 				SeqName: '', //工序
 				SeqCode: '', //工序号
 				CurrentWorkLine: '', //线
@@ -110,6 +112,7 @@
 				this.SizeName = ''
 				this.Mo = ''
 				this.IsFinished = false
+				this.InStation = false
 				this.SeqName = ''
 				this.SeqCode = ''
 				this.CurrentWorkLine = ''
@@ -135,7 +138,7 @@
 				return type == '进站' ? 'light' : 'flex row'
 			},
 			async direct() {
-				const [err, res] = await QueryProcessingHistoryByRackCode(8642614)
+				const [err, res] = await QueryProcessingHistoryByRackCode(8654116)
 				if (err) {
 					console.log(err)
 					uni.showModal({
@@ -155,6 +158,7 @@
 					this.CurrentStationID = target.CurrentStationID
 					this.IsFinished = target.IsFinished
 					this.RackCode = target.RackCode
+					this.InStation = target.InStation
 					target.RackProcessingHistory.forEach(e => {
 						e.ProcessRecords.forEach(item => {
 							// 站号处理
@@ -167,6 +171,7 @@
 					})
 					this.tableData = target.RackProcessingHistory
 					this.BarCodes = target.BarCodes
+					console.log(target);
 				}
 			},
 			// 控制title 颜色
