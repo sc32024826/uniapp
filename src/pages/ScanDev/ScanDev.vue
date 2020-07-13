@@ -32,41 +32,27 @@
 			</view>
 			<view class="data">
 				<uni-collapse>
-					<uni-collapse-item v-for="(item,key) in tableData" :key="key" title="衣架号" open="true" >
-						<view class="flex row">
-								<view class="cell station">{{item.StationID}}</view>
-							<view class="flex column name">
-								<view class="cell">{{item.EmployeeID}}</view>
-								<view class="cell">{{item.Name}}</view>
+					<block v-for="(item,key) in tableData" :key="key">
+						<uni-collapse-item :open="true" :title="item.RackCode.toString()" :class="colorController(item.RackCode)">
+							<view v-for="(v,k) in item.ProcessRecords" :key="k" >
+								<view :class="fn(v.RecordType)">
+									<view class="cell station">{{v.StationID}}</view>
+									<view class="flex column name">
+										<view class="cell">{{v.EmployeeID}}</view>
+										<view class="cell">{{v.Name}}</view>
+									</view>
+									<view class="cell time">{{v.Timestamp}}</view>
+									<view class="cell type">{{v.RecordType}}</view>
+									<view class="flex column seq">
+										<view class="cell">{{v.SeqCode}}</view>
+										<view class="cell">{{v.SeqName}}</view>
+									</view>
+									<view class="cell count">{{v.Qty}}</view>
+								</view>
 							</view>
-							<view class="cell time">{{item.Timestamp}}</view>
-							<view class="cell type">{{item.RecordType}}</view>
-							<view class="flex column seq">
-								<view class="cell">{{item.SeqCode}}</view>
-								<view class="cell">{{item.SeqName}}</view>
-							</view>
-							<view class="cell count">{{item.Qty}}</view>
-						</view>
-					</uni-collapse-item>
+						</uni-collapse-item>
+					</block>
 				</uni-collapse>
-				<!-- 	<view v-for="(item,key) in tableData" :key="key" :class="fn(item.RecordType)">
-					<view class="flex row">
-						<view class="flex column station"> 
-						<view class="cell station">{{item.StationID}}</view>
-					 </view> 
-						<view class="flex column name">
-							<view class="cell">{{item.EmployeeID}}</view>
-							<view class="cell">{{item.Name}}</view>
-						</view>
-						<view class="cell time">{{item.Timestamp}}</view>
-						<view class="cell type">{{item.RecordType}}</view>
-						<view class="flex column seq">
-							<view class="cell">{{item.SeqCode}}</view>
-							<view class="cell">{{item.SeqName}}</view>
-						</view>
-						<view class="cell count">{{item.Qty}}</view>
-					</view>
-				</view> -->
 			</view>
 		</view>
 		<button class="margin" type="primary" @click="direct">手动模式</button>
@@ -78,7 +64,7 @@
 	import { dateFormat, ISO8601 } from "../ProcessRecord/dateFormat.js"
 	import { QueryProcessingHistoryByRackCode } from '@/api/api.js'
 	import { uniCollapse, uniCollapseItem } from '@dcloudio/uni-ui'
-	
+
 	export default {
 		components: { uniCollapse, uniCollapseItem },
 		data() {
@@ -96,11 +82,9 @@
 				RackCode: '', //衣架号
 				Qty: '',
 				haveScaned: true,
-				BarCodes: []
+				BarCodes: [],
+				log: ''
 			}
-		},
-		onLoad: function() {
-			// this.scanCode()
 		},
 		methods: {
 			scanCode() {
@@ -134,41 +118,7 @@
 				this.Qty = ''
 				this.haveScaned = false
 				this.BarCodes = []
-
 				this.scanCode()
-			},
-			async _requestAwait(Rackcode) {
-				const [err, res] = await QueryProcessingHistoryByRackCode(Rackcode)
-				if (err) {
-					console.log(err)
-					uni.showModal({
-						content: err.errMsg,
-						showCancel: false
-					});
-				} else {
-					let target = res.data.response
-					this.Qty = target.Qty
-					this.Mo = target.Mo
-					this.Color = target.Color
-					this.StyleID = target.StyleID
-					this.SizeName = target.SizeName
-					this.SeqName = target.SeqName
-					this.SeqCode = target.SeqCode
-					this.CurrentWorkLine = target.CurrentWorkLine
-					this.CurrentStationID = target.CurrentStationID
-					this.IsFinished = target.IsFinished
-					this.RackCode = target.RackCode
-					target.RackProcessingHistory.forEach(e => {
-						// 站号处理
-						e.StationID = e.LineID + '-' + e.StationID
-						// 类型处理
-						e.RecordType = e.RecordType == 3 ? '出站' : '进站'
-						let temp = new Date(ISO8601(e.Timestamp))
-						e.Timestamp = dateFormat("YYYY-mm-dd HH:MM:SS", temp)
-					})
-					this.tableData = target.RackProcessingHistory
-					this.BarCodes = target.BarCodes
-				}
 			},
 			// 显示条码列表
 			showList() {
@@ -182,10 +132,10 @@
 			},
 			// 根据type 返回css样式名
 			fn(type) {
-				return type == '进站' ? 'light' : ''
+				return type == '进站' ? 'light' : 'flex row'
 			},
 			async direct() {
-				const [err, res] = await QueryProcessingHistoryByRackCode(8639003)
+				const [err, res] = await QueryProcessingHistoryByRackCode(8644484)
 				if (err) {
 					console.log(err)
 					uni.showModal({
@@ -206,21 +156,29 @@
 					this.IsFinished = target.IsFinished
 					this.RackCode = target.RackCode
 					target.RackProcessingHistory.forEach(e => {
-						// 站号处理
-						e.StationID = e.LineID + '-' + e.StationID
-						// 类型处理
-						e.RecordType = e.RecordType == 3 ? '出站' : '进站'
-						let temp = new Date(ISO8601(e.Timestamp))
-						e.Timestamp = dateFormat("YYYY-mm-dd HH:MM:SS", temp)
+						e.ProcessRecords.forEach(item => {
+							// 站号处理
+							item.StationID = item.LineID + '-' + item.StationID
+							// 类型处理
+							item.RecordType = item.RecordType == 3 ? '出站' : '进站'
+							let temp = new Date(ISO8601(item.Timestamp))
+							item.Timestamp = dateFormat("YYYY-mm-dd HH:MM:SS", temp)
+						})
 					})
 					this.tableData = target.RackProcessingHistory
 					this.BarCodes = target.BarCodes
+				}
+			},
+			// 控制title 颜色
+			colorController(val){
+				if(val.toString() == this.RackCode){
+					return 'item'
 				}
 			}
 		}
 	}
 </script>
 
-<style>
+<style lang="less" scoped>
 	@import url('../ProcessRecord/style.less');
 </style>

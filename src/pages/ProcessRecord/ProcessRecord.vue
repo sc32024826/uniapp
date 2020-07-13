@@ -31,22 +31,28 @@
 				<view class="cell count" @click="showList">数量</view>
 			</view>
 			<view class="data">
-				<view v-for="(item,key) in tableData" :key="key" :class="fn(item.RecordType)">
-					<view class="flex row">
-						<view class="cell station">{{item.StationID}}</view>
-						<view class="flex column name">
-							<view class="cell">{{item.EmployeeID}}</view>
-							<view class="cell">{{item.Name}}</view>
-						</view>
-						<view class="cell time">{{item.Timestamp}}</view>
-						<view class="cell type">{{item.RecordType}}</view>
-						<view class="flex column seq">
-							<view class="cell">{{item.SeqCode}}</view>
-							<view class="cell">{{item.SeqName}}</view>
-						</view>
-						<view class="cell count">{{item.Qty}}</view>
-					</view>
-				</view>
+				<uni-collapse>
+					<block v-for="(item,key) in tableData" :key="key">
+						<uni-collapse-item :open="true" :title="item.RackCode.toString()" :class="colorController(item.RackCode)">
+							<view v-for="(v,k) in item.ProcessRecords" :key="k">
+								<view :class="fn(v.RecordType)">
+									<view class="cell station">{{v.StationID}}</view>
+									<view class="flex column name">
+										<view class="cell">{{v.EmployeeID}}</view>
+										<view class="cell">{{v.Name}}</view>
+									</view>
+									<view class="cell time">{{v.Timestamp}}</view>
+									<view class="cell type">{{v.RecordType}}</view>
+									<view class="flex column seq">
+										<view class="cell">{{v.SeqCode}}</view>
+										<view class="cell">{{v.SeqName}}</view>
+									</view>
+									<view class="cell count">{{v.Qty}}</view>
+								</view>
+							</view>
+						</uni-collapse-item>
+					</block>
+				</uni-collapse>
 			</view>
 		</view>
 	</view>
@@ -56,8 +62,10 @@
 	import * as dd from "dingtalk-jsapi"
 	import { dateFormat, ISO8601 } from "./dateFormat.js"
 	import { QueryProcessingHistoryByRackCode } from '@/api/api.js'
-	
+	import { uniCollapse, uniCollapseItem } from '@dcloudio/uni-ui'
+
 	export default {
+		components: { uniCollapse, uniCollapseItem },
 		data() {
 			return {
 				tableData: [],
@@ -111,7 +119,7 @@
 				this.Qty = ''
 				this.haveScaned = false
 				this.BarCodes = []
-				
+
 				this.scanCode()
 			},
 			async _requestAwait(Rackcode) {
@@ -136,12 +144,14 @@
 					this.IsFinished = target.IsFinished
 					this.RackCode = target.RackCode
 					target.RackProcessingHistory.forEach(e => {
-						// 站号处理
-						e.StationID = e.LineID + '-' + e.StationID
-						// 类型处理
-						e.RecordType = e.RecordType == 3 ? '出站' : '进站'
-						let temp = new Date(ISO8601(e.Timestamp))
-						e.Timestamp = dateFormat("YYYY-mm-dd HH:MM:SS", temp)
+						e.ProcessRecords.forEach(item => {
+							// 站号处理
+							item.StationID = item.LineID + '-' + item.StationID
+							// 类型处理
+							item.RecordType = item.RecordType == 3 ? '出站' : '进站'
+							let temp = new Date(ISO8601(item.Timestamp))
+							item.Timestamp = dateFormat("YYYY-mm-dd HH:MM:SS", temp)
+						})
 					})
 					this.tableData = target.RackProcessingHistory
 					this.BarCodes = target.BarCodes
@@ -159,7 +169,13 @@
 			},
 			// 根据type 返回css样式名
 			fn(type) {
-				return type == '进站' ? 'light' : ''
+				return type == '进站' ? 'light' : 'flex row'
+			},
+			// 控制title 颜色
+			colorController(val){
+				if(val.toString() == this.RackCode){
+					return 'item'
+				}
 			}
 		}
 	}

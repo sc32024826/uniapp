@@ -1,15 +1,13 @@
 export const GetLoginfoByCode = param => {
 	return uni.request({
-		url: "/api2/Login/GetLoginfoByCode",
+		url: "/api/Login/GetLoginfoByCode",
 		data: param,
-		header: {
-			"Content-Type": "application/json; charset=utf-8"
-		}
+		method:'GET'
 	})
 }
 export const QueryProcessingHistoryByRackCode = param => {
 	return uni.request({
-		url: "/api/MESInterfaces/QueryProcessingHistoryByRackCode",
+		url: "/api2/MESInterfaces/QueryProcessingHistoryByRackCode",
 		data: {
 			"Rackcode": param
 		},

@@ -1,12 +1,15 @@
 module.exports = {
 	"devServer": {
 		"proxy": {
-			'/api': {
+			'/api2': {
 				"target": 'http://test-api.servers.mchains.cn',
 				"changeOrigin": true,
-				"ws": true
+				"ws": true,
+				"pathRewrite": {
+					'^/api2': '/api'
+				}
 			},
-			'/api2': {
+			'/api/': {
 				"target": 'http://dingtalk.servers.mchains.cn',
 				"changeOrigin": true,
 				"ws": true

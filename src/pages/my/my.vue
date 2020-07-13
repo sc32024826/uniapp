@@ -3,7 +3,7 @@
 		<view class="head flex row">
 			<image :src="avatar" class="avatar"></image>
 			<view class="flex column name">
-				<text>{{username}}</text>
+				<text>{{userName}}</text>
 				<text>{{userID}}</text>
 			</view>
 		</view>
@@ -14,18 +14,25 @@
 </template>
 
 <script>
+	import { mapState } from 'vuex'
 	export default {
 		data() {
 			return {
 				avatar: '../../static/img/user.png',
-				username: '员工姓名',
+				// username: '员工姓名',
 				userID: '员工工号',
 				QRCode: ''
 			}
 		},
 		methods: {
 
+		},
+		computed: {
+			...mapState([
+				'userName'
+			])
 		}
+
 	}
 </script>
 
@@ -71,10 +78,12 @@
 		width: 50%;
 		text-align: center;
 	}
-	.body{
+
+	.body {
 		display: flex;
 		justify-content: center;
 	}
+
 	.QRCode {
 		width: 200px;
 		height: 200px;

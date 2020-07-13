@@ -1,54 +1,47 @@
 <template>
 	<div id="Container">
 		<view>等待用户数据返回...</view>
-		<view class="">
-			{{log}}
-		</view>
 	</div>
 </template>
 <script>
 	import * as dd from "dingtalk-jsapi"
 	import store from '../../store/index.js'
 	import { GetLoginfoByCode } from '@/api/api.js'
-
+	import { mapMutations } from 'vuex'
 	export default {
 		data() {
 			return {
-				log:''
+				log: ''
 			}
 		},
 		methods: {
 			async _requestAwait(data) {
-				this.log = data
-				const { err, res } = await GetLoginfoByCode(data)
+				const [err, res] = await GetLoginfoByCode(data)
 
 				if (err) {
+					console.log(err);
 					uni.showModal({
 						content: err.errMsg,
 						showCancel: false
 					});
 				} else {
-					// console.log(res.data)
-					// let user = res.data.response.Userid
-					// // this.log = user
+					let user = res.data.response.Userid
 					// // 成功之后 需要再vuex中 存储 用户名
-					// store.commit('login', {
-					// 	userName: user
-					// })
+					this.login(user)
 					// 跳转到 功能选择界面
 					uni.switchTab({
 						url: '../main/main'
 					})
 				}
-			}
+			},
+			...mapMutations(['login'])
 
 		},
 		onShow: function() {
 			let that = this
 			dd.ready(function() {
 				dd.runtime.permission.requestAuthCode({
-					corpId:"ding18de7d49f5d6bdf1acaaa37764f94726",  // 山英001
-					// corpId: "ding04dfeb3807df4a9d35c2f4657eb6378f",
+					corpId: "ding04dfeb3807df4a9d35c2f4657eb6378f",
 					onSuccess: function(result) {
 						// that.code = result.code
 						that._requestAwait(result)
