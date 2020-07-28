@@ -3,15 +3,20 @@
 		<view class="flex column top" v-if="haveScaned">
 			<view class="flex column margin">
 				<view class="flex row space">
-					<view>衣架号:{{RackCode}}</view>
-					<view v-if="IsFinished" class="red debug">已完成</view>
-					<view v-if="InStation" class="red debug">站内</view>
+					<view @click="finishRack(RackCode)">衣架号:{{RackCode}}
+						<uni-icons type="info" size="50" v-if="RackCode"></uni-icons>
+					</view>
+					<view v-if="Status == 3" class="red debug">已完成</view>
+					<view v-if="Status == 4" class="red debug">已完成4</view>
+					<view v-if="Status == 2" class="red debug">站内</view>
 				</view>
 				<view v-if="Mo">
 					<view>生产单:{{Mo}}</view>
 				</view>
 				<view v-if="Mo">款色码:{{StyleID}} - {{Color}} - {{SizeName}}</view>
-				<view v-if="Mo" @click="showList">数量:{{Qty}}(...)</view>
+				<view v-if="Mo" @click="showList">数量:{{Qty}}
+					<uni-icons type="info" size="50"></uni-icons>
+				</view>
 				<view class="flex row" v-if="Mo">
 					<view class="currentSeq">当前工序:{{SeqCode}}-{{SeqName}}</view>
 					<view class="currentCustation">当前站:{{CurrentWorkLine}}-{{CurrentStationID}}</view>
@@ -63,7 +68,7 @@
 <script>
 	import * as dd from "dingtalk-jsapi"
 	import { dateFormat, ISO8601 } from "../ProcessRecord/dateFormat.js"
-	import { QueryProcessingHistoryByRackCode } from '@/api/api.js'
+	import { QueryProcessingHistoryByRackCode, doneRack } from '@/api/api.js'
 	import { uniCollapse, uniCollapseItem } from '@dcloudio/uni-ui'
 
 	export default {
@@ -75,8 +80,7 @@
 				StyleID: '', //款号
 				SizeName: '', //尺码
 				Mo: '', // 生产单
-				IsFinished: false, //已经完成
-				InStation: false,
+				Status: -1,
 				SeqName: '', //工序
 				SeqCode: '', //工序号
 				CurrentWorkLine: '', //线
@@ -111,8 +115,7 @@
 				this.StyleID = ''
 				this.SizeName = ''
 				this.Mo = ''
-				this.IsFinished = false
-				this.InStation = false
+				this.Status = -1
 				this.SeqName = ''
 				this.SeqCode = ''
 				this.CurrentWorkLine = ''
@@ -138,7 +141,7 @@
 				return type == '进站' ? 'light' : 'flex row'
 			},
 			async direct() {
-				const [err, res] = await QueryProcessingHistoryByRackCode(8654116)
+				const [err, res] = await QueryProcessingHistoryByRackCode(8651406)
 				if (err) {
 					console.log(err)
 					uni.showModal({
@@ -156,9 +159,8 @@
 					this.SeqCode = target.SeqCode
 					this.CurrentWorkLine = target.CurrentWorkLine
 					this.CurrentStationID = target.CurrentStationID
-					this.IsFinished = target.IsFinished
+					this.Status = target.Status
 					this.RackCode = target.RackCode
-					this.InStation = target.InStation
 					target.RackProcessingHistory.forEach(e => {
 						e.ProcessRecords.forEach(item => {
 							// 站号处理
@@ -181,13 +183,46 @@
 				}
 			},
 			// 控制title 显示
-			title(key,rack) {
+			title(key, rack) {
 				let no = key + 1
 				return '衣架' + no + ': ' + rack.toString()
 			},
-			isOpen(rack){
-				if(rack.toString() == this.RackCode){
+			isOpen(rack) {
+				if (rack.toString() == this.RackCode) {
 					return true
+				}
+			},
+			// 设置衣架完成
+			finishRack(RackCode) {
+				if (RackCode) {
+					uni.showModal({
+						title: '警告',
+						content: '确认设置衣架号 ' + RackCode + ' 为已完成',
+						confirmColor: 'RED',
+						success: (res) => {
+							if (res.confirm) {
+								this.confirmFinish(RackCode)
+							}
+						}
+					})
+				}
+			},
+			async confirmFinish(RackCode) {
+				const [err, res] = await doneRack(RackCode)
+				if (err) {
+					uni.showModal({
+						content: err
+					})
+				} else {
+					this.refreshStatus(RackCode)
+				}
+			},
+			// 刷新获取status
+			async refreshStatus(RackCode) {
+				const [err, res] = await QueryProcessingHistoryByRackCode(RackCode)
+				if (!err) {
+					let target = res.data.response
+					this.Status = target.Status
 				}
 			}
 		}

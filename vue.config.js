@@ -1,18 +1,30 @@
 module.exports = {
 	"devServer": {
 		"proxy": {
-			'/api2': {
+			'/services': {
 				"target": 'http://test-api.servers.mchains.cn',
 				"changeOrigin": true,
 				"ws": true,
-				"pathRewrite": {
-					'^/api2': '/api'
+				"pathRewrite":{
+					'^/services':''
 				}
 			},
-			'/api/': {
+			'/dingtalk': {
 				"target": 'http://dingtalk.servers.mchains.cn',
 				"changeOrigin": true,
-				"ws": true
+				"ws": true,
+				"pathRewrite":{
+					'^/dingtalk':''
+				}
+			},
+			'/sunrise': {
+				"target": 'http://test-sunrise.servers.mchains.cn',
+				// "target": 'http://172.18.20.145:8081',
+				"changeOrigin": true,
+				"ws": true,
+				"pathRewrite":{
+					'^/sunrise':''
+				}
 			}
 		}
 	}

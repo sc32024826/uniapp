@@ -1,13 +1,13 @@
 export const GetLoginfoByCode = param => {
 	return uni.request({
-		url: "/api/Login/GetLoginfoByCode",
+		url: "/dingtalk/api/Login/GetLoginfoByCode",
 		data: param,
-		method:'GET'
+		method: 'GET'
 	})
 }
 export const QueryProcessingHistoryByRackCode = param => {
 	return uni.request({
-		url: "/api2/MESInterfaces/QueryProcessingHistoryByRackCode",
+		url: "/services/api/MESInterfaces/QueryProcessingHistoryByRackCode",
 		data: {
 			"Rackcode": param
 		},
@@ -30,4 +30,18 @@ export const tempfunction = param => {
 		]
 
 	}
+}
+/**
+ * 设置衣架 状态
+ * param int
+ */
+export const doneRack = param => {
+	return uni.request({
+		url: '/sunrise/api/MESInterfaces/SetRackToFinished',
+		data: JSON.stringify(param),
+		method: 'PUT',
+		header: {
+			"Content-Type": "application/json; charset=utf-8"
+		}
+	})
 }
