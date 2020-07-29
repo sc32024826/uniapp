@@ -1,6 +1,11 @@
 <template>
 	<view id="container">
 		<view id="toolbar" class="flex center">
+			<view class="debug dropdown">
+				<picker @change="bindPickerChange" :value="index" :range="array">
+					<view>选择工序: {{array[index]}}</view>
+				</picker>
+			</view>
 			<checkbox-group @change="requestType">
 				<label>
 					<checkbox value="color" />区分颜色
@@ -24,29 +29,35 @@
 					<view class="flex row test vertical-center ">
 						<checkbox :value="item.id" :checked="item.Check" />
 						<view class="mo">
-							<view>{{item.content}}</view>
+							<view>单号: {{item.MO}}</view>
+							<view>款号: {{item.StyleNo}}</view>
+							<view>颜色: {{item.ColorName}}</view>
+							<view>尺码: {{item.SizeName}}</view>
 						</view>
-						<view class="count">{{item.Count}}</view>
+						<view class="count">{{item.Qty}}</view>
 						<input placeholder="0" type="number" adjust-position :disabled="!item.Check"></input>
 					</view>
 				</view>
 			</checkbox-group>
 		</view>
 		<view class="flex row bottom">
-			<button type="primary" size="mini" @click="offline">下线选中的衣服</button>
-			<button type="primary" size="mini" @click="offlineByUser">按指定数量下线</button>
+			<!-- <button type="primary" size="mini" @click="offline">下线选中的衣服</button> -->
+			<!-- <button type="primary" size="mini" @click="offlineByUser">按指定数量下线</button> -->
 		</view>
 	</view>
 </template>
 
 <script>
-	import { tempfunction } from '@/api/api.js'
-
+	import { RackOffline, getSeqNameList } from '@/api/api.js'
+	import { SelectAll } from './classify.js'
 	export default {
 		data() {
 			return {
 				items: [],
-				choose: [] // 选中的衣服衣架
+				choose: [], // 选中的衣服衣架
+				array: [],
+				index: -1,
+				SeqList: []
 			}
 		},
 		methods: {
@@ -95,14 +106,45 @@
 			async getDate(param) {
 				const { res, err, data } = await tempfunction(param)
 				return data
+			},
+			async bindPickerChange(e) {
+				let SeqCode = this.SeqList[e.target.value].value
+				const [err, res] = await RackOffline(SeqCode)
+				if (err) {
+					// console.log(err);
+					uni.showModal({
+						content: err
+					})
+				} else {
+
+					
+					let re = SelectAll(res.data.response)
+					this.items = re
+					console.log(re);
+				}
 			}
 		},
-		async onPullDownRefresh() {
-			await this.getDate()
-			uni.stopPullDownRefresh();
+		// 下拉刷新
+		// async onPullDownRefresh() {
+		// 	await this.getDate()
+		// 	uni.stopPullDownRefresh();
+		// },
+		watch: {
+
 		},
-		watch:{
-			
+		async created() {
+			const [err, res] = await getSeqNameList()
+			if (err) {
+				console.log(err);
+			} else {
+				console.log(res.data.response);
+				let obj = res.data.response
+				this.SeqList = obj
+				for (let { label, value } of obj) {
+					this.array.push(label)
+				}
+				console.log(this.array);
+			}
 		}
 	}
 </script>
@@ -123,7 +165,7 @@
 			width: 400rpx;
 			// overflow: hidden;
 			display: flex;
-			flex-direction: row;
+			flex-direction: column;
 			justify-content: center;
 			// text-overflow: ellipsis;
 		}
@@ -190,5 +232,13 @@
 		bottom: 0;
 		width: 100%;
 		margin-bottom: 50rpx;
+	}
+
+	.debug {
+		border: solid 1rpx red;
+	}
+
+	.dropdown {
+		margin-right: 10rpx;
 	}
 </style>

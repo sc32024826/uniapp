@@ -16,20 +16,16 @@ export const QueryProcessingHistoryByRackCode = param => {
 		}
 	})
 }
-
-export const tempfunction = param => {
-	// return uni.request({
-	// 	url: '',
-	// 	data: {}
-	// })
-	return {
-		data: [
-			{ id: '1', content: '1-123-32423', Count: '1', Check: false },
-			{ id: '2', content: '123123-dffgdrfs-sdfsd', Count: '50', Check: false },
-			{ id: '3', content: '121211123123-dfgdsfs-dsdfsd', Count: '50000', Check: false }
-		]
-
-	}
+/**
+ * 在线衣架下线
+ */
+export const RackOffline = param => {
+	return uni.request({
+		url: '/sunrise/api/MESInterfaces/GetQtyOnlineMODCS',
+		data: {
+			"SeqCode": param
+		}
+	})
 }
 /**
  * 设置衣架 状态
@@ -43,5 +39,11 @@ export const doneRack = param => {
 		header: {
 			"Content-Type": "application/json; charset=utf-8"
 		}
+	})
+}
+
+export const getSeqNameList = () => {
+	return uni.request({
+		url: '/sunrise/api/BaseInfo/GetBaseSeqCode'
 	})
 }
