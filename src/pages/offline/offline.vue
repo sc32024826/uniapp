@@ -17,8 +17,8 @@
 				</checkbox-group>
 			</view>
 			<view id="title" class="flex row vertical-center">
-				<checkbox-group @change="selectAll">
-					<checkbox value="chooseAll"></checkbox>
+				<checkbox-group @change="selectAll" >
+					<checkbox value="1" ref="selectAll"></checkbox>
 				</checkbox-group>
 				<view class="white" style="width: 400rpx;">生产单-款号-颜色-尺码</view>
 				<view class="white" style="width: 80rpx;">线上</view>
@@ -31,7 +31,7 @@
 				<view v-if="!show">暂无数据</view>
 				<view class="stripe" v-for="(item,i) in tableData" :key="i">
 					<view class="flex row test vertical-center ">
-						<checkbox :value="item.id" :checked="item.Check" />
+						<checkbox :value="item.id" :checked="item.checked" />
 						<view class="mo">
 							<view>单号: {{item.MO}}</view>
 							<view>款号: {{item.StyleNo}}</view>
@@ -39,7 +39,7 @@
 							<view v-if="DoSize">尺码: {{item.SizeName}}</view>
 						</view>
 						<view class="count">{{item.Qty}}</view>
-						<input placeholder="0" type="number" adjust-position :disabled="!item.Check"></input>
+						<input placeholder="0" type="number" adjust-position :disabled="!item.checked"></input>
 					</view>
 				</view>
 			</checkbox-group>
@@ -68,22 +68,17 @@
 			}
 		},
 		methods: {
-			// 全选 全不选
+			// 全选 /全不选
 			selectAll(e) {
-				// 全选
-				if (this.tableData.length === 0) return
-				if (e.detail.value == 'chooseAll') {
-					let choose = []
-					this.tableData.forEach(element => {
-						element = Object.assign(element, { Check: true })
-						choose.push(element.id)
+				// 首先获取 选项列表 即 tabledata
+				if (e.target.value.length > 0) {
+					this.tableData.map(v => {
+						v.checked = true
 					})
-					this.choose = choose
 				} else {
-					this.tableData.forEach(element => {
-						element = Object.assign(element, { Check: false })
+					this.tableData.map(v => {
+						v.checked = false
 					})
-					this.choose = []
 				}
 			},
 			// 区分尺码 区分颜色
@@ -95,24 +90,32 @@
 			},
 			// 勾选列表行
 			checkboxChange(e) {
-				console.log('这里');
-				let chooseList = e.detail.value
-				this.choose = chooseList
-				if (chooseList.length == 0) return
-				this.tableData.forEach(element => {
-					if (chooseList.indexOf(element.id) > -1) {
-						element.Check = true
+				console.log(e.target.value) // 这是一个数组
+				// console.log(1 in [1,2,3])
+				this.tableData.map((v, k) => {
+
+					if (e.target.value.indexOf(k.toString()) > -1) {
+						console.log(k + '在数组' + e.target.value + '中')
+						v.checked = true
 					} else {
-						element.Check = false
+						console.log(k + '不在数组' + e.target.value + '中')
+						v.checked = false
 					}
 				})
+				this.isAllSelect()
 			},
 			offline() {
-				console.log('下线id为', this.choose);
-				uni.showModal({
-					content: '下线id为' + this.choose,
-					showCancel: false
+				var ids = []
+				this.tableData.map(v => {
+					if (v.checked) {
+						ids = ids.concat(v.list)
+					}
 				})
+				console.log(ids);
+				// uni.showModal({
+				// 	content: '下线id为' + this.choose,
+				// 	showCancel: false
+				// })
 			},
 			offlineByUser() {
 
@@ -132,10 +135,10 @@
 						this.tableData = SelectAll(this.defalutData)
 					}
 				} else {
-					uni.showModal({
-						content: '请求错误,请选则工序!',
-						showCancel: false
-					})
+					// uni.showModal({
+					// 	content: '请求错误,请选则工序!',
+					// 	showCancel: false
+					// })
 				}
 			},
 			async bindPickerChange(e) {
@@ -160,7 +163,22 @@
 						this.tableData = SelectAll(res.data.response)
 					}
 				}
-
+			},
+			// 每次勾选操作之后 都需要判断一次 是否是都选择了,若是 则勾选 全选 若否 不勾选全选
+			isAllSelect() {
+				// 总条目数
+				let length = this.tableData.length
+				// 勾选的数量
+				var count = 0
+				this.tableData.map(v => {
+					v.checked == true ? count++ : count
+				})
+				
+				if (count == length) {
+					this.$refs.selectAll.checked = true
+				}else{
+					this.$refs.selectAll.checked = false
+				}
 			}
 		},
 		// 下拉刷新
@@ -176,7 +194,6 @@
 					showCancel: false
 				})
 			} else {
-				console.log(res.data.response);
 				let obj = res.data.response
 				this.SeqList = obj
 				for (let { label, value } of obj) {

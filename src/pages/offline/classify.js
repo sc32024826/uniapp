@@ -14,14 +14,17 @@ export const SelectByColor = data => {
 	var sum = 0
 	var ele = {}
 	var res = []
+	var guids = []
 	for (var i = 0; i < title.length; i++) {
 		sum = 0
+		guids = []
 		for (var j = 0; j < data.length; j++) {
 			if (title[i].MO == data[j].MO && title[i].ColorName == data[j].ColorName) {
 				sum += data[j].Qty
+				guids.push(data[j].ZdOnlineGuid)
 			}
 		}
-		ele = Object.assign(title[i], { 'Qty': sum })
+		ele = Object.assign(title[i], { 'id': i.toString(), 'Qty': sum, 'list': guids, 'checked': false })
 		res.push(ele)
 	}
 	console.log(res);
@@ -44,16 +47,17 @@ export const SelectBySize = data => {
 	var sum = 0
 	var ele = {}
 	var res = []
-	console.log(title);
-	console.log(data);
+	var guids = []
 	for (var i = 0; i < title.length; i++) {
 		sum = 0
+		guids = []
 		for (var j = 0; j < data.length; j++) {
 			if (title[i].MO == data[j].MO && title[i].SizeName == data[j].SizeName) {
 				sum += data[j].Qty
+				guids.push(data[j].ZdOnlineGuid)
 			}
 		}
-		ele = Object.assign(title[i], { 'Qty': sum })
+		ele = Object.assign(title[i], { 'id': i.toString(), 'Qty': sum, 'list': guids, 'checked': false })
 		res.push(ele)
 	}
 	console.log(res);
@@ -62,6 +66,11 @@ export const SelectBySize = data => {
 
 // 区分颜色  区分尺码
 export const SelectByColorSize = data => {
+	data.map((v, k) => {
+		v = Object.assign(v, { id: k, checked: false })
+		console.log(v);
+	})
+	console.log(data)
 	return data
 }
 // 不区分颜色和尺码
@@ -78,18 +87,20 @@ export const SelectAll = data => {
 	})
 	var MOs = [...s].map(e => JSON.parse(e))
 	// 不区分颜色  不区分尺码 SUM求和
-	console.log(MOs);
 	var res = []
 	var ele = {}
-	MOs.forEach(v => {
-		var SUM = 0
-		console.log(v);
+	var guids = []
+	var SUM = 0
+	MOs.forEach((v, k) => {
+		SUM = 0
+		guids = []
 		data.forEach(e => {
 			if (e.MO == v.MO) {
+				guids.push(e.ZdOnlineGuid)
 				SUM += e.Qty
 			}
 		})
-		ele = Object.assign(v, { 'Qty': SUM })
+		ele = Object.assign(v, { 'id': k.toString(), 'Qty': SUM, 'list': guids, 'checked': false })
 		res.push(ele)
 	})
 	console.log(res);
