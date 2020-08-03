@@ -1,3 +1,4 @@
+
 // 只区分颜色  不区分尺码
 export const SelectByColor = data => {
 	var MO = new Set()
@@ -60,18 +61,17 @@ export const SelectBySize = data => {
 		ele = Object.assign(title[i], { 'id': i.toString(), 'Qty': sum, 'list': guids, 'checked': false })
 		res.push(ele)
 	}
-	console.log(res);
 	return res
 }
 
 // 区分颜色  区分尺码
 export const SelectByColorSize = data => {
+	var res = []
 	data.map((v, k) => {
-		v = Object.assign(v, { id: k, checked: false })
-		console.log(v);
+		v = Object.assign(v, { 'id': k.toString(), 'list': [v.ZdOnlineGuid], 'checked': false })
+		res.push(v)
 	})
-	console.log(data)
-	return data
+	return res
 }
 // 不区分颜色和尺码
 export const SelectAll = data => {
@@ -103,6 +103,5 @@ export const SelectAll = data => {
 		ele = Object.assign(v, { 'id': k.toString(), 'Qty': SUM, 'list': guids, 'checked': false })
 		res.push(ele)
 	})
-	console.log(res);
 	return res
 }

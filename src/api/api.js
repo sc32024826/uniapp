@@ -47,3 +47,12 @@ export const getSeqNameList = () => {
 		url: '/sunrise/api/BaseInfo/GetBaseSeqCode'
 	})
 }
+
+//根据在加工产品唯一键列表下线指定衣服数量的在线衣架
+export const SetRackOfflineByZdOnlineGuid = param => {
+	return uni.request({
+		url: '/sunrise/api/MESInterfaces/SetRackOfflineByZdOnlineGuid',
+		method: 'POST',
+		data: param
+	})
+}

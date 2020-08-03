@@ -6,7 +6,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
 	state: {
 		hasLogin: false,
-		userName: ""
+		userName: "",
+		tempData:[]
 	},
 	mutations: {
 		login(state, userName) {
@@ -16,6 +17,9 @@ const store = new Vuex.Store({
 		logout(state) {
 			state.userName = "";
 			state.hasLogin = false;
+		},
+		setTempData(state,data){
+			state.tempData = data
 		}
 	}
 })

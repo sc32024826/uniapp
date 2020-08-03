@@ -39,14 +39,22 @@
 							<view v-if="DoSize">尺码: {{item.SizeName}}</view>
 						</view>
 						<view class="count">{{item.Qty}}</view>
-						<input placeholder="0" type="number" adjust-position :disabled="!item.checked" @blur="setUserQty"></input>
+						<!-- <input placeholder="0" type="number" adjust-position :disabled=""></input> -->
+						<view v-show="item.checked">XXX</view>
 					</view>
 				</view>
 			</checkbox-group>
 		</view>
-		<view class="flex row bottom">
-			<button type="primary" size="mini" @click="offline">下线选中的衣服</button>
-			<button type="primary" size="mini" @click="offlineByUser">按指定数量下线</button>
+		<view class="flex column bottom">
+			<view class="PageBar flex row">
+				<a @click="Currentpage -= 1" :disable="Currentpage = 0">上一页</a>
+				{{Currentpage+1}}/{{pages}}
+				<a @click="Currentpage += 1" :disable="Currentpage = pages">下一页</a>
+			</view>
+			<view class="flex row space">
+				<button type="primary" size="mini" @click="offline">下线选中的衣服</button>
+				<button type="primary" size="mini" @click="offlineByUser">按指定数量下线</button>
+			</view>
 		</view>
 	</view>
 </template>
@@ -54,7 +62,6 @@
 <script>
 	import { RackOffline, getSeqNameList } from '@/api/api.js'
 	import { SelectAll, SelectBySize, SelectByColor, SelectByColorSize, SetRackOfflineByZdOnlineGuid } from './classify.js'
-	import { mapState, mapMutations } from 'vuex'
 	export default {
 		data() {
 			return {
@@ -65,21 +72,24 @@
 				SeqList: [],
 				DoColor: true, //区分颜色
 				DoSize: true, //区分尺码
-				source: []
+				defalutData: [],
+				Currentpage: 0,
+				source: [], // 数据源
+				perPage: 6 //每页显示数量
 			}
 		},
 		methods: {
-			...mapMutations(['setTempData']),
 			// 全选 /全不选
 			selectAll(e) {
 
 				// 首先获取 选项列表 即 tabledata
 				if (e.target.value.length > 0) {
-					this.tableData.map(v => {
+					this.source.map(v => {
 						v.checked = true
 					})
+					console.log(this.source)
 				} else {
-					this.tableData.map(v => {
+					this.source.map(v => {
 						v.checked = false
 					})
 				}
@@ -95,7 +105,7 @@
 			checkboxChange(e) {
 
 				var choose = e.target.value || []
-				this.tableData.map((v, k) => {
+				this.source.map((v, k) => {
 					if (choose.indexOf(k.toString()) > -1) {
 						v.checked = true
 					} else {
@@ -103,13 +113,13 @@
 					}
 				})
 				this.isAllSelect()
-				console.log(this.tableData)
+				console.log(this.source);
 			},
 			offline() {
 				var ids = []
 				var qty = 0
 				// var styles = []
-				this.tableData.map(v => {
+				this.source.map(v => {
 					if (v.checked) {
 						ids = ids.concat(v.list)
 						qty += v.Qty
@@ -144,31 +154,26 @@
 			},
 			// 重新刷新表数据 
 			getDate() {
-				let data = this.tempData
-				var result = []
-				if (this.tableData.length > 0) {
+				if (this.defalutData.length > 0) {
 					// this.$refs.selectAll.checked = false
-					if (this.DoColor) {
-						if (this.DoSize) {
-							result = SelectByColorSize(data)
-						} else {
-							result = SelectByColor(data)
-						}
-					} else if (this.DoSize) {
-						result = SelectBySize(data)
-					} else {
-						result = SelectAll(data)
-					}
+					// if (this.DoColor) {
+					// 	if (this.DoSize) {
+					// 		this.tableData = SelectByColorSize(this.defalutData)
+					// 	} else {
+					// 		this.tableData = SelectByColor(this.defalutData)
+					// 	}
+					// } else if (this.DoSize) {
+					// 	this.tableData = SelectBySize(this.defalutData)
+					// } else {
+					// 	this.tableData = SelectAll(this.defalutData)
+					// }
 				} else {
 					uni.showModal({
 						content: '请求错误,请选则工序!',
 						showCancel: false
 					})
 				}
-				
-				this.tableData = result
 			},
-			// 请求原始数据
 			async bindPickerChange(e) {
 				this.index = e.target.value
 				let SeqCode = this.SeqList[e.target.value].value
@@ -182,6 +187,7 @@
 					})
 				} else {
 					let data = res.data.response
+					
 					var result = []
 					if (this.DoColor) {
 						if (this.DoSize) {
@@ -194,19 +200,23 @@
 					} else {
 						result = SelectAll(data)
 					}
-					this.setTempData(data)
 				}
-				// console.log('更新数据源')
-				this.tableData = result
+				this.source = result
+				let start = this.Currentpage * this.perPage
+				let end = this.Currentpage * this.perPage + this.perPage
+
+				console.log('start ' + start, 'end ' + end);
+				this.tableData = result.slice(start, end)
+
 				uni.hideLoading()
 			},
 			// 每次勾选操作之后 都需要判断一次 是否是都选择了,若是 则勾选 全选 若否 不勾选全选
 			isAllSelect() {
 				// 总条目数
-				let length = this.tableData.length
+				let length = this.source.length
 				// 勾选的数量
 				var count = 0
-				this.tableData.map(v => {
+				this.source.map(v => {
 					v.checked == true ? count++ : count
 				})
 
@@ -234,9 +244,6 @@
 				// 		content: res
 				// 	})
 				// }
-			},
-			setUserQty(e){
-				console.log(e);
 			}
 		},
 		// 下拉刷新
@@ -271,10 +278,13 @@
 					return false
 				}
 			},
-			...mapState(['tempData'])
-		},
-		destroyed() {
-			this.setTempData('')
+			totallines() {
+				console.log(this.source.length);
+				return this.source.length
+			},
+			pages() {
+				return Math.ceil(this.totallines / this.perPage)
+			}
 		}
 	}
 </script>
@@ -286,8 +296,8 @@
 		// border: solid 1rpx red;
 
 		#head {
-			position: fixed;
-			top: 0;
+			// position: fixed;
+			// top: 0;
 			width: 100%;
 			background-color: white;
 			z-index: 2;
@@ -299,7 +309,6 @@
 
 		#list {
 			// height: 80%;
-			margin-top: 160rpx;
 		}
 
 		.bottom {
@@ -310,6 +319,10 @@
 			border-top: solid 1rpx grey;
 			padding-top: 15rpx;
 
+			.space {
+				margin-top: 15rpx;
+				justify-content: space-around;
+			}
 		}
 	}
 
