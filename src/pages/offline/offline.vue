@@ -24,8 +24,8 @@
 				<view class="white" style="width: 80rpx;">线上</view>
 				<view class="white" style="width: 100rpx;">下线数</view>
 			</view>
+			<view class="errorMsg" v-if="showError">{{msg}}</view>
 		</view>
-
 		<view id="list" class="uni-list">
 			<checkbox-group @change="checkboxChange">
 				<view v-if="!show">暂无数据</view>
@@ -39,7 +39,8 @@
 							<view v-if="DoSize">尺码: {{item.SizeName}}</view>
 						</view>
 						<view class="count">{{item.Qty}}</view>
-						<input placeholder="0" type="number" adjust-position :disabled="!item.checked" @blur="setUserQty"></input>
+						<input placeholder="0" type="number" adjust-position :disabled="!item.checked" @input="verity($event,item.Qty)"
+						 @blur="setUserQty($event,item.id)"></input>
 					</view>
 				</view>
 			</checkbox-group>
@@ -65,7 +66,9 @@
 				SeqList: [],
 				DoColor: true, //区分颜色
 				DoSize: true, //区分尺码
-				source: []
+				source: [],
+				msg: '显示错误信息',
+				showError: false
 			}
 		},
 		methods: {
@@ -103,7 +106,6 @@
 					}
 				})
 				this.isAllSelect()
-				console.log(this.tableData)
 			},
 			offline() {
 				var ids = []
@@ -140,7 +142,34 @@
 				// })
 			},
 			offlineByUser() {
-
+				var ids = []
+				var qty = 0
+				this.tableData.map(v => {
+					if (v.checked) {
+						ids = ids.concat(v.list)
+						if (v.offline > 0) {
+							qty += v.offline
+						} else {
+							qty += v.Qty
+						}
+					}
+				})
+				if (ids.length == 0) {
+					uni.showModal({
+						content: '您没有选择任何项目',
+						showCancel: false
+					})
+				} else {
+					uni.showModal({
+						title: '确认下线',
+						content: '共计 ' + qty.toString() + ' 件',
+						success: (res) => {
+							if (res.confirm) {
+								this.offlineConfirm(ids, qty)
+							}
+						}
+					})
+				}
 			},
 			// 重新刷新表数据 
 			getDate() {
@@ -165,7 +194,7 @@
 						showCancel: false
 					})
 				}
-				
+
 				this.tableData = result
 			},
 			// 请求原始数据
@@ -178,7 +207,7 @@
 				var [err, res] = await RackOffline(SeqCode)
 				if (err) {
 					uni.showModal({
-						content: err.toString()
+						content: err
 					})
 				} else {
 					let data = res.data.response
@@ -235,8 +264,19 @@
 				// 	})
 				// }
 			},
-			setUserQty(e){
-				console.log(e);
+			// 更新手动下线数量
+			setUserQty(e, id) {
+				// console.log(this.tableData[id]);
+				this.tableData[id] = Object.assign(this.tableData[id], { offline: Number(e.target.value) })
+			},
+			// 数量 输入验证
+			verity(e, v) {
+				if (e.target.value > v) {
+					this.showError = true
+					this.msg = '数量错误!'
+				} else {
+					this.showError = false
+				}
 			}
 		},
 		// 下拉刷新
@@ -295,20 +335,29 @@
 			#toolbar {
 				margin: 5rpx;
 			}
+
+			.errorMsg {
+				background-color: red;
+				color: white;
+				height: 60rpx;
+				font-size: 40rpx;
+			}
 		}
 
 		#list {
 			// height: 80%;
-			margin-top: 160rpx;
+			margin-top: 220rpx;
 		}
 
 		.bottom {
 			position: fixed;
-			bottom: 30rpx;
+			bottom: 0rpx;
 			width: 100%;
 			z-index: 2;
 			border-top: solid 1rpx grey;
 			padding-top: 15rpx;
+			padding-bottom: 30rpx;
+			background-color: white;
 
 		}
 	}

@@ -1,6 +1,5 @@
 <template>
 	<div id="Container">
-		<view>等待用户数据返回...</view>
 	</div>
 </template>
 <script>
@@ -11,13 +10,12 @@
 	export default {
 		data() {
 			return {
-				log: ''
 			}
 		},
 		methods: {
 			async _requestAwait(data) {
 				const [err, res] = await GetLoginfoByCode(data)
-
+				uni.hideLoading()
 				if (err) {
 					console.log(err);
 					uni.showModal({
@@ -25,19 +23,32 @@
 						showCancel: false
 					});
 				} else {
-					let user = res.data.response.Userid
-					// // 成功之后 需要再vuex中 存储 用户名
-					this.login(user)
-					// 跳转到 功能选择界面
-					uni.switchTab({
-						url: '../main/main'
-					})
+					if (res.data.success == true) {
+						let user = res.data.response.Userid
+						// // 成功之后 需要再vuex中 存储 用户名
+						this.login(user)
+						// 跳转到 功能选择界面
+						uni.switchTab({
+							url: '../main/main'
+						})
+					} else {
+						console.log(res);
+						uni.showModal({
+							content: res.data.msg,
+							showCancel: false
+						});
+					}
+
 				}
+
 			},
 			...mapMutations(['login'])
 
 		},
-		onShow: function() {
+		created() {
+			uni.showLoading({
+				title: '正在请求数据!'
+			})
 			let that = this
 			dd.ready(function() {
 				dd.runtime.permission.requestAuthCode({
@@ -52,7 +63,7 @@
 					}
 				})
 			})
-		},
+		}
 	}
 </script>
 
