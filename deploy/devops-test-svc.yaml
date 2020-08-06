@@ -1,0 +1,23 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: test-shanying-uniapp
+  namespace: dev-test
+  labels:
+    app: test-shanying-uniapp
+  annotations:
+    kubesphere.io/alias-name: uniapp test service
+    kubesphere.io/serviceType: statelessservice
+spec:
+  ports:
+    - name: http-80
+      protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: test-shanying-uniapp
+  type: ClusterIP
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
