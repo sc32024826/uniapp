@@ -53,8 +53,8 @@
 </template>
 
 <script>
-	import { RackOffline, getSeqNameList } from '@/api/api.js'
-	import { SelectAll, SelectBySize, SelectByColor, SelectByColorSize, SetRackOfflineByZdOnlineGuid } from './classify.js'
+	import { GetQtyOnlineMODCS, getSeqNameList, SetRackOfflineByZdOnlineGuid } from '@/api/api.js'
+	import { SelectAll, SelectBySize, SelectByColor, SelectByColorSize } from './classify.js'
 	import { mapState, mapMutations } from 'vuex'
 	export default {
 		data() {
@@ -124,10 +124,8 @@
 						showCancel: false
 					})
 				} else {
-					// styles = styles.toString().replace(/,/g, '\n')
 					uni.showModal({
 						title: '确认下线',
-						// content: styles + '\n' + '共计 ' + qty.toString() + ' 件',
 						content: '共计 ' + qty.toString() + ' 件',
 						success: (res) => {
 							if (res.confirm) {
@@ -201,10 +199,14 @@
 			async bindPickerChange(e) {
 				this.index = e.target.value
 				let SeqCode = this.SeqList[e.target.value].value
+				getDataSource(SeqCode)
+			},
+			// 向后台请求数据
+			async getDataSource(SeqCode) {
 				uni.showLoading({
 					title: '正在请求数据!'
 				})
-				var [err, res] = await RackOffline(SeqCode)
+				var [err, res] = await GetQtyOnlineMODCS(SeqCode)
 				if (err) {
 					uni.showModal({
 						content: err
@@ -253,16 +255,15 @@
 					qty: qty
 				}
 				console.log(param)
-				// var [err, res] = await SetRackOfflineByZdOnlineGuid(param)
-				// if (err) {
-				// 	uni.showModal({
-				// 		content: err
-				// 	})
-				// } else {
-				// 	uni.showModal({
-				// 		content: res
-				// 	})
-				// }
+				var [err, res] = await SetRackOfflineByZdOnlineGuid(param)
+				if (err) {
+					uni.showModal({
+						content: err
+					})
+				} else {
+					// 下线成功后 重新获取数据源
+
+				}
 			},
 			// 更新手动下线数量
 			setUserQty(e, id) {

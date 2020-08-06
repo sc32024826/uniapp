@@ -17,9 +17,9 @@ export const QueryProcessingHistoryByRackCode = param => {
 	})
 }
 /**
- * 在线衣架下线
+ * 获取当前在线衣架的款色码数量信息
  */
-export const RackOffline = param => {
+export const GetQtyOnlineMODCS = param => {
 	return uni.request({
 		url: '/sunrise/api/MESInterfaces/GetQtyOnlineMODCS',
 		data: {
@@ -28,7 +28,7 @@ export const RackOffline = param => {
 	})
 }
 /**
- * 设置衣架 状态
+ * 根据衣架号谁当该衣架为已完成
  * param int
  */
 export const doneRack = param => {
@@ -41,7 +41,9 @@ export const doneRack = param => {
 		}
 	})
 }
-
+/**
+ * 获取基础工序代码
+ */
 export const getSeqNameList = () => {
 	return uni.request({
 		url: '/sunrise/api/BaseInfo/GetBaseSeqCode'
