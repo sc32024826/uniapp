@@ -20,7 +20,7 @@
 				<checkbox-group @change="selectAll">
 					<checkbox value="1" ref="selectAll"></checkbox>
 				</checkbox-group>
-				<view class="white" style="width: 400rpx;">生产单-款号-颜色-尺码</view>
+				<view class="white" style="width: 400rpx;">款号-颜色-尺码</view>
 				<view class="white" style="width: 80rpx;">线上</view>
 				<view class="white" style="width: 100rpx;">下线数</view>
 			</view>
@@ -32,11 +32,11 @@
 				<view class="stripe" v-for="(item,i) in tableData" :key="i">
 					<view class="flex row test vertical-center ">
 						<checkbox :value="item.id" :checked="item.checked" />
-						<view class="mo">
-							<view>单号: {{item.MO}}</view>
-							<view>款号: {{item.StyleNo}}</view>
-							<view v-if="DoColor">颜色: {{item.ColorName}}</view>
-							<view v-if="DoSize">尺码: {{item.SizeName}}</view>
+						<view class="flex row mo">
+							<!-- <view>单号: {{item.MO}}</view> -->
+							<view class="st">{{item.StyleNo}}</view>
+							<view v-if="DoColor" class="co">{{item.ColorName}}</view>
+							<view v-if="DoSize" class="si">{{item.SizeName}}</view>
 						</view>
 						<view class="count">{{item.Qty}}</view>
 						<input placeholder="0" type="number" adjust-position :disabled="!item.checked" @input="verity($event,item.Qty)"
@@ -107,52 +107,58 @@
 				})
 				this.isAllSelect()
 			},
+			// 下线选中的衣服
 			offline() {
-				var ids = []
-				var qty = 0
-				// var styles = []
+				var list = []
+				var obj = {}
+				var styles = new Set()
 				this.tableData.map(v => {
+					obj = {}
 					if (v.checked) {
-						ids = ids.concat(v.list)
-						qty += v.Qty
-						// styles.push(v.MO)
+						styles.add(v.MO)
+						obj.zdOnlineGuids = v.list
+						obj.qty = v.Qty
+						obj.SeqCode = this.SeqList[this.index].value
+						list.push(obj)
 					}
 				})
-				if (ids.length == 0) {
+				var products = [...styles].toString().replace(/\,/g,'\n')
+				if (list.length == 0) {
 					uni.showModal({
 						content: '您没有选择任何项目',
 						showCancel: false
 					})
 				} else {
 					uni.showModal({
-						title: '确认下线',
-						content: '共计 ' + qty.toString() + ' 件',
+						title: '生产单确认',
+						// content: '下线勾选的 ' + list.length + ' 项.',
+						content: products,
 						success: (res) => {
 							if (res.confirm) {
-								this.offlineConfirm(ids, qty)
+								this.offlineConfirm(list)
 							}
 						}
 					})
 				}
-				// uni.showModal({
-				// 	content: '下线id为' + this.choose,
-				// 	showCancel: false
-				// })
+
 			},
 			offlineByUser() {
-				var ids = []
-				var qty = 0
+				var list = []
+				var obj = {}
 				this.tableData.map(v => {
+					obj = {}
 					if (v.checked) {
-						ids = ids.concat(v.list)
+						obj.zdOnlineGuids = v.list
+						obj.SeqCode = this.SeqList[this.index].value
 						if (v.offline > 0) {
-							qty += v.offline
+							obj.qty = v.offline
 						} else {
-							qty += v.Qty
+							obj.qty = v.Qty
 						}
+						list.push(obj)
 					}
 				})
-				if (ids.length == 0) {
+				if (list.length == 0) {
 					uni.showModal({
 						content: '您没有选择任何项目',
 						showCancel: false
@@ -160,10 +166,10 @@
 				} else {
 					uni.showModal({
 						title: '确认下线',
-						content: '共计 ' + qty.toString() + ' 件',
+						content: '下线勾选的 ' + list.length + '项.',
 						success: (res) => {
 							if (res.confirm) {
-								this.offlineConfirm(ids, qty)
+								this.offlineConfirm(list)
 							}
 						}
 					})
@@ -198,11 +204,11 @@
 			// 请求原始数据
 			async bindPickerChange(e) {
 				this.index = e.target.value
-				let SeqCode = this.SeqList[e.target.value].value
-				getDataSource(SeqCode)
+				this.getDataSource()
 			},
 			// 向后台请求数据
-			async getDataSource(SeqCode) {
+			async getDataSource() {
+				let SeqCode = this.SeqList[this.index].value
 				uni.showLoading({
 					title: '正在请求数据!'
 				})
@@ -248,22 +254,23 @@
 				}
 			},
 			// 确认下线
-			async offlineConfirm(list, qty) {
-				let param = {
-					zdOnlineGuids: list,
-					seqCode: this.SeqList[this.index].value,
-					qty: qty
-				}
-				console.log(param)
-				var [err, res] = await SetRackOfflineByZdOnlineGuid(param)
+			async offlineConfirm(list) {
+				var [err, res] = await SetRackOfflineByZdOnlineGuid(list)
 				if (err) {
 					uni.showModal({
 						content: err
 					})
 				} else {
 					// 下线成功后 重新获取数据源
-
+					this.getDataSource()
+					console.log('下线成功')
+					console.log(res.data)
+					uni.showToast({
+						title: res.data.msg,
+						duration: 3
+					})
 				}
+
 			},
 			// 更新手动下线数量
 			setUserQty(e, id) {
@@ -282,7 +289,7 @@
 		},
 		// 下拉刷新
 		// async onPullDownRefresh() {
-		// 	await this.getDate()
+		// 	await this.getDataSource()
 		// 	uni.stopPullDownRefresh();
 		// },
 		async created() {
@@ -327,8 +334,8 @@
 		// border: solid 1rpx red;
 
 		#head {
-			position: fixed;
-			top: 0;
+			// position: fixed;
+			// top: 0;
 			width: 100%;
 			background-color: white;
 			z-index: 2;
@@ -346,8 +353,52 @@
 		}
 
 		#list {
-			// height: 80%;
-			margin-top: 220rpx;
+			height: 1100rpx;
+			overflow: scroll;
+
+			.stripe:nth-child(even) {
+				background: #273238;
+				border-radius: 10rpx;
+				color: white;
+
+				.mo {
+					border: solid 1rpx white;
+				}
+
+				.count {
+					width: 80rpx;
+					border: solid 1rpx white;
+				}
+			}
+
+			.stripe:nth-child(odd) {}
+
+			.mo {
+				width: 420rpx;
+				max-width: 420rpx;
+				overflow: hidden;
+				border: solid 1rpx black;
+
+				.st {
+					width: 210rpx;
+					overflow: auto;
+				}
+
+				.co {
+					width: 105rpx;
+					overflow: auto;
+				}
+
+				.si {
+					width: 105rpx;
+					overflow: auto;
+				}
+			}
+
+			.count {
+				width: 80rpx;
+				border: solid 1rpx black;
+			}
 		}
 
 		.bottom {
@@ -371,32 +422,14 @@
 		justify-content: space-around;
 		min-height: 80rpx;
 		margin-bottom: 10rpx;
-
-		view {
-			// border: solid 1rpx red;
-		}
-
-		.mo {
-			width: 400rpx;
-			// overflow: hidden;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			// text-overflow: ellipsis;
-		}
-
-		.count {
-			width: 80rpx;
-		}
+		border: solid 1rpx black;
+		border-radius: 10rpx;
 	}
 
 	input {
 		border: solid 1px grey;
 		width: 100rpx;
 	}
-
-	//
-
 
 	.flex {
 		display: flex;
@@ -427,17 +460,9 @@
 		background-color: #53B4DF;
 		margin-bottom: 20rpx;
 
-		view {
-			// border: solid 1rpx red;
-		}
 	}
 
 	.white {
-		color: white;
-	}
-
-	.stripe:nth-child(even) {
-		background: #273238;
 		color: white;
 	}
 

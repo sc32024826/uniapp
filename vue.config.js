@@ -19,7 +19,7 @@ module.exports = {
 			},
 			'/sunrise': {
 				"target": 'http://test-sunrise.servers.mchains.cn',
-				// "target": 'http://172.18.20.145:8081',
+				// "target": 'http://localhost',
 				"changeOrigin": true,
 				"ws": true,
 				"pathRewrite":{

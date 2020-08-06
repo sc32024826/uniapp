@@ -13,6 +13,11 @@
 		},
 		methods: {
 			
+		},
+		created() {
+			uni.showToast({
+				title:'测试内容'
+			})
 		}
 	}
 </script>
