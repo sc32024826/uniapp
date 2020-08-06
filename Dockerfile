@@ -1,4 +1,4 @@
-FROM node:alpine3.12 AS publish
+FROM node:alpine AS publish
 ARG Version
 WORKDIR /src
 COPY . .
