@@ -24,6 +24,7 @@
 					});
 				} else {
 					if (res.data.success == true) {
+						console.log(res.data)
 						let user = res.data.response.Userid
 						// // 成功之后 需要再vuex中 存储 用户名
 						this.login(user)
@@ -54,7 +55,6 @@
 				dd.runtime.permission.requestAuthCode({
 					corpId: "ding04dfeb3807df4a9d35c2f4657eb6378f",
 					onSuccess: function(result) {
-						// that.code = result.code
 						that._requestAwait(result)
 					},
 					onFail: function(err) {
