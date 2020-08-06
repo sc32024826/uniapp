@@ -46,7 +46,7 @@
 			</checkbox-group>
 		</view>
 		<view class="flex row bottom">
-			<button type="primary" size="mini" @click="offline">下线选中的衣服</button>
+			<button type="primary" size="mini" @click="offlineByUser">下线选中的衣服</button>
 			<button type="primary" size="mini" @click="offlineByUser">按指定数量下线</button>
 		</view>
 	</view>
@@ -75,7 +75,6 @@
 			...mapMutations(['setTempData']),
 			// 全选 /全不选
 			selectAll(e) {
-
 				// 首先获取 选项列表 即 tabledata
 				if (e.target.value.length > 0) {
 					this.tableData.map(v => {
@@ -108,7 +107,7 @@
 				this.isAllSelect()
 			},
 			// 下线选中的衣服
-			offline() {
+			offlineByUser() {
 				var list = []
 				var obj = {}
 				var styles = new Set()
@@ -117,8 +116,12 @@
 					if (v.checked) {
 						styles.add(v.MO)
 						obj.zdOnlineGuids = v.list
-						obj.qty = v.Qty
 						obj.SeqCode = this.SeqList[this.index].value
+						if (v.offline > 0) {
+							obj.qty = v.offline
+						} else {
+							obj.qty = v.Qty
+						}
 						list.push(obj)
 					}
 				})
@@ -131,42 +134,7 @@
 				} else {
 					uni.showModal({
 						title: '生产单确认',
-						// content: '下线勾选的 ' + list.length + ' 项.',
 						content: products,
-						success: (res) => {
-							if (res.confirm) {
-								this.offlineConfirm(list)
-							}
-						}
-					})
-				}
-
-			},
-			offlineByUser() {
-				var list = []
-				var obj = {}
-				this.tableData.map(v => {
-					obj = {}
-					if (v.checked) {
-						obj.zdOnlineGuids = v.list
-						obj.SeqCode = this.SeqList[this.index].value
-						if (v.offline > 0) {
-							obj.qty = v.offline
-						} else {
-							obj.qty = v.Qty
-						}
-						list.push(obj)
-					}
-				})
-				if (list.length == 0) {
-					uni.showModal({
-						content: '您没有选择任何项目',
-						showCancel: false
-					})
-				} else {
-					uni.showModal({
-						title: '确认下线',
-						content: '下线勾选的 ' + list.length + '项.',
 						success: (res) => {
 							if (res.confirm) {
 								this.offlineConfirm(list)
@@ -180,7 +148,6 @@
 				let data = this.tempData
 				var result = []
 				if (this.tableData.length > 0) {
-					// this.$refs.selectAll.checked = false
 					if (this.DoColor) {
 						if (this.DoSize) {
 							result = SelectByColorSize(data)
@@ -198,7 +165,6 @@
 						showCancel: false
 					})
 				}
-
 				this.tableData = result
 			},
 			// 请求原始数据
@@ -270,11 +236,9 @@
 						duration: 3
 					})
 				}
-
 			},
 			// 更新手动下线数量
 			setUserQty(e, id) {
-				// console.log(this.tableData[id]);
 				this.tableData[id] = Object.assign(this.tableData[id], { offline: Number(e.target.value) })
 			},
 			// 数量 输入验证
