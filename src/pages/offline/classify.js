@@ -28,7 +28,6 @@ export const SelectByColor = data => {
 		ele = Object.assign(title[i], { 'id': i.toString(), 'Qty': sum, 'list': guids, 'checked': false })
 		res.push(ele)
 	}
-	console.log(res);
 	return res
 }
 

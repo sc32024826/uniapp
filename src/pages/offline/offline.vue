@@ -89,7 +89,7 @@
 			requestType(e) {
 				let param = e.detail.value
 				param.indexOf('size') > -1 ? this.DoSize = true : this.DoSize = false
-				param.indexOf('color') > -1 ? this.DoColor = true : this.DoColor = false
+				param.indexOf('color') > -1 ? this.DoColor = true : this.DoColor = false,
 				this.getDate()
 			},
 			// 勾选列表行
@@ -146,7 +146,8 @@
 			getDate() {
 				let data = this.tempData
 				var result = []
-				if (this.tableData.length > 0) {
+				if (data.length > 0) {
+					
 					if (this.DoColor) {
 						if (this.DoSize) {
 							result = SelectByColorSize(data)
@@ -164,15 +165,26 @@
 						showCancel: false
 					})
 				}
-				this.tableData = result
+				console.log(result)
+				this.tableData = []
+				uni.showLoading({
+					
+				})
+				setTimeout(()=>{
+					uni.hideLoading()
+					this.tableData = result
+				},500)
+				
 			},
 			// 请求原始数据
 			async bindPickerChange(e) {
 				this.index = e.target.value
+				
 				this.getDataSource()
 			},
 			// 向后台请求数据
 			async getDataSource() {
+				this.tableData = []
 				let SeqCode = this.SeqList[this.index].value
 				uni.showLoading({
 					title: '正在请求数据!'
@@ -200,7 +212,6 @@
 				}
 				// console.log('更新数据源')
 				this.tableData = result
-				console.log(result)
 				uni.hideLoading()
 			},
 			// 每次勾选操作之后 都需要判断一次 是否是都选择了,若是 则勾选 全选 若否 不勾选全选
@@ -240,6 +251,8 @@
 			// 更新手动下线数量
 			setUserQty(e, id) {
 				this.tableData[id] = Object.assign(this.tableData[id], { offline: Number(e.target.value) })
+				
+				console.log(this.tempData)
 			},
 			// 数量 输入验证
 			verity(e, v) {

@@ -1,4 +1,5 @@
 module.exports = {
+	"transpileDependencies":['uni-simple-router'],
 	"devServer": {
 		"proxy": {
 			'/services': {
