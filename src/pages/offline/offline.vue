@@ -124,7 +124,7 @@
 						list.push(obj)
 					}
 				})
-				var products = [...styles].toString().replace(/\,/g,'\n')
+				var products = [...styles].toString().replace(/\,/g, '\n')
 				if (list.length == 0) {
 					uni.showModal({
 						content: '您没有选择任何项目',
@@ -233,7 +233,7 @@
 					console.log(res.data)
 					uni.showModal({
 						content: res.data.msg,
-						showCancel:false
+						showCancel: false
 					})
 				}
 			},
@@ -269,9 +269,13 @@
 			} else {
 				let obj = res.data.response
 				this.SeqList = obj
-				for (let { label, value } of obj) {
-					this.array.push(label)
-				}
+				obj.map((v, k) => {
+					if (v.label == '套整件') {
+						this.index = k
+					}
+					this.array.push(v.label)
+				})
+
 				uni.hideLoading()
 			}
 		},
