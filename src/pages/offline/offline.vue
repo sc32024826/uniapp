@@ -60,9 +60,8 @@
 		data() {
 			return {
 				tableData: [],
-				choose: [], // 选中的衣服衣架
 				array: [],
-				index: 0,
+				index: 2,
 				SeqList: [],
 				DoColor: true, //区分颜色
 				DoSize: true, //区分尺码
@@ -201,6 +200,7 @@
 				}
 				// console.log('更新数据源')
 				this.tableData = result
+				console.log(result)
 				uni.hideLoading()
 			},
 			// 每次勾选操作之后 都需要判断一次 是否是都选择了,若是 则勾选 全选 若否 不勾选全选
@@ -231,9 +231,9 @@
 					this.getDataSource()
 					console.log('下线成功')
 					console.log(res.data)
-					uni.showToast({
-						title: res.data.msg,
-						duration: 3
+					uni.showModal({
+						content: res.data.msg,
+						showCancel:false
 					})
 				}
 			},
