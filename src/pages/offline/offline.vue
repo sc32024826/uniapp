@@ -46,8 +46,8 @@
 			</checkbox-group>
 		</view>
 		<view class="flex row bottom">
-			<button type="primary" size="mini" @click="offlineByUser">下线选中的衣服</button>
-			<button type="primary" size="mini" @click="offlineByUser">按指定数量下线</button>
+			<button type="primary" size="mini" @click="offlineByUser">下线衣服</button>
+			<!-- <button type="primary" size="mini" @click="offlineByUser">按指定数量下线</button> -->
 		</view>
 	</view>
 </template>
@@ -335,7 +335,7 @@
 
 		#list {
 			height: 1100rpx;
-			overflow: scroll;
+			// overflow: ;
 
 			.stripe:nth-child(even) {
 				background: #273238;
@@ -359,20 +359,20 @@
 				max-width: 420rpx;
 				overflow: hidden;
 				border: solid 1rpx black;
-
+				max-height: 42rpx;
 				.st {
 					width: 210rpx;
-					overflow: auto;
+					overflow: hidden;
 				}
 
 				.co {
 					width: 105rpx;
-					overflow: auto;
+					overflow: hidden;
 				}
 
 				.si {
 					width: 105rpx;
-					overflow: auto;
+					overflow: hidden;
 				}
 			}
 
