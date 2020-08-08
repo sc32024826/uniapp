@@ -58,3 +58,12 @@ export const SetRackOfflineByZdOnlineGuid = param => {
 		data: param
 	})
 }
+/**
+ * 获取站点状态信息
+ */
+export const GetStationStatus = param => {
+	return uni.request({
+		url: '/sunrise/api/MESInterfaces/GetStationStatus',
+		data: param
+	})
+}

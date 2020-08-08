@@ -1,19 +1,19 @@
 <template>
 	<view class="container">
 		<uni-collapse>
-			<uni-collapse-item :title="item.line" :open="true" v-for="(item,i) in data" :key="i" class="collapseitem">
+			<uni-collapse-item :title="item.name" :open="true" v-for="(item,i) in data" :key="i" class="collapseitem">
 				<view class="flex row wrap item">
 					<view class="box" v-for="(v,k) in item.list" :key="k">
 						<view class="flex row">
-							<view class="light"></view>
-							<view>{{v.LineNo}}-{{v.StationNo}}</view>
+							<view :class="v.Enable ? 'base light' : 'base stop'"></view>
+							<view>{{v.LineID}}-{{v.StationID}}</view>
 							<view>{{v.SeqName}}</view>
 						</view>
 						<view class="flex row">
-							<view>{{v.EmpID}}-{{v.EmpName}}</view>
-							<view>{{v.Count}}</view>
+							<view>{{v.EmpID}}-{{v.Name}}</view>
+							<view>{{v.RackCnt}}</view>
 						</view>
-						<view class="flex row">{{v.Style}}</view>
+						<!-- <view class="flex row">{{v.Style}}</view> -->
 					</view>
 				</view>
 			</uni-collapse-item>
@@ -23,77 +23,35 @@
 
 <script>
 	import { uniCollapse, uniCollapseItem } from '@dcloudio/uni-ui'
+	import { GetStationStatus } from '@/api/api.js'
+	import groupBy from './classify.js'
+
 	export default {
 		components: { uniCollapse, uniCollapseItem },
 		data() {
 			return {
-				data: [{
-					line: '1号线',
-					list: [{
-							LineNo: 1,
-							StationNo: 2,
-							SeqName: 'asdada',
-							EmpID: 1231,
-							EmpName: '张三',
-							Count: 1231,
-							Style: '1231231'
-						},
-						{
-							LineNo: 1,
-							StationNo: 2,
-							SeqName: 'asdada',
-							EmpID: 1231,
-							EmpName: '张三',
-							Count: 1231,
-							Style: '1231231'
-						}
-					]
-				}, {
-					line: '2号线',
-					list: [{
-							LineNo: 1,
-							StationNo: 2,
-							SeqName: 'asdada',
-							EmpID: 1231,
-							EmpName: '张三',
-							Count: 1231,
-							Style: '1231231'
-						},
-						{
-							LineNo: 1,
-							StationNo: 2,
-							SeqName: 'asdada',
-							EmpID: 1231,
-							EmpName: '张三',
-							Count: 1231,
-							Style: '1231231'
-						}
-					]
-				}, {
-					line: '3号线',
-					list: [{
-							LineNo: 1,
-							StationNo: 2,
-							SeqName: 'asdada',
-							EmpID: 1231,
-							EmpName: '张三',
-							Count: 1231,
-							Style: '1231231'
-						},
-						{
-							LineNo: 1,
-							StationNo: 2,
-							SeqName: 'asdada',
-							EmpID: 1231,
-							EmpName: '张三',
-							Count: 1231,
-							Style: '1231231'
-						}
-					]
-				}]
+				data: [],
 			}
 		},
 		methods: {
+
+		},
+		async mounted() {
+			let para = ''
+			const [err, res] = await GetStationStatus(para)
+			if (err) {
+				uni.showModal({
+					content: err,
+					showCancel: false
+				})
+			} else {
+				console.log(res.data)
+				if (res.data.success == true) {
+					let data = res.data.response
+					this.data = groupBy(data, 'LineID')
+					console.log(this.data);
+				}
+			}
 
 		}
 	}
@@ -102,7 +60,7 @@
 <style lang="less" scopde>
 	//调试 规则
 	.debug {
-		border: solid 1px red;
+		border: solid 1rpx red;
 	}
 
 	// 正式规则
@@ -145,29 +103,38 @@
 	.wrap {
 		flex-wrap: wrap;
 	}
-
-	.light {
+	.base{
 		width: 50rpx;
 		height: 50rpx;
-		background: yellow;
 		border: solid 1rpx green;
 		margin-top: 10rpx;
 	}
-	.collapseitem{
-		.item{
+	.light {
+		
+		background: yellow;
+		
+	}
+	.stop{
+		background: red;
+	}
+
+	.collapseitem {
+		.item {
 			padding: 10rpx 0rpx 10rpx 0rpx;
 		}
 	}
-	.collapseitem:nth-child(even){
-		.item{
+
+	.collapseitem:nth-child(even) {
+		.item {
 			background-color: #666699;
 			color: white;
 		}
 	}
-	.collapseitem:nth-child(odd){
-		.item{
+
+	.collapseitem:nth-child(odd) {
+		.item {
 			background-color: #CCCCCC;
-			
+
 		}
 	}
 </style>

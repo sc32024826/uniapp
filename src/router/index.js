@@ -3,6 +3,7 @@ import Vue from 'vue'
 //这里仅示范npm安装方式的引入，其它方式引入请看最上面【安装】部分
 import Router from 'uni-simple-router'
 import store from '@/store'
+import * as dd from "dingtalk-jsapi"
 
 Vue.use(Router)
 //初始化
@@ -11,24 +12,28 @@ const router = new Router({
 });
 //全局路由前置守卫
 router.beforeEach((to, from, next) => {
-	uni.showLoading({
-		
+	if (to.meta.title) { document.title = to.meta.title }
+	// 设置钉钉导航栏标题 start
+	dd.biz.navigation.setTitle({
+		title: document.title, // 控制标题文本，空字符串表示显示默认文本
+		onSuccess: result => {},
+		onFail: err => {}
 	})
-	if(to.name == 'index'){
+	if (to.name == 'index') {
 		next()
-	}else{
-		if(store.state.userName){
+	} else {
+		if (store.state.userName) {
 			console.log(store.state.userName)
 			next()
-		}else{
-			router.push({name:'index'})
+		} else {
+			router.push({ name: 'index' })
 		}
 	}
 
-	
+
 })
 // 全局路由后置守卫
 router.afterEach((to, from) => {
-	uni.hideLoading()
+
 })
 export default router;

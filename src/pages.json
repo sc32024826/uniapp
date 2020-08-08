@@ -3,7 +3,10 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "ShanYing"
+				"navigationBarTitleText": "ShanYing",
+				"app-plus": {
+					"titleNView": false
+				}
 			}
 		},
 		{
@@ -55,41 +58,37 @@
 			}
 		}
 
-	    ,{
-            "path" : "pages/ScanDev/ScanDev",
-            "style" : {
+		, {
+			"path": "pages/ScanDev/ScanDev",
+			"style": {
 				"app-plus": {
 					"titleNView": false
 				}
 			}
-        }
-        ,{
-            "path" : "pages/nfc/nfc",
-            "style" : {
-				// "navigationBarTitleText": "扫码"
+		}, {
+			"path": "pages/nfc/nfc",
+			"style": {
 				"app-plus": {
 					"titleNView": false
 				}
 			}
-        }
-        ,{
-            "path" : "pages/ProInfo/ProInfo",
-            "style" : {
+		}, {
+			"path": "pages/ProInfo/ProInfo",
+			"style": {
 				"app-plus": {
 					"titleNView": false
 				}
 			}
-        }
-        ,{
-            "path" : "pages/offline/offline",
-            "style" : {
+		}, {
+			"path": "pages/offline/offline",
+			"style": {
 				"app-plus": {
 					"titleNView": false
 				}
 				// "enablePullDownRefresh": true
 			}
-        }
-    ],
+		}
+	],
 	"tabBar": {
 		"color": "#7a7e83",
 		"selectedColor": "#0faeff",
