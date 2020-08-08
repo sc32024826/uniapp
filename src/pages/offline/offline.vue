@@ -32,7 +32,7 @@
 				<view class="stripe" v-for="(item,i) in tableData" :key="i">
 					<view class="flex row test vertical-center ">
 						<checkbox :value="item.id" :checked="item.checked" />
-						<view class="flex row mo">
+						<view class="flex row mo" @click="showFullInfo(item.MO,item.StyleNo,item.ColorName,item.SizeName)">
 							<!-- <view>单号: {{item.MO}}</view> -->
 							<view class="st">{{item.StyleNo}}</view>
 							<view v-if="DoColor" class="co">{{item.ColorName}}</view>
@@ -262,6 +262,26 @@
 				} else {
 					this.showError = false
 				}
+			},
+			// 点击 行 显示 生产单信息
+			showFullInfo(a,b,c,d){
+				var res = ''
+				if(a){
+					res = '生产单: ' + a + '\n'
+				}
+				if(b){
+					res += '款号: ' + b + '\n'
+				}
+				if(c){
+					res += '颜色: ' + c + '\n'
+				}
+				if(d){
+					res += '尺码: ' + d 
+				}
+				uni.showModal({
+					content:res,
+					showCancel:false
+				})
 			}
 		},
 		// 下拉刷新
@@ -271,7 +291,7 @@
 		// },
 		async created() {
 			uni.showLoading({
-				title: '正在请求数据!'
+				title: '正在请求工序列表!'
 			})
 			var [err, res] = await getSeqNameList()
 			if (err) {
