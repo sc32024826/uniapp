@@ -165,7 +165,6 @@
 						showCancel: false
 					})
 				}
-				console.log(result)
 				this.tableData = []
 				uni.showLoading({
 					
@@ -311,6 +310,10 @@
 
 				uni.hideLoading()
 			}
+			setTimeout(()=>{
+				this.getDataSource()
+			},1000)
+			
 		},
 		computed: {
 			show() {

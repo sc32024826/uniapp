@@ -20,9 +20,7 @@ const store = new Vuex.Store({
 		},
 		setTempData(state,data){
 			// 深拷贝 数据
-			console.log('保存临时数据')
 			state.tempData = JSON.parse(JSON.stringify(data))
-			console.log(data)
 		}
 	}
 })
