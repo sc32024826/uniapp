@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<uni-collapse>
-			<uni-collapse-item :title="item.line" open="true" v-for="(item,i) in data" :key="i" class="collapseitem">
+			<uni-collapse-item :title="item.line" :open="true" v-for="(item,i) in data" :key="i" class="collapseitem">
 				<view class="flex row wrap item">
 					<view class="box" v-for="(v,k) in item.list" :key="k">
 						<view class="flex row">

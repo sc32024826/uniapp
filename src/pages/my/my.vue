@@ -26,8 +26,9 @@
 		},
 		methods: {
 			makeCode() {
+				let that = this
 				var qrcode = new QRCode('qrcode', {
-					text: this.userName,
+					text: that.userName,
 					width: 128,
 					height: 128,
 					colorDark: '#000000',

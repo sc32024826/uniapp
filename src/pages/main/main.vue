@@ -43,12 +43,7 @@
 						url: '/pages/offline/offline',
 						icon: '&#xe6bb;',
 						title: '衣架下线'
-					},
-					{
-						url: '/pages/ScanDev/ScanDev',
-						icon: '&#xe73b;',
-						title: '加工记录DEV'
-					},
+					}
 				]
 			}
 		},

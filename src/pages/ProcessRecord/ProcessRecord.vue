@@ -103,6 +103,7 @@
 						_this._requestAwait(data.text)
 					},
 					onFail: function(err) {
+						console.log(err);
 						uni.switchTab({
 							url: '../main/main'
 						})
