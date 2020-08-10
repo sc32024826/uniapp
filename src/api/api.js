@@ -67,3 +67,12 @@ export const GetStationStatus = param => {
 		data: param
 	})
 }
+/**
+ * 获取生产线 信息
+ */
+export const GetLineStatus = param => {
+	return uni.request({
+		url: '/sunrise/api/MESInterfaces/GetLineStatus',
+		data: param
+	})
+}

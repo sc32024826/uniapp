@@ -5,7 +5,7 @@
 function groupBy(array, key) {
 	let obj = {};
 	array.forEach(function(o) {
-		let group = JSON.stringify(o[key]) + '号线'
+		let group = JSON.stringify(o[key])
 		obj[group] = obj[group] || [];
 		obj[group].push(o);
 	});

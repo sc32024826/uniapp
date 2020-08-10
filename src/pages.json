@@ -108,8 +108,8 @@
 			{
 				"pagePath": "pages/my/my",
 				"text": "我的",
-				"iconPath": "static/img/home.png",
-				"selectedIconPath": "static/img/user.png"
+				"iconPath": "static/img/user.png",
+				"selectedIconPath": "static/img/userHL.png"
 			}
 		]
 	},

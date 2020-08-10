@@ -90,7 +90,7 @@
 				let param = e.detail.value
 				param.indexOf('size') > -1 ? this.DoSize = true : this.DoSize = false
 				param.indexOf('color') > -1 ? this.DoColor = true : this.DoColor = false,
-				this.getDate()
+					this.getDate()
 			},
 			// 勾选列表行
 			checkboxChange(e) {
@@ -147,7 +147,7 @@
 				let data = this.tempData
 				var result = []
 				if (data.length > 0) {
-					
+
 					if (this.DoColor) {
 						if (this.DoSize) {
 							result = SelectByColorSize(data)
@@ -167,18 +167,18 @@
 				}
 				this.tableData = []
 				uni.showLoading({
-					
+
 				})
-				setTimeout(()=>{
+				setTimeout(() => {
 					uni.hideLoading()
 					this.tableData = result
-				},500)
-				
+				}, 500)
+
 			},
 			// 请求原始数据
 			async bindPickerChange(e) {
 				this.index = e.target.value
-				
+
 				this.getDataSource()
 			},
 			// 向后台请求数据
@@ -250,7 +250,7 @@
 			// 更新手动下线数量
 			setUserQty(e, id) {
 				this.tableData[id] = Object.assign(this.tableData[id], { offline: Number(e.target.value) })
-				
+
 				console.log(this.tempData)
 			},
 			// 数量 输入验证
@@ -263,23 +263,23 @@
 				}
 			},
 			// 点击 行 显示 生产单信息
-			showFullInfo(a,b,c,d){
+			showFullInfo(a, b, c, d) {
 				var res = ''
-				if(a){
+				if (a) {
 					res = '生产单: ' + a + '\n'
 				}
-				if(b){
+				if (b) {
 					res += '款号: ' + b + '\n'
 				}
-				if(c){
+				if (c) {
 					res += '颜色: ' + c + '\n'
 				}
-				if(d){
-					res += '尺码: ' + d 
+				if (d) {
+					res += '尺码: ' + d
 				}
 				uni.showModal({
-					content:res,
-					showCancel:false
+					content: res,
+					showCancel: false
 				})
 			}
 		},
@@ -310,10 +310,10 @@
 
 				uni.hideLoading()
 			}
-			setTimeout(()=>{
+			setTimeout(() => {
 				this.getDataSource()
-			},1000)
-			
+			}, 1000)
+
 		},
 		computed: {
 			show() {
@@ -380,21 +380,27 @@
 			.mo {
 				width: 420rpx;
 				max-width: 420rpx;
-				overflow: hidden;
 				border: solid 1rpx black;
 				max-height: 42rpx;
+
 				.st {
 					width: 210rpx;
+					text-overflow: ellipsis;
+					white-space: nowrap;
 					overflow: hidden;
 				}
 
 				.co {
 					width: 105rpx;
+					text-overflow: ellipsis;
+					white-space: nowrap;
 					overflow: hidden;
 				}
 
 				.si {
 					width: 105rpx;
+					text-overflow: ellipsis;
+					white-space: nowrap;
 					overflow: hidden;
 				}
 			}
