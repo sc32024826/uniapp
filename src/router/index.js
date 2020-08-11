@@ -17,14 +17,13 @@ router.beforeEach((to, from, next) => {
 	dd.biz.navigation.setTitle({
 		title: document.title, // 控制标题文本，空字符串表示显示默认文本
 		onSuccess: result => {},
-		onFail: err => {
-		}
+		onFail: err => {}
 	})
 	if (to.name == 'index') {
 		next()
 	} else {
 		if (store.state.userName) {
-			console.log(store.state.userName)
+			// console.log(store.state.userName)
 			next()
 		} else {
 			router.push({ name: 'index' })

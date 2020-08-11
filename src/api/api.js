@@ -76,3 +76,22 @@ export const GetLineStatus = param => {
 		data: param
 	})
 }
+/**
+ * 根据站点唯一键查询站内衣架信息
+ */
+export const QueryInStationRackInfByStationGuid = param => {
+	return uni.request({
+		url: '/sunrise/api/MESInterfaces/QueryInStationRackInfByStationGuid',
+		data: param
+	})
+}
+/**
+ * 设置生产线启停
+ */
+export const SetLinePause = param => {
+	return uni.request({
+		url: '/sunrise/api/MESInterfaces/SetLinePause',
+		data: param,
+		method: 'PUT'
+	})
+}

@@ -57,10 +57,10 @@ const home = [{
 		}
 	},
 	{
-		path: '',
-		name: '',
+		path: '/pages/details/details',
+		name: 'details',
 		meta: {
-			title: ''
+			title: '站点信息'
 		}
 	}
 
