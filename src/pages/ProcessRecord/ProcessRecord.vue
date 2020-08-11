@@ -23,7 +23,10 @@
 				</view>
 			</view>
 		</view>
-		<button class="margin" type="primary" @click="nextScan">继续扫码</button>
+		<view class="flex row button-area">
+			<button type="primary" @click="nextScan">扫码</button>
+			<button type="primary" @click="inputHand">手输</button>
+		</view>
 		<view class="table">
 			<view class="flex row head">
 				<view class="cell station">站号</view>
@@ -61,6 +64,16 @@
 				</uni-collapse>
 			</view>
 		</view>
+		<view id="modal" v-show="inputByHand">
+			<view id="mask">
+				<text>手动输入衣架号</text>
+				<input type="number" placeholder="衣架号" v-model="RackCodeHD" />
+				<view>
+					<button type="default" size="mini" @click="closeModal">取消</button>
+					<button type="primary" size="mini" @click="submit">提交</button>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -87,7 +100,9 @@
 				RackCode: '', //衣架号
 				Qty: '',
 				haveScaned: false,
-				BarCodes: []
+				BarCodes: [],
+				inputByHand: false,
+				RackCodeHD:''
 			}
 		},
 		onLoad: function() {
@@ -103,10 +118,6 @@
 						_this._requestAwait(data.text)
 					},
 					onFail: function(err) {
-						console.log(err);
-						uni.switchTab({
-							url: '../main/main'
-						})
 					}
 				})
 			},
@@ -227,11 +238,22 @@
 					let target = res.data.response
 					this.Status = target.Status
 				}
+			},
+			inputHand() {
+				this.inputByHand = true
+			},
+			closeModal(){
+				this.inputByHand = false
+			},
+			submit(){
+				this._requestAwait(this.RackCodeHD)
+				this.inputByHand = false
+				this.RackCodeHD = ''
 			}
 		}
 	}
 </script>
 
-<style>
+<style lang="less" scoped>
 	@import url("./style.less");
 </style>
