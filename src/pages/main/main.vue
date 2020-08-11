@@ -16,10 +16,9 @@
 </template>
 
 <script>
-	import {
-		mapState
-	} from 'vuex'
-
+	import {mapState} from 'vuex'
+	import * as dd from "dingtalk-jsapi"
+	
 	export default {
 		computed: mapState(['hasLogin', 'userName']),
 		data() {
@@ -56,6 +55,16 @@
 					url: url
 				})
 			}
+		},
+		onShow() {
+			dd.biz.navigation.setRight({
+				show: false,
+				control: true,
+				text: '',
+				onSuccess: function() {
+					
+				}
+			})
 		}
 	}
 </script>

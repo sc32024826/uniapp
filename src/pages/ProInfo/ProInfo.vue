@@ -47,7 +47,8 @@
 		components: { uniCollapse, uniCollapseItem },
 		data() {
 			return {
-				data: []
+				data: [],
+				showSelect: false
 			}
 		},
 		methods: {
@@ -193,10 +194,10 @@
 					})
 				})
 				this.data = part_2
-			
+
 			},
 			// 复选
-			selectManay(){
+			selectManay() {
 				var _this = this
 				dd.biz.navigation.setRight({
 					show: true,
@@ -208,7 +209,7 @@
 					}
 				})
 			},
-			cancelSelect(){
+			cancelSelect() {
 				var _this = this
 				dd.biz.navigation.setRight({
 					show: true,
@@ -224,6 +225,16 @@
 		mounted() {
 			this.getData()
 			this.selectManay()
+		},
+		onHide() {
+			dd.biz.navigation.setRight({
+				show: false,
+				control: true,
+				text: '',
+				onSuccess: function() {
+					
+				}
+			})
 		}
 	}
 </script>
