@@ -95,3 +95,12 @@ export const SetLinePause = param => {
 		method: 'PUT'
 	})
 }
+/**
+ * 根据站点唯一码获取站点当前已分配款色码
+ */
+export const GetStationAssign = param => {
+	return uni.request({
+		url: '/sunrise/api/MESInterfaces/GetStationAssignInfoResultsByStation',
+		data: param
+	})
+}
