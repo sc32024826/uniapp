@@ -2,11 +2,10 @@
 	"easycom": {
 		"autoscan": true,
 		"custom": {
-			// uni-ui 规则如下配置
 			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
 		}
 	},
-	"pages": [ //pages数组中第一项表示应用启动页,
+	"pages": [
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -45,7 +44,8 @@
 					"titleNView": false
 				}
 			}
-		}, {
+		},
+		{
 			"path": "pages/work/work",
 			"style": {
 				"navigationBarTitleText": "任务分配",
@@ -63,29 +63,32 @@
 					"titleNView": false
 				}
 			}
-		}, {
+		},
+		{
 			"path": "pages/nfc/nfc",
 			"style": {
 				"app-plus": {
 					"titleNView": false
 				}
 			}
-		}, {
+		},
+		{
 			"path": "pages/ProInfo/ProInfo",
 			"style": {
 				"app-plus": {
 					"titleNView": false
 				}
 			}
-		}, {
+		},
+		{
 			"path": "pages/offline/offline",
 			"style": {
 				"app-plus": {
 					"titleNView": false
 				}
-				// "enablePullDownRefresh": true
 			}
-		}, {
+		},
+		{
 			"path": "pages/details/details",
 			"style": {
 				"navigationBarTitleText": "站点信息",
@@ -99,7 +102,8 @@
 		"color": "#7a7e83",
 		"selectedColor": "#0faeff",
 		"backgroundColor": "#ffffff",
-		"list": [{
+		"list": [
+			{
 				"pagePath": "pages/usual/usual",
 				"text": "常用",
 				"iconPath": "static/img/home.png",

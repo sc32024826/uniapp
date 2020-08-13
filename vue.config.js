@@ -1,21 +1,21 @@
 module.exports = {
-	"transpileDependencies":['uni-simple-router'],
+	"transpileDependencies": ['uni-simple-router'],
 	"devServer": {
 		"proxy": {
 			'/services': {
 				"target": 'http://test-api.servers.mchains.cn',
 				"changeOrigin": true,
 				"ws": true,
-				"pathRewrite":{
-					'^/services':''
+				"pathRewrite": {
+					'^/services': ''
 				}
 			},
 			'/dingtalk': {
 				"target": 'http://dingtalk.servers.mchains.cn',
 				"changeOrigin": true,
 				"ws": true,
-				"pathRewrite":{
-					'^/dingtalk':''
+				"pathRewrite": {
+					'^/dingtalk': ''
 				}
 			},
 			'/sunrise': {
@@ -23,10 +23,13 @@ module.exports = {
 				// "target": 'http://localhost',
 				"changeOrigin": true,
 				"ws": true,
-				"pathRewrite":{
-					'^/sunrise':''
+				"pathRewrite": {
+					'^/sunrise': ''
 				}
 			}
-		}
+		},
+		"sockHost": 'http://localhost:8080/',
+		"disableHostCheck": true
+
 	}
 }

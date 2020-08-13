@@ -42,9 +42,9 @@
 			<view class="data">
 				<uni-collapse>
 					<block v-for="(item,key) in tableData" :key="key">
-						<uni-collapse-item :open="isOpen(item.RackCode)" :title="title(key,item.RackCode)" :class="colorController(item.RackCode)">
+						<uni-collapse-item :open="isOpen(item.RackCode)" :title="title(key,item.RackCode)" :class="[item.RackCode==RackCode?'item':'']">
 							<view v-for="(v,k) in item.ProcessRecords" :key="k">
-								<view :class="fn(v.RecordType)">
+								<view :class="[v.RecordType == '进站' ? 'light' : 'flex row']">
 									<view class="cell station">{{v.StationID}}</view>
 									<view class="flex column name">
 										<view class="cell">{{v.EmployeeID}}</view>
@@ -68,7 +68,7 @@
 			<view id="mask">
 				<text>手动输入衣架号</text>
 				<input type="number" placeholder="衣架号" v-model="RackCodeHD" />
-				<view>
+				<view >
 					<button type="default" size="mini" @click="closeModal">取消</button>
 					<button type="primary" size="mini" @click="submit">提交</button>
 				</view>
@@ -118,7 +118,10 @@
 						_this._requestAwait(data.text)
 					},
 					onFail: function(err) {
+						
 					}
+				}).catch(e=>{
+					console.log(e)
 				})
 			},
 			// 继续下个扫码
@@ -184,16 +187,6 @@
 					content: res,
 					showCancel: false
 				})
-			},
-			// 根据type 返回css样式名
-			fn(type) {
-				return type == '进站' ? 'light' : 'flex row'
-			},
-			// 控制title 颜色
-			colorController(val) {
-				if (val.toString() == this.RackCode) {
-					return 'item'
-				}
 			},
 			// 控制title 显示
 			title(key, rack) {

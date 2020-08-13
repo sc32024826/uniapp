@@ -9,15 +9,18 @@
 						<view>负载率:{{item.LoadRatio}}</view>
 						<view>运行状态:{{item.Status==1?'停止':item.Status==2?'运行':'演示'}}</view>
 					</view>
-					<button type="primary" id="runStop" @click="lineOption(item.Status,item.LineGuid)">{{item.Status==1?'运行':'停止'}}</button>
+					<button class="runStop" @click="lineOption(item)" :type="item.bt.type" :loading="item.bt.load" :disabled="item.bt.disabled">
+						{{item.bt.text}}
+					</button>
 				</view>
-				<uni-collapse-item :title="item.LineID + '号线'" class="collapseitem">
+				<uni-collapse-item :title="item.LineID + '号线'" class="collapseitem" :open="showContent">
 					<view class="flex row wrap item">
 						<view class="box" v-for="(v,k) in item.list" :key="k" @longpress="longpressfn" v-if="item.list">
-							<checkbox class="checkbox" v-show="showSelect"></checkbox>
-							<view @click="clickBox(v.StationGuid)">
+							<view @click="clickBox(i,k,v.StationGuid)">
+								<!-- <checkbox class="checkbox" v-show="showSelect" :ref="'check'+i+k"></checkbox> -->
+								<mcheck :checked="false" @togglecheck="toggle"></mcheck>
 								<view class="flex row">
-									<view :class="getstyle(v.Enable,v.EnableIn)"></view>
+									<view :class="v.Enable*v.EnableIn == false ? 'base stop':'base light'"></view>
 									<view>{{v.LineID}}-{{v.StationID}}</view>
 									<view>{{v.SeqName}}</view>
 								</view>
@@ -31,7 +34,6 @@
 					</view>
 				</uni-collapse-item>
 			</view>
-
 		</uni-collapse>
 	</view>
 </template>
@@ -42,30 +44,49 @@
 	import groupBy from './classify.js'
 	import { mapMutations } from 'vuex'
 	import * as dd from "dingtalk-jsapi"
+	import mcheck from './child.vue'
 
 	export default {
-		components: { uniCollapse, uniCollapseItem },
+		components: { uniCollapse, uniCollapseItem, mcheck },
 		data() {
 			return {
 				data: [],
-				showSelect: false
+				showSelect: false, // 是否显示多选框
+				showContent: false, // 是否展开下拉扩展框
+				stopJump: false, // 当触发多选时,改为true 禁止 跳转页面
+				delay: {},
+				timerOver: true // 定时器是否结束的标志
 			}
 		},
 		methods: {
 			...mapMutations(['setStationMsg']),
-			// 
-			getstyle(a, b) {
-				if (a * b == false) {
-					return 'base stop'
+			//控制按钮颜色
+			getButtontype(Status) {
+				if (!this.loading) {
+					return Status == 1 ? 'primary' : 'warn'
 				} else {
-					return 'base light'
+					return 'default'
+				}
+			},
+			setBtDisable(i) {
+				if (this.disabled.length > 0) {
+					console.log('----')
+					return this.disabled[i].status
+				} else {
+					return false
 				}
 			},
 			// 长按 出现复选框
 			longpressfn() {
 				this.showSelect = true
 			},
-			async clickBox(id) {
+			async clickBox(i, k, id) {
+				if (this.stopJump) {
+					// let name = 'check' + i + k
+					// this.$refs[name][0].checked = !this.$refs[name][0].checked
+					// console.log(this.$children[0])
+					return
+				}
 				uni.showLoading({
 					title: '正在查询,请稍后!'
 				})
@@ -108,14 +129,14 @@
 				}
 			},
 			// 启停生产线
-			lineOption(state, LineGuid) {
+			lineOption(item) {
 				var option = false
 				// 当前停止状态
-				if (state != 1) {
+				if (item.Status != 1) {
 					option = true
 				}
 				var param = {
-					'LineGuid': LineGuid,
+					'LineGuid': item.LineGuid,
 					'isToPause': option,
 					'onlyOnce': true
 				}
@@ -129,40 +150,33 @@
 					content: str,
 					success: (res) => {
 						if (res.confirm) {
-							this.OptionConfirm(param)
+							this.OptionConfirm(item, param)
 						}
 					}
 				})
 			},
-			// 操作确认
-			async OptionConfirm(param) {
-				this.data = []
-
-				uni.showLoading({
-					title: '请稍后,正在执行!'
-				})
-
-				var [err, res] = await SetLinePause(param)
-				setTimeout(() => {
-					this.getData()
-					uni.hideLoading()
-					if (err) {
-						uni.showModal({
-							content: err,
-							showCancel: false
-						})
-					} else {
-						uni.showModal({
-							content: res.data.msg,
-							showCancel: false
-						})
-					}
-				}, 10000)
+			/**
+			 * 操作确认
+			 * @param {Object} i 生产线序号
+			 * @param {Object} param
+			 */
+			async OptionConfirm(item, param) {
+				console.log(new Date())
+				item.bt = {
+					text: '等待',
+					load: true,
+					disabled: true,
+					type: 'default'
+				}
+				this.delayGetData()
+				await SetLinePause(param)
 			},
 			// 获得数据
 			async getData() {
-				var part_1 = [],
-					part_2 = []
+				console.log('更新数据')
+				console.log(new Date())
+				var part_1 = []
+				var part_2 = []
 				let para = ''
 				const [err, res] = await GetStationStatus(para)
 				if (err) {
@@ -189,12 +203,21 @@
 				part_2.map(m => {
 					part_1.forEach(e => {
 						if (m.LineID == e.name) {
-							m = Object.assign(m, { list: e.list })
+							let tt = m.Status == 1 ? '运行' : '停止'
+							let type = m.Status == 1 ? 'primary' : 'warn'
+							m = Object.assign(m, {
+								list: e.list,
+								bt: {
+									text: tt,
+									type: type,
+									load: false,
+									disabled: false
+								}
+							})
 						}
 					})
 				})
 				this.data = part_2
-
 			},
 			// 复选
 			selectManay() {
@@ -205,8 +228,12 @@
 					text: '选择',
 					onSuccess: function() {
 						_this.showSelect = true
+						_this.showContent = true
+						_this.stopJump = true
 						_this.cancelSelect()
 					}
+				}).catch(e => {
+					console.log(e)
 				})
 			},
 			cancelSelect() {
@@ -217,23 +244,53 @@
 					text: '取消',
 					onSuccess: function() {
 						_this.showSelect = false
+						_this.stopJump = false
 						_this.selectManay()
 					}
+				}).catch(e => {
+					console.log(e)
 				})
+			},
+			toggle(val) {
+				console.log('子组件 emit事件,传递的参数为: ', val)
+			},
+			//
+			delayGetData() {
+				//判断定时器是否结束
+				if (this.timerOver) {
+					// console.log('定时器 不存在 或者结束')
+					this.delay = setTimeout((a) => {
+						this.getData()
+						this.timerOver = a
+						// clearTimeout(this.delay)
+					}, 10000, true)
+					this.timerOver = false
+				} else { // 若定时器依然存在 则 先取消当前定时器 再更新定时器
+					// console.log('定时器 已经存在,先清除当前定时器 再更新定义')
+					clearTimeout(this.delay)
+					this.delay = setTimeout((a) => {
+						this.getData()
+						this.timerOver = a
+						// clearTimeout(this.delay)
+					}, 10000, true)
+					this.timerOver = false
+				}
 			}
 		},
-		mounted() {
-			this.getData()
+		async mounted() {
+			// 加载数据
+			await this.getData()
+			// 显示 钉钉导航栏 右侧按钮
 			this.selectManay()
+			// 根据生产线数量生成一个 全部为false 的数组,用于控制每条生产线按钮的 禁用状态
+			console.log(this.data)
 		},
 		onHide() {
 			dd.biz.navigation.setRight({
 				show: false,
 				control: true,
 				text: '',
-				onSuccess: function() {
-					
-				}
+				onSuccess: function() {}
 			})
 		}
 	}
@@ -244,12 +301,6 @@
 	.debug {
 		border: solid 1rpx red;
 	}
-
-	// ::-webkit-scrollbar{
-	//   width: 0;
-	//   height: 0;
-	//   color: transparent;
-	// }
 
 	// 正式规则
 	.container {
@@ -274,7 +325,10 @@
 				background-color: #666699;
 				color: white;
 
-				#runStop {}
+				.runStop {
+					width: 300rpx;
+					margin-right: 5rpx;
+				}
 			}
 
 			.collapseitem {

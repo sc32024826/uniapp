@@ -24,10 +24,10 @@
 				</uni-collapse-item>
 				<uni-collapse-item title="已分配的方案" :open="true">
 					<view v-for="(v,i) in data" :key="i" class="flex row solution" >
-						<view>{{v.MoNo}}</view>
-						<view>{{v.StyleNo}}</view>
-						<view>{{v.ColorName}}</view>
-						<view>{{v.SizeName}}</view>
+						<view class="mo">{{v.MoNo}}</view>
+						<view class="style">{{v.StyleNo}}</view>
+						<view class="color">{{v.ColorName}}</view>
+						<view class="size">{{v.SizeName}}</view>
 					</view>
 				</uni-collapse-item>
 			</uni-collapse>
@@ -132,10 +132,40 @@
 			border: solid 1rpx black;
 			margin: 2rpx;
 		}
-
+		.solution{
+			border: solid 1rpx black;
+			.mo{
+				width: 250rpx;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.style{
+				width: 150rpx;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				text-align: center;
+			}
+			.color{
+				width: 150rpx;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				text-align: center;
+			}
+			.size{
+				width: 80rpx;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				text-align: right;
+			}
+		}
 		.solution:nth-child(even) {
-			background-color: #7c7c7c;
+			background-color: #666666;
 			color: white;
+			
 		}
 	}
 

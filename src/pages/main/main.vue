@@ -64,6 +64,8 @@
 				onSuccess: function() {
 					
 				}
+			}).catch(e=>{
+				
 			})
 		}
 	}
