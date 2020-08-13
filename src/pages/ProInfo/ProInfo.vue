@@ -6,7 +6,7 @@
 					<view class="flex row wrap infomation">
 						<view>总数:{{item.ClothesQty}}</view>
 						<view>衣架数:{{item.NotFinishedRackQty}}</view>
-						<view>负载率:{{item.LoadRatio}}</view>
+						<view>负载率:{{item.LoadRatio*100}}%</view>
 						<view>运行状态:{{item.Status==1?'停止':item.Status==2?'运行':'演示'}}</view>
 					</view>
 					<button class="runStop" @click="lineOption(item)" :type="item.bt.type" :loading="item.bt.load" :disabled="item.bt.disabled">
@@ -16,9 +16,8 @@
 				<uni-collapse-item :title="item.LineID + '号线'" class="collapseitem" :open="showContent">
 					<view class="flex row wrap item">
 						<view class="box" v-for="(v,k) in item.list" :key="k" @longpress="longpressfn" v-if="item.list">
-							<view @click="clickBox(i,k,v.StationGuid)">
-								<!-- <checkbox class="checkbox" v-show="showSelect" :ref="'check'+i+k"></checkbox> -->
-								<mcheck :checked="false" @togglecheck="toggle"></mcheck>
+							<view @click="clickBox(v)">
+								<checkbox class="checkbox" v-show="showSelect" :checked="v.checked"></checkbox>
 								<view class="flex row">
 									<view :class="v.Enable*v.EnableIn == false ? 'base stop':'base light'"></view>
 									<view>{{v.LineID}}-{{v.StationID}}</view>
@@ -44,10 +43,9 @@
 	import groupBy from './classify.js'
 	import { mapMutations } from 'vuex'
 	import * as dd from "dingtalk-jsapi"
-	import mcheck from './child.vue'
 
 	export default {
-		components: { uniCollapse, uniCollapseItem, mcheck },
+		components: { uniCollapse, uniCollapseItem },
 		data() {
 			return {
 				data: [],
@@ -80,18 +78,16 @@
 			longpressfn() {
 				this.showSelect = true
 			},
-			async clickBox(i, k, id) {
+			async clickBox(v) {
 				if (this.stopJump) {
-					// let name = 'check' + i + k
-					// this.$refs[name][0].checked = !this.$refs[name][0].checked
-					// console.log(this.$children[0])
+					v.checked = ! v.checked
 					return
 				}
 				uni.showLoading({
 					title: '正在查询,请稍后!'
 				})
 				let para = {
-					StationGuid: id
+					StationGuid: v.StationGuid
 				}
 				const [err, res] = await QueryInStationRackInfByStationGuid(para)
 				uni.hideLoading()
@@ -103,7 +99,7 @@
 				} else {
 					if (res.data.success == true) {
 						this.setStationMsg({
-							id: id,
+							id: v.StationGuid,
 							data: res.data.response
 						})
 						uni.navigateTo({
@@ -155,11 +151,7 @@
 					}
 				})
 			},
-			/**
-			 * 操作确认
-			 * @param {Object} i 生产线序号
-			 * @param {Object} param
-			 */
+			//操作确认
 			async OptionConfirm(item, param) {
 				console.log(new Date())
 				item.bt = {
@@ -173,8 +165,6 @@
 			},
 			// 获得数据
 			async getData() {
-				console.log('更新数据')
-				console.log(new Date())
 				var part_1 = []
 				var part_2 = []
 				let para = ''
@@ -187,6 +177,10 @@
 				} else {
 					if (res.data.success == true) {
 						let data = res.data.response
+						
+						data.map(e => {
+							e = Object.assign(e, { checked: false })
+						})
 						part_1 = groupBy(data, 'LineID')
 					}
 				}
