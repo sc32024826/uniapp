@@ -1,9 +1,8 @@
 <template>
-	<view class="content">
+	<view class="container">
 		<view class="logo">
-			<image class="logo" src="@/static/img/Title.jpg"></image>
 		</view>
-		<view class="flex row">
+		<view class="flex row warp">
 			<block v-for="(item,i) in optionList">
 				<view class="flex column box" @tap="jump(item.url)">
 					<text class="test" v-html="item.icon"></text>
@@ -16,37 +15,37 @@
 </template>
 
 <script>
-	import {mapState} from 'vuex'
+	import { mapState } from 'vuex'
 	import * as dd from "dingtalk-jsapi"
-	
+
 	export default {
 		computed: mapState(['hasLogin', 'userName']),
 		data() {
 			return {
 				optionList: [{
 						url: '/pages/ProcessRecord/ProcessRecord',
-						icon: '&#xe73b;',
+						icon: '&#xe75f;',
 						title: '加工记录'
 					},
 					{
 						url: '/pages/nfc/nfc',
-						icon: '&#xe6e4;',
+						icon: '&#xe756;',
 						title: 'NFC'
 					},
 					{
 						url: '/pages/ProInfo/ProInfo',
-						icon: '&#xe771;',
-						title: '当日生产情况'
+						icon: '&#xe6db;',
+						title: '生产情况'
 					},
-					{
-						url: '/pages/offline/offline',
-						icon: '&#xe6bb;',
-						title: '衣架下线'
-					},
+					// {
+					// 	url: '/pages/offline/offline',
+					// 	icon: '&#xe6bb;',
+					// 	title: '衣架下线'
+					// },
 					{
 						url: '/pages/beforeOffline/beforeOffline',
-						icon: '&#xe6bb;',
-						title: 'XXX页面'
+						icon: '&#xe71f;',
+						title: '生产线'
 					}
 				]
 			}
@@ -67,16 +66,22 @@
 				control: true,
 				text: '',
 				onSuccess: function() {
-					
+
 				}
-			}).catch(e=>{
-				
+			})
+			dd.biz.navigation.setLeft({
+				show: false,
+				control: true,
+				text: '',
+				onSuccess: function() {
+			
+				}
 			})
 		}
 	}
 </script>
 
-<style>
+<style lang="less" scoped>
 	@font-face {
 		font-family: 'iconfont';
 		/* project id 1825614 */
@@ -90,7 +95,7 @@
 
 	.test {
 		font-family: 'iconfont';
-		font-size: 100px;
+		font-size: 150rpx;
 		font-style: normal;
 	}
 
@@ -108,21 +113,34 @@
 		justify-content: space-between;
 	}
 
+	.wrap {
+		flex-wrap: wrap;
+	}
+
 	.title {
 		text-align: center;
 	}
 
 	.box {
-		margin-top: 4px;
-		margin-right: 4px;
+		margin-top: 4rpx;
+		margin-right: 4rpx;
 		align-items: center;
 	}
 
-	.logo {
-		width: 100%;
-	}
 
-	.content {
-		width: 375px;
+
+	.container {
+		width: 100%;
+
+		.logo {
+			// width: 100%;
+			height: 250rpx;
+			background-image: url("@/static/img/Title.jpg");
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-position: center;
+			margin: 10rpx;
+
+		}
 	}
 </style>

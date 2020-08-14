@@ -24,7 +24,6 @@
 					});
 				} else {
 					if (res.data.success == true) {
-						console.log(res.data)
 						let user = res.data.response.Userid
 						// // 成功之后 需要再vuex中 存储 用户名
 						this.login(user)

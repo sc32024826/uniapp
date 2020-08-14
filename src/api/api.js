@@ -104,3 +104,11 @@ export const GetStationAssign = param => {
 		data: param
 	})
 }
+/**
+ * 查询各工序未完工的衣架及衣服数
+ */
+export const QueryQtyWithSeq = () => {
+	return uni.request({
+		url: '/sunrise/api/MESInterfaces/QueryQtyWithSeq'
+	})
+}

@@ -93,7 +93,11 @@
 		}
 	    ,{
             "path" : "pages/beforeOffline/beforeOffline",
-            "style" : {}
+            "style" : {
+				"app-plus": {
+					"titleNView": false
+				}
+			}
         }
     ],
 	"tabBar": {

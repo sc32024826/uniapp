@@ -187,7 +187,6 @@
 			// 请求原始数据
 			async bindPickerChange(e) {
 				this.index = e.target.value
-
 				this.getDataSource()
 			},
 			// 向后台请求数据
@@ -274,7 +273,6 @@
 			},
 			// 更新手动下线数量
 			setUserQty(e, id) {
-				// this.tableData[id] = Object.assign(this.tableData[id], { offline: Number(e.target.value) })
 				this.$set(this.tableData[id], 'offline', Number(e.target.value))
 			},
 			// 数量 输入验证
@@ -307,12 +305,8 @@
 				})
 			}
 		},
-		// 下拉刷新
-		// async onPullDownRefresh() {
-		// 	await this.getDataSource()
-		// 	uni.stopPullDownRefresh();
-		// },
-		async created() {
+		async onLoad(option) {
+			let currentSeq = option.SeqName
 			uni.showLoading({
 				title: '正在请求工序列表!'
 			})
@@ -326,7 +320,7 @@
 				let obj = res.data.response
 				this.SeqList = obj
 				obj.map((v, k) => {
-					if (v.label == '套整件') {
+					if (v.label == currentSeq) {
 						this.index = k
 					}
 					this.array.push(v.label)
@@ -336,8 +330,7 @@
 			}
 			setTimeout(() => {
 				this.getDataSource()
-			}, 1000)
-
+			}, 500)
 		},
 		computed: {
 			show() {

@@ -46,7 +46,7 @@ const home = [{
 		path: '/pages/ProInfo/ProInfo',
 		name: 'ProInfo',
 		meta: {
-			title: '当日生产情况'
+			title: '今日生产情况'
 		}
 	},
 	{
@@ -67,7 +67,7 @@ const home = [{
 		path: '/pages/beforeOffline/beforeOffline',
 		name: 'beforeOffline',
 		meta: {
-			title: '下线前的操作'
+			title: '生产线'
 		}
 	}
 

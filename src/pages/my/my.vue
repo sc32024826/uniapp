@@ -10,7 +10,7 @@
 			<view id="qrcode"></view>
 		</view>
 		<view class="footer">
-			Shanying Technology Co., Ltd. Version: {{app_version}}
+			SY Technology Co., Ltd. Version: {{app_version}}
 		</view>
 	</view>
 </template>
