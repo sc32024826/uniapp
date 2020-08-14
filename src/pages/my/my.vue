@@ -4,11 +4,13 @@
 			<image :src="avatar" class="avatar"></image>
 			<view class="flex column name">
 				<text>{{userName}}</text>
-				<!-- <text>{{userID}}</text> -->
 			</view>
 		</view>
 		<view class="body">
 			<view id="qrcode"></view>
+		</view>
+		<view class="footer">
+			Shanying Technology Co., Ltd. Version: {{app_version}}
 		</view>
 	</view>
 </template>
@@ -20,8 +22,9 @@
 	export default {
 		data() {
 			return {
-				avatar: '../../static/img/1.jpg',
-				userID: '员工工号'
+				avatar: '../../static/img/rb.png',
+				userID: '员工工号',
+				app_version: ''
 			}
 		},
 		methods: {
@@ -45,6 +48,8 @@
 		},
 		mounted() {
 			this.makeCode()
+			this.app_version = process.env.VUE_APP_VERSION
+			// console.log(process.env);
 		}
 
 	}
@@ -55,7 +60,8 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		justify-items: center;
+		justify-content: center;
+		align-items: center;
 
 		.head {
 			width: 90%;
@@ -82,19 +88,29 @@
 		.body {
 			display: flex;
 			justify-content: center;
+			// border: solid 1rpx red;
+			min-height: 700rpx;
 
 			#qrcode {
 				width: 128px;
 				height: 128px;
 				background-color: #fff; //设置白色背景色
-				padding: 6px; 
+				padding: 6px;
 			}
 		}
+		.footer{
+			width: 90%;
+			height: 50rpx;
+			border-top: solid 1rpx black;
+			text-align: center;
+		}
 	}
-	.flex{
+
+	.flex {
 		display: flex;
 	}
-	.column{
+
+	.column {
 		flex-direction: column;
 	}
 </style>

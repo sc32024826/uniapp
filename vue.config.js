@@ -1,3 +1,5 @@
+process.env.VUE_APP_VERSION = require('./package.json').version
+
 module.exports = {
 	"transpileDependencies": ['uni-simple-router'],
 	"devServer": {
@@ -30,6 +32,5 @@ module.exports = {
 		},
 		"sockHost": 'http://localhost:8080/',
 		"disableHostCheck": true
-
 	}
 }

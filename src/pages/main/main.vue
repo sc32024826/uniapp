@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="logo">
-			<image class="logo"></image>
+			<image class="logo" src="@/static/img/Title.jpg"></image>
 		</view>
 		<view class="flex row">
 			<block v-for="(item,i) in optionList">
@@ -110,14 +110,11 @@
 	.box {
 		margin-top: 4px;
 		margin-right: 4px;
-		/* border: solid 2px #000000; */
-		/* width: 31%; */
 		align-items: center;
 	}
 
 	.logo {
-		height: 100px;
-		background-color: #404040;
+		width: 100%;
 	}
 
 	.content {

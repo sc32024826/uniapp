@@ -18,7 +18,7 @@
 			</view>
 			<view id="title" class="flex row vertical-center">
 				<checkbox-group @change="selectAll">
-					<checkbox value="1" ref="selectAll"></checkbox>
+					<checkbox value="1" ref="selectAll" :checked="allselect"></checkbox>
 				</checkbox-group>
 				<view class="white" style="width: 400rpx;">款号-颜色-尺码</view>
 				<view class="white" style="width: 80rpx;">线上</view>
@@ -45,7 +45,12 @@
 				</view>
 			</checkbox-group>
 		</view>
-		<view class="flex row bottom">
+		<view class="flex column bottom">
+			<view id="sum" class="flex row">
+				<text>总计:</text>
+				<view class="sum">{{totalOnline}}</view>
+				<view class="sum">{{totalCustom}}</view>
+			</view>
 			<button type="primary" size="mini" @click="offlineByUser">下线衣服</button>
 			<!-- <button type="primary" size="mini" @click="offlineByUser">按指定数量下线</button> -->
 		</view>
@@ -63,11 +68,14 @@
 				array: [],
 				index: 2,
 				SeqList: [],
-				DoColor: true, //区分颜色
-				DoSize: true, //区分尺码
+				DoColor: false, //区分颜色
+				DoSize: false, //区分尺码
 				source: [],
 				msg: '显示错误信息',
-				showError: false
+				showError: false,
+				sum1: 0,
+				sum2: 0,
+				allselect: false // 全选标志
 			}
 		},
 		methods: {
@@ -94,7 +102,6 @@
 			},
 			// 勾选列表行
 			checkboxChange(e) {
-
 				var choose = e.target.value || []
 				this.tableData.map((v, k) => {
 					if (choose.indexOf(k.toString()) > -1) {
@@ -224,34 +231,51 @@
 				})
 
 				if (count == length) {
-					this.$refs.selectAll.checked = true
+					this.allselect = true
 				} else {
-					this.$refs.selectAll.checked = false
+					this.allselect = false
 				}
 			},
 			// 确认下线
 			async offlineConfirm(list) {
-				var [err, res] = await SetRackOfflineByZdOnlineGuid(list)
-				if (err) {
+				let v = JSON.parse(window.localStorage.getItem('offlineHistory'))
+				if (v.totalOnline == this.totalOnline && v.totalCustom == this.totalCustom) {
 					uni.showModal({
-						content: err
-					})
-				} else {
-					// 下线成功后 重新获取数据源
-					this.getDataSource()
-					console.log('下线成功')
-					console.log(res.data)
-					uni.showModal({
-						content: res.data.msg,
-						showCancel: false
+						content: '您在 ' + v.time + '执行过一次相同数量的下线操作,请核对本次操作!',
+						success: async(res) => {
+							if (res.confirm) {
+								return
+								var [err, res] = await SetRackOfflineByZdOnlineGuid(list)
+								if (err) {
+									uni.showModal({
+										content: err
+									})
+								} else {
+									var record = {
+										totalOnline: this.totalOnline,
+										totalCustom: this.totalCustom,
+										time: new Date()
+									}
+									// 本地存储上一次提交记录
+									window.localStorage.setItem('offlineHistory', JSON.stringify(record))
+									// 下线成功后 重新获取数据源
+									this.getDataSource()
+									uni.showModal({
+										content: res.data.msg,
+										showCancel: false
+									})
+								}
+							}
+						}
 					})
 				}
+				console.log('继续执行本次操作')
+
 			},
 			// 更新手动下线数量
 			setUserQty(e, id) {
-				this.tableData[id] = Object.assign(this.tableData[id], { offline: Number(e.target.value) })
-
-				console.log(this.tempData)
+				// this.tableData[id] = Object.assign(this.tableData[id], { offline: Number(e.target.value) })
+				this.$set(this.tableData[id], 'offline', Number(e.target.value))
 			},
 			// 数量 输入验证
 			verity(e, v) {
@@ -323,7 +347,29 @@
 					return false
 				}
 			},
-			...mapState(['tempData'])
+			...mapState(['tempData']),
+			// 合计值 
+			totalOnline() {
+				var total = 0
+				this.tableData.map(item => {
+					if (item.checked) {
+						total += item.Qty
+					}
+				})
+				return total
+			},
+			// 合计值
+			totalCustom() {
+				var custom = 0
+				this.tableData.map(item => {
+					if (item.checked) {
+						if (item.offline) {
+							custom += item.offline
+						}
+					}
+				})
+				return custom
+			}
 		},
 		destroyed() {
 			this.setTempData('')
@@ -338,7 +384,7 @@
 		// border: solid 1rpx red;
 
 		#head {
-			// position: fixed;
+			position: fixed;
 			// top: 0;
 			width: 100%;
 			background-color: white;
@@ -349,16 +395,20 @@
 			}
 
 			.errorMsg {
+				width: 100%;
+				top: 0;
+				position: fixed;
 				background-color: red;
 				color: white;
 				height: 60rpx;
 				font-size: 40rpx;
+				z-index: 3;
 			}
 		}
 
 		#list {
 			height: 1100rpx;
-			// overflow: ;
+			margin-top: 150rpx;
 
 			.stripe:nth-child(even) {
 				background: #273238;
@@ -416,11 +466,27 @@
 			bottom: 0rpx;
 			width: 100%;
 			z-index: 2;
-			border-top: solid 1rpx grey;
-			padding-top: 15rpx;
+
+			padding-top: 5rpx;
 			padding-bottom: 30rpx;
 			background-color: white;
 
+			#sum {
+				border-top: solid 1rpx grey;
+				border-bottom: solid 1rpx grey;
+				padding: 5rpx 0 5rpx 0;
+				margin-bottom: 10rpx;
+
+				text {
+					flex-grow: 4;
+				}
+
+				.sum {
+					width: 100rpx;
+					margin-right: 10rpx;
+					border: solid 1rpx black;
+				}
+			}
 		}
 	}
 

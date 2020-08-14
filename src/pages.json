@@ -24,12 +24,6 @@
 			}
 		},
 		{
-			"path": "pages/set/set",
-			"style": {
-				"navigationBarTitleText": "设置"
-			}
-		},
-		{
 			"path": "pages/my/my",
 			"style": {
 				"app-plus": {
@@ -97,7 +91,11 @@
 				}
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/beforeOffline/beforeOffline",
+            "style" : {}
+        }
+    ],
 	"tabBar": {
 		"color": "#7a7e83",
 		"selectedColor": "#0faeff",
