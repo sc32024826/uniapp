@@ -42,6 +42,11 @@
 						url: '/pages/offline/offline',
 						icon: '&#xe6bb;',
 						title: '衣架下线'
+					},
+					{
+						url: '/pages/beforeOffline/beforeOffline',
+						icon: '&#xe6bb;',
+						title: 'XXX页面'
 					}
 				]
 			}

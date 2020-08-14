@@ -61,6 +61,8 @@
 	import { GetQtyOnlineMODCS, getSeqNameList, SetRackOfflineByZdOnlineGuid } from '@/api/api.js'
 	import { SelectAll, SelectBySize, SelectByColor, SelectByColorSize } from './classify.js'
 	import { mapState, mapMutations } from 'vuex'
+	import format from '../../utils/data/format.js'
+
 	export default {
 		data() {
 			return {
@@ -239,12 +241,12 @@
 			// 确认下线
 			async offlineConfirm(list) {
 				let v = JSON.parse(window.localStorage.getItem('offlineHistory'))
+				let time = format('yyyy-MM-dd hh:mm:ss', new Date(v.time))
 				if (v.totalOnline == this.totalOnline && v.totalCustom == this.totalCustom) {
 					uni.showModal({
-						content: '您在 ' + v.time + '执行过一次相同数量的下线操作,请核对本次操作!',
-						success: async(res) => {
+						content: '您在 ' + time + '执行过一次相同数量的下线操作,请核对本次操作!',
+						success: async (res) => {
 							if (res.confirm) {
-								return
 								var [err, res] = await SetRackOfflineByZdOnlineGuid(list)
 								if (err) {
 									uni.showModal({
@@ -269,8 +271,6 @@
 						}
 					})
 				}
-				console.log('继续执行本次操作')
-
 			},
 			// 更新手动下线数量
 			setUserQty(e, id) {

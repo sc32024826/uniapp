@@ -62,6 +62,13 @@ const home = [{
 		meta: {
 			title: '站点信息'
 		}
+	},
+	{
+		path: '/pages/beforeOffline/beforeOffline',
+		name: 'beforeOffline',
+		meta: {
+			title: '下线前的操作'
+		}
 	}
 
 ]
