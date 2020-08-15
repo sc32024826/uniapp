@@ -6,7 +6,7 @@
 					<view class="flex row wrap infomation">
 						<view>总数:{{item.ClothesQty}}</view>
 						<view>衣架数:{{item.NotFinishedRackQty}}</view>
-						<view>负载率:{{item.LoadRatio*100}}%</view>
+						<view>负载率:{{Math.round(item.LoadRatio*100)}}%</view>
 						<view>运行状态:{{item.Status==1?'停止':item.Status==2?'运行':'演示'}}</view>
 					</view>
 					<button class="runStop" @click="lineOption(item)" :type="item.bt.type" :loading="item.bt.load" :disabled="item.bt.disabled">
@@ -301,6 +301,9 @@
 		width: 100%;
 		text-align: center;
 		text-align: left;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 
 		.ToolBar {
 			position: fixed;

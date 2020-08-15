@@ -131,7 +131,9 @@
 
 	.container {
 		width: 100%;
-
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 		.logo {
 			// width: 100%;
 			height: 250rpx;

@@ -62,6 +62,9 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 
 		.head {
 			width: 90%;

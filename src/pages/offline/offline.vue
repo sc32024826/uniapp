@@ -374,7 +374,9 @@
 	#container {
 		width: 100%;
 		text-align: center;
-		// border: solid 1rpx red;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 
 		#head {
 			position: fixed;

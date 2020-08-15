@@ -10,7 +10,7 @@
 			<view class="flex row items">
 				<view>生产线{{v.LineID}}</view>
 				<view>{{v.NotFinishedRackQty}}</view>
-				<view>{{v.LoadRatio*100}} % </view>
+				<view>{{Math.round(v.LoadRatio*100)}} % </view>
 				<view>{{v.ClothesQty}}</view>
 			</view>
 		</view>
@@ -81,7 +81,9 @@
 <style lang="less">
 	#container {
 		width: 100%;
-
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 		#head {
 			background-color: #00aaff;
 			color: white;
