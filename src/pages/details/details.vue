@@ -75,10 +75,7 @@
 				pageCount: 1, //分页总数
 				page: 1, //当前页
 				dataCount: 15, //总条数
-				PageSize: 20, //每页显示数量
-				more: 'more',
-				showTop: false
-
+				PageSize: 40 //每页显示数量
 			}
 		},
 		methods: {
@@ -157,6 +154,12 @@
 			},
 			nodata() {
 				return this.stationMsg.data.length > 0 ? false : true
+			},
+			more(){
+				return this.dataCount > this.PageSize ? 'more' : 'noMore'
+			},
+			showTop(){
+				
 			}
 		},
 		// 上拉 触底

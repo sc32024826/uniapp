@@ -24,7 +24,6 @@
 				<view class="white" style="width: 80rpx;">线上</view>
 				<view class="white" style="width: 100rpx;">下线数</view>
 			</view>
-			<view class="errorMsg" v-if="showError">{{msg}}</view>
 		</view>
 		<view id="list" class="uni-list">
 			<checkbox-group @change="checkboxChange">
@@ -33,7 +32,6 @@
 					<view class="flex row test vertical-center ">
 						<checkbox :value="item.id" :checked="item.checked" />
 						<view class="flex row mo" @click="showFullInfo(item.MO,item.StyleNo,item.ColorName,item.SizeName)">
-							<!-- <view>单号: {{item.MO}}</view> -->
 							<view class="st">{{item.StyleNo}}</view>
 							<view v-if="DoColor" class="co">{{item.ColorName}}</view>
 							<view v-if="DoSize" class="si">{{item.SizeName}}</view>
@@ -53,8 +51,10 @@
 				<view class="sum">{{totalCustom}}</view>
 			</view>
 			<button type="primary" size="mini" @click="offlineByUser">下线衣服</button>
-			<!-- <button type="primary" size="mini" @click="offlineByUser">按指定数量下线</button> -->
 		</view>
+		<uniPopup type="top" ref="popup">
+			<uni-popup-message type="error" message="数量错误" :duration="2000"></uni-popup-message>
+		</uniPopup>
 	</view>
 </template>
 
@@ -63,8 +63,13 @@
 	import { SelectAll, SelectBySize, SelectByColor, SelectByColorSize } from './classify.js'
 	import { mapState, mapMutations } from 'vuex'
 	import format from '../../utils/data/format.js'
+	import { uniPopup,uniPopupMessage } from '@dcloudio/uni-ui'
 
 	export default {
+		components: {
+			uniPopup,
+			uniPopupMessage 
+		},
 		data() {
 			return {
 				tableData: [],
@@ -74,8 +79,6 @@
 				DoColor: false, //区分颜色
 				DoSize: false, //区分尺码
 				source: [],
-				msg: '显示错误信息',
-				showError: false,
 				sum1: 0,
 				sum2: 0,
 				allselect: false // 全选标志
@@ -261,8 +264,8 @@
 									}
 									// 本地存储上一次提交记录
 									uni.setStorage({
-										key:'offlineHistory',
-										data:JSON.stringify(record)
+										key: 'offlineHistory',
+										data: JSON.stringify(record)
 									})
 									// 下线成功后 重新获取数据源
 									this.getDataSource()
@@ -283,10 +286,7 @@
 			// 数量 输入验证
 			verity(e, v) {
 				if (e.target.value > v) {
-					this.showError = true
-					this.msg = '数量错误!'
-				} else {
-					this.showError = false
+					this.$refs.popup.open()
 				}
 			},
 			// 点击 行 显示 生产单信息

@@ -15,7 +15,8 @@
 				</view>
 				<uni-collapse-item :title="item.LineID + '号线'" class="collapseitem" :open="showContent">
 					<view class="flex row wrap item">
-						<view class="box" v-for="(v,k) in item.list" :key="k" @longpress="longpressfn" v-if="item.list">
+						<view class="box" v-for="(v,k) in item.list" :key="k"  v-if="item.list">
+							<!-- @longpress="longpressfn" -->
 							<view @click="clickBox(v)">
 								<checkbox class="checkbox" v-show="showSelect" :checked="v.checked"></checkbox>
 								<view class="flex row">
@@ -77,6 +78,7 @@
 			// 长按 出现复选框
 			longpressfn() {
 				this.showSelect = true
+				this.stopJump = true
 			},
 			async clickBox(v) {
 				if (this.stopJump) {
@@ -336,8 +338,7 @@
 						width: 48%;
 						border: solid 2rpx #DCDEE2;
 						height: 200rpx;
-						margin-bottom: 10rpx;
-						margin-top: 10rpx;
+						margin:10rpx 5rpx 5rpx 5rpx;
 						background-color: white;
 
 						.checkbox {
@@ -388,6 +389,8 @@
 
 	.wrap {
 		flex-wrap: wrap;
+		// align-items: flex-start;
+		justify-content: start;
 	}
 
 	.base {

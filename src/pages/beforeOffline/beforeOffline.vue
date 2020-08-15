@@ -2,23 +2,41 @@
 	<view id="container">
 		<view id="head" class="head flex row">
 			<view>生产线</view>
-			<view>未完成</view>
-			<view>负载率</view>
+			<view>衣架数</view>
 			<view>衣服数</view>
+			<view>负载率</view>
 		</view>
 		<view class="ProductLines" v-for="(v,i) in lines" :key="i">
 			<view class="flex row items">
 				<view>生产线{{v.LineID}}</view>
 				<view>{{v.NotFinishedRackQty}}</view>
-				<view>{{Math.round(v.LoadRatio*100)}} % </view>
 				<view>{{v.ClothesQty}}</view>
+				<view>{{Math.round(v.LoadRatio*100)}} % </view>
 			</view>
+		</view>
+		<view class="sum flex row">
+			<view>合计:</view>
+			<view>{{RackQty}}</view>
+			<view>{{ClothesQty}}</view>
+			<view></view>
 		</view>
 		<view id="details">
 			<view class="flex row head">
-				<view id="seq">工序</view>
-				<view id="online">在线</view>
-				<view id="in">站内</view>
+				<view id="seq" >工序</view>
+				<view class="grow2">
+					<view id="online">在线</view>
+					<view class="flex row">
+						<view>衣架数</view>
+						<view>衣服数</view>
+					</view>
+				</view>
+				<view class="grow2">
+					<view id="in">站内</view>
+					<view class="flex row">
+						<view>衣架数</view>
+						<view>衣服数</view>
+					</view>
+				</view>
 			</view>
 			<view class="details flex row" v-for="(v,i) in details" :key="i" @click="naviTo(v)">
 				<view>{{v.SeqName}}</view>
@@ -26,6 +44,13 @@
 				<view>{{v.OnlineQty}}</view>
 				<view>{{v.InStationCount}}</view>
 				<view>{{v.InStationQty}}</view>
+			</view>
+			<view class="flex row yellow">
+				<view>合计:</view>
+				<view>{{OnlineCount}}</view>
+				<view>{{OnlineQty}}</view>
+				<view>{{InStationCount}}</view>
+				<view>{{InStationQty}}</view>
 			</view>
 		</view>
 	</view>
@@ -42,7 +67,7 @@
 		},
 		mounted() {
 			uni.showLoading({
-				title:'加载中'
+				title: '加载中'
 			})
 			this.getData()
 			this.showLineInfo()
@@ -59,7 +84,7 @@
 					})
 				} else {
 					this.lines = res.data
-					console.log(this.lines);
+					// console.log(this.lines);
 				}
 			},
 			async showLineInfo() {
@@ -69,14 +94,59 @@
 				} else {
 					if (res.data.success) {
 						this.details = res.data.response
+						console.log(this.details);
 					}
 				}
 			},
 			// 页面跳转
-			naviTo(obj){
+			naviTo(obj) {
 				uni.navigateTo({
-					url:'/pages/offline/offline?SeqCode='+ obj.SeqCode + '&SeqName=' + obj.SeqName
+					url: '/pages/offline/offline?SeqCode=' + obj.SeqCode + '&SeqName=' + obj.SeqName
 				})
+			}
+		},
+		computed: {
+			ClothesQty() {
+				let qty = 0
+				this.lines.map(e => {
+					qty += e.ClothesQty
+				})
+				return qty
+			},
+			RackQty() {
+				let qty = 0
+				this.lines.map(e => {
+					qty += Number(e.NotFinishedRackQty)
+				})
+				return qty
+			},
+			InStationCount(){
+				let qty = 0
+				this.details.map(m=>{
+					qty += m.InStationCount
+				})
+				return qty
+			},
+			InStationQty(){
+				let qty = 0
+				this.details.map(m=>{
+					qty += m.InStationQty
+				})
+				return qty
+			},
+			OnlineCount(){
+				let qty = 0
+				this.details.map(m=>{
+					qty += m.OnlineCount
+				})
+				return qty
+			},
+			OnlineQty(){
+				let qty = 0
+				this.details.map(m=>{
+					qty += m.OnlineQty
+				})
+				return qty
 			}
 		}
 	}
@@ -88,6 +158,7 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+
 		#head {
 			background-color: #00aaff;
 			color: white;
@@ -96,16 +167,26 @@
 			view {
 				text-align: center;
 				min-width: 60rpx;
+				// border: solid 1rpx red;
 			}
 		}
 
-		.head {}
-
 		.ProductLines {
 			.items {
-				margin-right: 20rpx;
-				margin-left: 10rpx;
-				padding: 30rpx 0 30rpx 0;
+				padding: 30rpx 10rpx 30rpx 10rpx;
+
+				view {
+					width: 100rpx;
+				}
+			}
+		}
+
+		.sum {
+			padding: 10rpx;
+			background-color: #ffff00;
+
+			view {
+				width: 100rpx;
 			}
 		}
 
@@ -116,27 +197,35 @@
 		}
 
 		#details {
-			// border-top: solid 5rpx black;
 			padding-top: 20rpx;
 
 			.head {
 				background-color: #00aaff;
 				padding: 10rpx;
 				color: white;
-
+				view{
+					margin-left: 10rpx;
+				}
+				.grow2{
+					flex-grow: 2;
+				}
 				#seq {
-					margin-left: 20rpx;
 					width: 120rpx;
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
 				}
 
 				#online {
 					flex-grow: 2;
 					text-align: center;
+					border-bottom: solid 1rpx white;
 				}
 
 				#in {
 					flex-grow: 2;
 					text-align: center;
+					border-bottom: solid 1rpx white;
 				}
 
 			}
@@ -153,6 +242,10 @@
 			.details:nth-child(odd) {
 				background-color: #00aa30;
 				color: white;
+			}
+			.yellow{
+				background-color: #ffff00;
+				padding:10rpx 20rpx 10rpx 20rpx;
 			}
 
 		}
