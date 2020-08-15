@@ -41,8 +41,12 @@
 			}
 		},
 		mounted() {
+			uni.showLoading({
+				title:'加载中'
+			})
 			this.getData()
 			this.showLineInfo()
+			uni.hideLoading()
 		},
 		methods: {
 			async getData() {

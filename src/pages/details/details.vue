@@ -3,47 +3,49 @@
 		<uni-collapse>
 			<uni-collapse-item title="站内衣架" :open="true" class="collapseitem">
 				<view v-if="nodata" class="infomsg">暂无数据</view>
-				<uni-swipe-action>
-					<view v-for="(v,i) in stationMsg.data" :key="i" class="width">
-						<uni-swipe-action-item :right-options="options" @click="bindClick" @change="swipeChange($event, index)">
-							<view class="flex row">
-								<view class="flex row line">
-									<view>款: {{v.StyleNo}}</view>
-									<view style="flex-shrink: 1;">色: {{v.ColorName}}</view>
-									<view style="flex-shrink: 1;">码: {{v.SizeName}}</view>
+				<view class="scroll1">
+					<uni-swipe-action>
+						<view v-for="(v,i) in stationMsg.data" :key="i" class="width">
+							<uni-swipe-action-item :right-options="options" @click="bindClick" @change="swipeChange($event, index)">
+								<view class="flex row">
+									<view class="flex row line">
+										<view>款: {{v.StyleNo}}</view>
+										<view style="flex-shrink: 1;">色: {{v.ColorName}}</view>
+										<view style="flex-shrink: 1;">码: {{v.SizeName}}</view>
+									</view>
+									<view class="flex row line">
+										<view>单: {{v.MoNo}}</view>
+										<view>号: {{v.RackCode}}</view>
+										<view>{{v.Qty}}件</view>
+									</view>
 								</view>
-								<view class="flex row line">
-									<view>单: {{v.MoNo}}</view>
-									<view>号: {{v.RackCode}}</view>
-									<view>{{v.Qty}}件</view>
-								</view>
-							</view>
-						</uni-swipe-action-item>
-					</view>
-				</uni-swipe-action>
+							</uni-swipe-action-item>
+						</view>
+					</uni-swipe-action>
+				</view>
+
 			</uni-collapse-item>
 			<uni-collapse-item title="已分配的方案" :open="true">
 				<template v-if="nodata2">
 					<view class="infomsg">暂无数据</view>
 				</template>
-				<view v-for="(v,i) in data" :key="i" class="solution" @click="showModal(v)">
-					<view class="no">{{i+1}}</view>
-					<view class="mo">{{v.MoNo}}</view>
-					<view class="style">{{v.StyleNo}}</view>
+				<view class="scroll">
+					<view v-for="(v,i) in data" :key="i" class="solution" @click="showModal(v)">
+						<view class="no">{{i+1}}</view>
+						<view class="mo">{{v.MoNo}}</view>
+						<view class="style">{{v.StyleNo}}</view>
+					</view>
+					<uni-load-more :status="more" v-if="!nodata2"></uni-load-more>
 				</view>
 			</uni-collapse-item>
 		</uni-collapse>
-		<view id="footer" class="flex row"> 
-			<view>上一页</view>
-			<view></view>
-			<view>下一页</view>
-		</view>
+		<view id="junpToTop" @click="junpToTop" v-show="showTop"></view>
 	</view>
 </template>
 
 <script>
 	import { mapState } from 'vuex'
-	import { uniCollapse, uniCollapseItem, uniSwipeAction, uniSwipeActionItem } from '@dcloudio/uni-ui'
+	import { uniCollapse, uniCollapseItem, uniSwipeAction, uniSwipeActionItem, uniLoadMore } from '@dcloudio/uni-ui'
 	import { GetStationAssign } from '@/api/api.js'
 
 	export default {
@@ -51,7 +53,8 @@
 			uniCollapse,
 			uniCollapseItem,
 			uniSwipeAction,
-			uniSwipeActionItem
+			uniSwipeActionItem,
+			uniLoadMore
 		},
 		data() {
 			return {
@@ -69,11 +72,12 @@
 						}
 					}
 				],
-				nodata: true,
 				pageCount: 1, //分页总数
 				page: 1, //当前页
 				dataCount: 15, //总条数
-				PageSize: 20 //每页显示数量
+				PageSize: 20, //每页显示数量
+				more: 'more',
+				showTop: false
 
 			}
 		},
@@ -82,11 +86,17 @@
 				console.log('点击了' + (e.position === 'left' ? '左侧' : '右侧') + e.content.text + '按钮')
 			},
 			swipeChange(e, index) {
-				console.log('当前状态：' + open + '，下标：' + index)
+				// console.log('当前状态：' + open + '，下标：' + index)
 			},
-			async getData() {
+			/**
+			 * @param {Object} PageIndex 页
+			 * @param {Object} PageSize 每页数据
+			 */
+			async getData(PageIndex, PageSize) {
 				let param = {
-					StationGuid: this.stationMsg.id
+					StationGuid: this.stationMsg.id,
+					PageIndex: PageIndex,
+					PageSize: PageSize
 				}
 				var [err, res] = await GetStationAssign(param)
 				if (err) {
@@ -96,11 +106,13 @@
 					})
 				} else {
 					let a = res.data.response
+					console.log(a);
 					this.pageCount = a.pageCount
 					this.page = a.page
 					this.dataCount = a.dataCount
 					this.PageSize = a.PageSize
-					this.data = a.data
+					return a.data
+
 				}
 			},
 			showModal(item) {
@@ -109,16 +121,48 @@
 					content: str,
 					showCancel: false
 				})
+			},
+			async setData() {
+				this.data = await this.getData(this.page, this.PageSize)
+			},
+			//拼接数据
+			async addData() {
+				// 显示正在加载
+				this.more = 'loading'
+				//如果 数据量 大于当前显示的 则加载新的
+				if (this.dataCount > this.page * this.PageSize) {
+					let newdata = await this.getData(this.page + 1, this.PageSize)
+					this.data = this.data.concat(newdata)
+				} else {
+					this.more = 'noMore'
+				}
+				this.more = 'more'
+			},
+			junpToTop() {
+				uni.pageScrollTo({
+					scrollTop: 0,
+					complete: () => {
+						this.showTop = false
+					}
+				})
 			}
 		},
 		mounted() {
-			this.getData()
+			this.setData()
 		},
 		computed: {
 			...mapState(['stationMsg']),
 			nodata2() {
 				return this.data.length > 0 ? false : true
+			},
+			nodata() {
+				return this.stationMsg.data.length > 0 ? false : true
 			}
+		},
+		// 上拉 触底
+		async onReachBottom() {
+			this.addData()
+			this.showTop = true
 		}
 	}
 </script>
@@ -130,9 +174,11 @@
 
 	#container {
 		width: 100%;
+		// height: 100vh;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+
 		.infomsg {
 			width: 100%;
 			text-align: center;
@@ -196,9 +242,31 @@
 			color: white;
 
 		}
-		#footer{
-			border: solid 1rpx red;
+
+		.scroll1 {
+			overflow-y: scroll;
+			-webkit-overflow-scrolling: touch;
+			max-height: 80vh;
+		}
+
+		.scroll {
+			// overflow-y: scroll;
+			// -webkit-overflow-scrolling: touch;
+			// height: 80vh;
+		}
+		#junpToTop{
+			width: 80rpx;
 			height: 80rpx;
+			position: fixed;
+			right: 60rpx;
+			bottom: 60rpx;
+			z-index: 4;
+			background-color: white;
+			background-image: url(../../static/img/top.png);
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: 50% 50%;
+			
 		}
 	}
 

@@ -49,6 +49,7 @@
 			<view id="sum" class="flex row">
 				<text>总计:</text>
 				<view class="sum">{{totalOnline}}</view>
+				<text>待提交:</text>
 				<view class="sum">{{totalCustom}}</view>
 			</view>
 			<button type="primary" size="mini" @click="offlineByUser">下线衣服</button>
@@ -239,6 +240,7 @@
 			},
 			// 确认下线
 			async offlineConfirm(list) {
+
 				let v = JSON.parse(window.localStorage.getItem('offlineHistory'))
 				let time = format('yyyy-MM-dd hh:mm:ss', new Date(v.time))
 				if (v.totalOnline == this.totalOnline && v.totalCustom == this.totalCustom) {
@@ -258,7 +260,10 @@
 										time: new Date()
 									}
 									// 本地存储上一次提交记录
-									window.localStorage.setItem('offlineHistory', JSON.stringify(record))
+									uni.setStorage({
+										key:'offlineHistory',
+										data:JSON.stringify(record)
+									})
 									// 下线成功后 重新获取数据源
 									this.getDataSource()
 									uni.showModal({
@@ -345,9 +350,7 @@
 			totalOnline() {
 				var total = 0
 				this.tableData.map(item => {
-					if (item.checked) {
-						total += item.Qty
-					}
+					total += item.Qty
 				})
 				return total
 			},
@@ -479,7 +482,7 @@
 				.sum {
 					width: 100rpx;
 					margin-right: 10rpx;
-					border: solid 1rpx black;
+					// border: solid 1rpx black;
 				}
 			}
 		}
