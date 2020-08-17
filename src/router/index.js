@@ -14,12 +14,12 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
 	if (to.meta.title) { document.title = to.meta.title }
 	// 设置钉钉导航栏标题 start
-	dd.biz.navigation.setTitle({
-		title: document.title, // 控制标题文本，空字符串表示显示默认文本
-		onSuccess: result => {},
-		onFail: err => {}
-	}).catch(e => {
-		console.log(e)
+	dd.ready(function() {
+		dd.biz.navigation.setTitle({
+			title: document.title, // 控制标题文本，空字符串表示显示默认文本
+			onSuccess: result => {},
+			onFail: err => {}
+		})
 	})
 	if (to.name == 'index') {
 		next()
