@@ -31,7 +31,7 @@
 				<view class="stripe" v-for="(item,i) in tableData" :key="i">
 					<view class="flex row test vertical-center ">
 						<checkbox :value="item.id" :checked="item.checked" />
-						<view class="flex row mo" @click="showFullInfo(item.MO,item.StyleNo,item.ColorName,item.SizeName)">
+						<view class="flex row mo" @click="showFullInfo(item)">
 							<view class="st">{{item.StyleNo}}</view>
 							<view v-if="DoColor" class="co">{{item.ColorName}}</view>
 							<view v-if="DoSize" class="si">{{item.SizeName}}</view>
@@ -246,7 +246,7 @@
 
 				let v = JSON.parse(window.localStorage.getItem('offlineHistory'))
 				let time = format('yyyy-MM-dd hh:mm:ss', new Date(v.time))
-				if (v.totalOnline == this.totalOnline && v.totalCustom == this.totalCustom) {
+				if (v.totalCustom == this.totalCustom) {
 					uni.showModal({
 						content: '您在 ' + time + '执行过一次相同数量的下线操作,请核对本次操作!',
 						success: async (res) => {
@@ -258,7 +258,6 @@
 									})
 								} else {
 									var record = {
-										totalOnline: this.totalOnline,
 										totalCustom: this.totalCustom,
 										time: new Date()
 									}
@@ -290,19 +289,20 @@
 				}
 			},
 			// 点击 行 显示 生产单信息
-			showFullInfo(a, b, c, d) {
+			showFullInfo(item) {
+				let {MO,StyleNo,ColorName,SizeName} = item
 				var res = ''
-				if (a) {
-					res = '生产单: ' + a + '\n'
+				if (MO) {
+					res = '生产单: ' + MO + '\n'
 				}
-				if (b) {
-					res += '款号: ' + b + '\n'
+				if (StyleNo) {
+					res += '款号: ' + StyleNo + '\n'
 				}
-				if (c) {
-					res += '颜色: ' + c + '\n'
+				if (ColorName) {
+					res += '颜色: ' + ColorName + '\n'
 				}
-				if (d) {
-					res += '尺码: ' + d
+				if (SizeName) {
+					res += '尺码: ' + SizeName
 				}
 				uni.showModal({
 					content: res,
@@ -361,6 +361,8 @@
 					if (item.checked) {
 						if (item.offline) {
 							custom += item.offline
+						}else{
+							custom += item.Qty
 						}
 					}
 				})
@@ -406,7 +408,7 @@
 
 		#list {
 			height: 1100rpx;
-			margin-top: 150rpx;
+			margin-top: 160rpx;
 
 			.stripe:nth-child(even) {
 				background: #273238;
@@ -414,12 +416,12 @@
 				color: white;
 
 				.mo {
-					border: solid 1rpx white;
+					// border: solid 1rpx white;
 				}
 
 				.count {
 					width: 80rpx;
-					border: solid 1rpx white;
+					// border: solid 1rpx white;
 				}
 			}
 
@@ -428,7 +430,7 @@
 			.mo {
 				width: 420rpx;
 				max-width: 420rpx;
-				border: solid 1rpx black;
+				// border: solid 1rpx black;
 				max-height: 42rpx;
 
 				.st {
@@ -455,7 +457,7 @@
 
 			.count {
 				width: 80rpx;
-				border: solid 1rpx black;
+				// border: solid 1rpx black;
 			}
 		}
 

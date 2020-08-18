@@ -9,15 +9,14 @@
 	import { mapMutations } from 'vuex'
 	export default {
 		data() {
-			return {
-			}
+			return {}
 		},
 		methods: {
 			async _requestAwait(data) {
 				const [err, res] = await GetLoginfoByCode(data)
 				uni.hideLoading()
 				if (err) {
-					console.log(err);
+					// console.log(err);
 					uni.showModal({
 						content: err.errMsg,
 						showCancel: false
@@ -32,7 +31,7 @@
 							url: '../main/main'
 						})
 					} else {
-						console.log(res);
+						// console.log(res);
 						uni.showModal({
 							content: res.data.msg,
 							showCancel: false
@@ -57,8 +56,7 @@
 						that._requestAwait(result)
 					},
 					onFail: function(err) {
-						console.log(err)
-						that.log = err
+						// console.log(err)
 					}
 				})
 			})
