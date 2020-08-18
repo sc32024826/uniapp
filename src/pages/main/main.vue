@@ -2,7 +2,7 @@
 	<view class="container">
 		<view class="logo">
 		</view>
-		<view class="flex row warp">
+		<view class="flex row warp main">
 			<block v-for="(item,i) in optionList">
 				<view class="flex column box" @tap="jump(item.url)">
 					<text class="test" v-html="item.icon"></text>
@@ -24,17 +24,17 @@
 			return {
 				optionList: [{
 						url: '/pages/ProcessRecord/ProcessRecord',
-						icon: '&#xe75f;',
+						icon: '&#xe60a;',
 						title: '加工记录'
 					},
 					{
 						url: '/pages/nfc/nfc',
-						icon: '&#xe756;',
+						icon: '&#xe600;',
 						title: 'NFC'
 					},
 					{
 						url: '/pages/ProInfo/ProInfo',
-						icon: '&#xe6db;',
+						icon: '&#xe691;',
 						title: '生产情况'
 					},
 					// {
@@ -44,7 +44,7 @@
 					// },
 					{
 						url: '/pages/beforeOffline/beforeOffline',
-						icon: '&#xe71f;',
+						icon: '&#xe705;',
 						title: '生产线'
 					}
 				]
@@ -82,16 +82,6 @@
 </script>
 
 <style lang="less" scoped>
-	@font-face {
-		font-family: 'iconfont';
-		/* project id 1825614 */
-		src: url('https://at.alicdn.com/t/font_1825614_wqjnnkv7ksm.eot');
-		src: url('https://at.alicdn.com/t/font_1825614_wqjnnkv7ksm.eot?#iefix') format('embedded-opentype'),
-			url('https://at.alicdn.com/t/font_1825614_wqjnnkv7ksm.woff2') format('woff2'),
-			url('https://at.alicdn.com/t/font_1825614_wqjnnkv7ksm.woff') format('woff'),
-			url('https://at.alicdn.com/t/font_1825614_wqjnnkv7ksm.ttf') format('truetype'),
-			url('https://at.alicdn.com/t/font_1825614_wqjnnkv7ksm.svg#iconfont') format('svg');
-	}
 
 	.test {
 		font-family: 'iconfont';
@@ -143,6 +133,9 @@
 			background-position: center;
 			margin: 10rpx;
 
+		}
+		.main{
+			padding: 10rpx;
 		}
 	}
 </style>

@@ -50,7 +50,7 @@
 				<text>待提交:</text>
 				<view class="sum">{{totalCustom}}</view>
 			</view>
-			<button type="primary" size="mini" @click="offlineByUser">下线衣服</button>
+			<button type="primary" size="mini" @click="offlineByUser"><text class="iconfont">&#xe620;</text>下线衣服</button>
 		</view>
 		<uniPopup type="top" ref="popup">
 			<uni-popup-message type="error" message="数量错误" :duration="2000"></uni-popup-message>

@@ -10,7 +10,7 @@
 						<view>运行状态:{{item.Status==1?'停止':item.Status==2?'运行':'演示'}}</view>
 					</view>
 					<button class="runStop" @click="lineOption(item)" :type="item.bt.type" :loading="item.bt.load" :disabled="item.bt.disabled">
-						{{item.bt.text}}
+						<text class="iconfont">{{item.bt.text == '停止'? '&#xe74b;' : '&#xe65b;'}}</text>{{item.bt.text}}
 					</button>
 				</view>
 				<uni-collapse-item :title="item.LineID + '号线'" class="collapseitem" :open="showContent">

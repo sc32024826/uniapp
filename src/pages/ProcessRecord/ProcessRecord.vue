@@ -24,8 +24,8 @@
 			</view>
 		</view>
 		<view class="flex row button-area">
-			<button type="primary" @click="nextScan">扫码</button>
-			<button type="primary" @click="inputHand">手输</button>
+			<button type="primary" @click="nextScan"><text class="iconfont">&#xe6e5;</text>扫码</button>
+			<button type="primary" @click="inputHand"><text class="iconfont">&#xe601;</text>手输</button>
 		</view>
 		<view class="table">
 			<view class="flex row head">
