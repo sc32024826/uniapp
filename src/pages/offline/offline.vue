@@ -63,12 +63,12 @@
 	import { SelectAll, SelectBySize, SelectByColor, SelectByColorSize } from './classify.js'
 	import { mapState, mapMutations } from 'vuex'
 	import format from '../../utils/data/format.js'
-	import { uniPopup,uniPopupMessage } from '@dcloudio/uni-ui'
+	import { uniPopup, uniPopupMessage } from '@dcloudio/uni-ui'
 
 	export default {
 		components: {
 			uniPopup,
-			uniPopupMessage 
+			uniPopupMessage
 		},
 		data() {
 			return {
@@ -242,39 +242,45 @@
 				}
 			},
 			// 确认下线
-			async offlineConfirm(list) {
-
-				let v = JSON.parse(window.localStorage.getItem('offlineHistory'))
-				let time = format('yyyy-MM-dd hh:mm:ss', new Date(v.time))
-				if (v.totalCustom == this.totalCustom) {
-					uni.showModal({
-						content: '您在 ' + time + '执行过一次相同数量的下线操作,请核对本次操作!',
-						success: async (res) => {
-							if (res.confirm) {
-								var [err, res] = await SetRackOfflineByZdOnlineGuid(list)
-								if (err) {
-									uni.showModal({
-										content: err
-									})
-								} else {
-									var record = {
-										totalCustom: this.totalCustom,
-										time: new Date()
-									}
-									// 本地存储上一次提交记录
-									uni.setStorage({
-										key: 'offlineHistory',
-										data: JSON.stringify(record)
-									})
-									// 下线成功后 重新获取数据源
-									this.getDataSource()
-									uni.showModal({
-										content: res.data.msg,
-										showCancel: false
-									})
+			offlineConfirm(list) {
+				var v = JSON.parse(window.localStorage.getItem('offlineHistory'))
+				if (v) {
+					let time = format('yyyy-MM-dd hh:mm:ss', new Date(v.time))
+					if (v.totalCustom == this.totalCustom) {
+						uni.showModal({
+							content: '您在 ' + time + '执行过一次相同数量的下线操作,请核对本次操作!',
+							success: (res) => {
+								if (res.confirm) {
+									this.offline(list)
 								}
 							}
-						}
+						})
+					}
+				} else {
+					this.offline(list)
+				}
+			},
+			async offline(list) {
+				var [err, res] = await SetRackOfflineByZdOnlineGuid(list)
+				if (err) {
+					uni.showModal({
+						content: err
+					})
+				} else {
+					var record = {
+						totalCustom: this.totalCustom,
+						time: new Date()
+					}
+					// 本地存储上一次提交记录
+					uni.setStorage({
+						key: 'offlineHistory',
+						data: JSON.stringify(record)
+					})
+					// 下线成功后 重新获取数据源
+					this.getDataSource()
+					uni.showModal({
+						content: res.data.msg,
+						showCancel: false
 					})
 				}
 			},
@@ -290,7 +296,7 @@
 			},
 			// 点击 行 显示 生产单信息
 			showFullInfo(item) {
-				let {MO,StyleNo,ColorName,SizeName} = item
+				let { MO, StyleNo, ColorName, SizeName } = item
 				var res = ''
 				if (MO) {
 					res = '生产单: ' + MO + '\n'
@@ -361,7 +367,7 @@
 					if (item.checked) {
 						if (item.offline) {
 							custom += item.offline
-						}else{
+						} else {
 							custom += item.Qty
 						}
 					}
