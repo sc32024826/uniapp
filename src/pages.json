@@ -121,7 +121,7 @@
 				"pagePath": "pages/my/my",
 				"text": "我的",
 				"iconPath": "static/img/user.png",
-				"selectedIconPath": "static/img/userHL.png"
+				"selectedIconPath": "static/img/userHl.png"
 			}
 		]
 	},
