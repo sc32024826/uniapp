@@ -153,6 +153,7 @@
 					});
 				} else {
 					let target = res.data.response
+					console.log(target)
 					this.Qty = target.Qty
 					this.Mo = target.Mo
 					this.Color = target.Color
@@ -242,6 +243,7 @@
 				this._requestAwait(this.RackCodeHD)
 				this.inputByHand = false
 				this.RackCodeHD = ''
+				this.haveScaned = true
 			}
 		}
 	}
