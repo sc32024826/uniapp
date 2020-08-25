@@ -32,6 +32,7 @@ export const GetQtyOnlineMODCS = param => {
  * param int
  */
 export const doneRack = param => {
+
 	return uni.request({
 		url: '/sunrise/api/MESInterfaces/SetRackToFinished',
 		data: JSON.stringify(param),

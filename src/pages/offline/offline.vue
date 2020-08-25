@@ -179,7 +179,6 @@
 						showCancel: false
 					})
 				}
-				console.log(result)
 				this.tableData = []
 				uni.showLoading({
 

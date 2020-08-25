@@ -6,7 +6,7 @@
 				<view class="scroll1">
 					<uni-swipe-action>
 						<view v-for="(v,i) in stationMsg.data" :key="i" class="width">
-							<uni-swipe-action-item :right-options="options" @click="bindClick" @change="swipeChange($event, index)">
+							<uni-swipe-action-item :right-options="options" @click="bindClick($event,v)" @change="swipeChange()">
 								<view class="flex row">
 									<view class="flex row line">
 										<view>款: {{v.StyleNo}}</view>
@@ -46,7 +46,7 @@
 <script>
 	import { mapState } from 'vuex'
 	import { uniCollapse, uniCollapseItem, uniSwipeAction, uniSwipeActionItem, uniLoadMore } from '@dcloudio/uni-ui'
-	import { GetStationAssign } from '@/api/api.js'
+	import { GetStationAssign, doneRack } from '@/api/api.js'
 
 	export default {
 		components: {
@@ -60,18 +60,13 @@
 			return {
 				data: [],
 				options: [{
-						'text': '操作1',
-						'style': {
-							"backgroundColor": "#007aff",
-						}
-					},
-					{
-						'text': '操作2',
-						'style': {
-							"backgroundColor": "#dd524d"
-						}
+					'text': '结束衣架',
+					'style': {
+						"backgroundColor": "#dd524d"
 					}
-				],
+				}],
+				showTop: false,
+				more: 'more',
 				pageCount: 1, //分页总数
 				page: 1, //当前页
 				dataCount: 15, //总条数
@@ -79,11 +74,35 @@
 			}
 		},
 		methods: {
-			bindClick(e) {
-				console.log('点击了' + (e.position === 'left' ? '左侧' : '右侧') + e.content.text + '按钮')
+			bindClick(e, v) {
+				uni.showModal({
+					content: '设置该衣架为已完成状态!',
+					success: (res) => {
+						if (res.confirm) {
+							uni.showLoading({
+								title: '请稍后'
+							})
+							this.setRackFinished(v.RackCode)
+						}
+					}
+				})
 			},
-			swipeChange(e, index) {
-				// console.log('当前状态：' + open + '，下标：' + index)
+			async setRackFinished(Code) {
+				var [err, res] = await doneRack(Code)
+				uni.hideLoading()
+				if (err) {
+					console.log(err)
+				} else {
+					console.log(res)
+					uni.showModal({
+						content: res.data.msg,
+						showCancel: false
+					})
+				}
+				this.setData()
+			},
+			swipeChange(e) {
+				// console.log('左滑操作')
 			},
 			/**
 			 * @param {Object} PageIndex 页
@@ -133,7 +152,7 @@
 				} else {
 					this.more = 'noMore'
 				}
-				this.more = 'more'
+				// this.more = 'more'
 			},
 			junpToTop() {
 				uni.pageScrollTo({
@@ -154,12 +173,12 @@
 			},
 			nodata() {
 				return this.stationMsg.data.length > 0 ? false : true
-			},
-			more(){
-				return this.dataCount > this.PageSize ? 'more' : 'noMore'
-			},
-			showTop(){
-				
+			}
+		},
+		watch: {
+			page(newv,ov) {
+				let haveShow = this.PageSize *  newv
+				this.more = this.dataCount > haveShow ? 'more' : 'noMore'
 			}
 		},
 		// 上拉 触底
@@ -257,7 +276,8 @@
 			// -webkit-overflow-scrolling: touch;
 			// height: 80vh;
 		}
-		#junpToTop{
+
+		#junpToTop {
 			width: 80rpx;
 			height: 80rpx;
 			position: fixed;
@@ -269,7 +289,7 @@
 			background-position: center;
 			background-repeat: no-repeat;
 			background-size: 50% 50%;
-			
+
 		}
 	}
 
