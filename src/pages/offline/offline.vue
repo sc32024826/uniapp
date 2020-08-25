@@ -149,6 +149,7 @@
 						content: products,
 						success: (res) => {
 							if (res.confirm) {
+								console.log(list)
 								this.offlineConfirm(list)
 							}
 						}
@@ -178,6 +179,7 @@
 						showCancel: false
 					})
 				}
+				console.log(result)
 				this.tableData = []
 				uni.showLoading({
 
@@ -201,13 +203,14 @@
 					title: '正在请求数据!'
 				})
 				var [err, res] = await GetQtyOnlineMODCS(SeqCode)
+				var result = []
 				if (err) {
 					uni.showModal({
 						content: err
 					})
 				} else {
 					let data = res.data.response
-					var result = []
+
 					if (this.DoColor) {
 						if (this.DoSize) {
 							result = SelectByColorSize(data)
@@ -255,6 +258,8 @@
 								}
 							}
 						})
+					} else {
+						this.offline(list)
 					}
 				} else {
 					this.offline(list)
@@ -267,6 +272,7 @@
 						content: err
 					})
 				} else {
+					console.log(res)
 					var record = {
 						totalCustom: this.totalCustom,
 						time: new Date()
@@ -386,12 +392,10 @@
 		width: 100%;
 		text-align: center;
 		white-space: nowrap;
-		overflow: hidden;
 		text-overflow: ellipsis;
 
 		#head {
 			position: fixed;
-			// top: 0;
 			width: 100%;
 			background-color: white;
 			z-index: 2;
@@ -413,21 +417,19 @@
 		}
 
 		#list {
-			height: 1100rpx;
+			height: 750rpx;
 			margin-top: 160rpx;
-
+			overflow: scroll;
 			.stripe:nth-child(even) {
 				background: #273238;
 				border-radius: 10rpx;
 				color: white;
 
 				.mo {
-					// border: solid 1rpx white;
 				}
 
 				.count {
 					width: 80rpx;
-					// border: solid 1rpx white;
 				}
 			}
 
@@ -436,7 +438,6 @@
 			.mo {
 				width: 420rpx;
 				max-width: 420rpx;
-				// border: solid 1rpx black;
 				max-height: 42rpx;
 
 				.st {
@@ -463,7 +464,6 @@
 
 			.count {
 				width: 80rpx;
-				// border: solid 1rpx black;
 			}
 		}
 
@@ -474,7 +474,7 @@
 			z-index: 2;
 
 			padding-top: 5rpx;
-			padding-bottom: 30rpx;
+			padding-bottom: 15rpx;
 			background-color: white;
 
 			#sum {
@@ -490,7 +490,6 @@
 				.sum {
 					width: 100rpx;
 					margin-right: 10rpx;
-					// border: solid 1rpx black;
 				}
 			}
 		}
@@ -500,7 +499,6 @@
 
 	//
 	.test {
-		// border: solid 1px red;
 		justify-content: space-around;
 		min-height: 80rpx;
 		margin-bottom: 10rpx;

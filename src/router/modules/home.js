@@ -69,7 +69,13 @@ const home = [{
 		meta: {
 			title: '生产线'
 		}
+	},
+	{
+		path: '/pages/TreeData/TreeData',
+		name: 'TreeData',
+		meta: {
+			title: ''
+		}
 	}
-
 ]
 export default home

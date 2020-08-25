@@ -99,6 +99,10 @@
 				}
 			}
         }
+        ,{
+            "path" : "pages/TreeData/TreeData",
+            "style" : {}
+        }
     ],
 	"tabBar": {
 		"color": "#7a7e83",
