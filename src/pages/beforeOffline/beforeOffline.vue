@@ -1,51 +1,51 @@
 <template>
 	<view id="container">
-		<view id="head" class="head flex row">
+		<view id="head" class="head row between">
 			<view>生产线</view>
 			<view>衣架数</view>
 			<view>衣服数</view>
 			<view>负载率</view>
 		</view>
 		<view class="ProductLines" v-for="(v,i) in lines" :key="i">
-			<view class="flex row items">
+			<view class="row between items">
 				<view>生产线{{v.LineID}}</view>
 				<view>{{v.NotFinishedRackQty}}</view>
 				<view>{{v.ClothesQty}}</view>
 				<view>{{Math.round(v.LoadRatio*100)}} % </view>
 			</view>
 		</view>
-		<view class="sum flex row">
+		<view class="sum row between">
 			<view>合计:</view>
 			<view>{{RackQty}}</view>
 			<view>{{ClothesQty}}</view>
 			<view></view>
 		</view>
 		<view id="details">
-			<view class="flex row head">
-				<view id="seq" >工序</view>
+			<view class="row between head">
+				<view id="seq" class="column">工序</view>
 				<view class="grow2">
 					<view id="online">在线</view>
-					<view class="flex row">
+					<view class="row between">
 						<view>衣架数</view>
 						<view>衣服数</view>
 					</view>
 				</view>
 				<view class="grow2">
 					<view id="in">站内</view>
-					<view class="flex row">
+					<view class="row between">
 						<view>衣架数</view>
 						<view>衣服数</view>
 					</view>
 				</view>
 			</view>
-			<view class="details flex row" v-for="(v,i) in details" :key="i" @click="naviTo(v)">
+			<view class="details row between" v-for="(v,i) in details" :key="i" @click="naviTo(v)">
 				<view>{{v.SeqName}}</view>
 				<view>{{v.OnlineCount}}</view>
 				<view>{{v.OnlineQty}}</view>
 				<view>{{v.InStationCount}}</view>
 				<view>{{v.InStationQty}}</view>
 			</view>
-			<view class="flex row yellow">
+			<view class="row between yellow">
 				<view>合计:</view>
 				<view>{{OnlineCount}}</view>
 				<view>{{OnlineQty}}</view>
@@ -211,8 +211,6 @@
 				}
 				#seq {
 					width: 120rpx;
-					display: flex;
-					flex-direction: column;
 					justify-content: center;
 				}
 
@@ -249,14 +247,5 @@
 			}
 
 		}
-	}
-
-	.flex {
-		display: flex;
-	}
-
-	.row {
-		flex-direction: row;
-		justify-content: space-between;
 	}
 </style>

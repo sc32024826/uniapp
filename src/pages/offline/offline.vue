@@ -1,7 +1,7 @@
 <template>
 	<view id="container">
 		<view id="head">
-			<view id="toolbar" class="flex center">
+			<view id="toolbar" class="row center">
 				<view class="dropdown">
 					<picker @change="bindPickerChange" :value="index" :range="array">
 						<view>选择工序: {{array[index]}}</view>
@@ -16,7 +16,7 @@
 					</label>
 				</checkbox-group>
 			</view>
-			<view id="title" class="flex row vertical-center">
+			<view id="title" class="row vertical-center">
 				<checkbox-group @change="selectAll">
 					<checkbox value="1" ref="selectAll" :checked="allselect"></checkbox>
 				</checkbox-group>
@@ -29,9 +29,9 @@
 			<checkbox-group @change="checkboxChange">
 				<view v-if="!show">暂无数据</view>
 				<view class="stripe" v-for="(item,i) in tableData" :key="i">
-					<view class="flex row test vertical-center ">
+					<view class="row test vertical-center ">
 						<checkbox :value="item.id" :checked="item.checked" />
-						<view class="flex row mo" @click="showFullInfo(item)">
+						<view class="row mo" @click="showFullInfo(item)">
 							<view class="st">{{item.StyleNo}}</view>
 							<view v-if="DoColor" class="co">{{item.ColorName}}</view>
 							<view v-if="DoSize" class="si">{{item.SizeName}}</view>
@@ -43,14 +43,14 @@
 				</view>
 			</checkbox-group>
 		</view>
-		<view class="flex column bottom">
-			<view id="sum" class="flex row">
+		<view class="row bottom">
+			<view id="sum" class="row">
 				<text>总计:</text>
 				<view class="sum">{{totalOnline}}</view>
 				<text>待提交:</text>
 				<view class="sum">{{totalCustom}}</view>
 			</view>
-			<button type="primary" size="mini" @click="offlineByUser"><text class="iconfont">&#xe620;</text>下线衣服</button>
+			<button type="primary" size="mini" @click="offlineByUser">下线衣服</button>
 		</view>
 		<uniPopup type="top" ref="popup">
 			<uni-popup-message type="error" message="数量错误" :duration="2000"></uni-popup-message>
@@ -386,27 +386,36 @@
 	}
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
+	$height:100vh;
+	$head-height:9vh;
+	$bottom-height:7vh;
+
 	#container {
 		width: 100%;
 		text-align: center;
 		white-space: nowrap;
 		text-overflow: ellipsis;
+		// display: flex;
+		// flex-direction: column;
 
 		#head {
-			position: fixed;
 			width: 100%;
-			background-color: white;
 			z-index: 2;
+			height: $head-height;
+			min-height: 74px;
 
 			#toolbar {
 				margin: 5rpx;
+			}
+			#title {
+				height: 80rpx;
+				background-color: #53B4DF;
 			}
 
 			.errorMsg {
 				width: 100%;
 				top: 0;
-				position: fixed;
 				background-color: red;
 				color: white;
 				height: 60rpx;
@@ -416,23 +425,15 @@
 		}
 
 		#list {
-			height: 750rpx;
-			margin-top: 160rpx;
+			height: calc(93vh - 74px);
 			overflow: scroll;
+
 			.stripe:nth-child(even) {
-				background: #273238;
+				background-color: #273238;
 				border-radius: 10rpx;
 				color: white;
 
-				.mo {
-				}
-
-				.count {
-					width: 80rpx;
-				}
 			}
-
-			.stripe:nth-child(odd) {}
 
 			.mo {
 				width: 420rpx;
@@ -467,20 +468,17 @@
 		}
 
 		.bottom {
-			position: fixed;
-			bottom: 0rpx;
 			width: 100%;
 			z-index: 2;
-
-			padding-top: 5rpx;
-			padding-bottom: 15rpx;
-			background-color: white;
+			height: $bottom-height;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 5rpx;
 
 			#sum {
-				border-top: solid 1rpx grey;
-				border-bottom: solid 1rpx grey;
-				padding: 5rpx 0 5rpx 0;
-				margin-bottom: 10rpx;
+				height: $bottom-height;
+				align-items: center;
+				width: 70vw;
 
 				text {
 					flex-grow: 4;
@@ -494,11 +492,12 @@
 		}
 	}
 
-
+	.row{
+		justify-content: space-around;
+	}
 
 	//
 	.test {
-		justify-content: space-around;
 		min-height: 80rpx;
 		margin-bottom: 10rpx;
 		border: solid 1rpx black;
@@ -510,19 +509,6 @@
 		width: 100rpx;
 	}
 
-	.flex {
-		display: flex;
-	}
-
-	.row {
-		flex-direction: row;
-		justify-content: space-around;
-	}
-
-	.column {
-		flex-direction: column;
-	}
-
 	.center {
 		justify-content: center;
 
@@ -532,21 +518,8 @@
 		align-items: center; // 垂直居中
 	}
 
-
-
-	#title {
-		height: 80rpx;
-		background-color: #53B4DF;
-		margin-bottom: 20rpx;
-
-	}
-
 	.white {
 		color: white;
-	}
-
-	.debug {
-		border: solid 1rpx red;
 	}
 
 	.dropdown {

@@ -1,19 +1,8 @@
-# shanying_app
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+2020-8-26:
+	修复:站点信息页面左滑结束衣架之后 没有更新数据的问题,
+	发现新的无问题:结束衣架成功之后 返回前页 是否需要重新刷新前页?
+2020-8-27:
+	修改下线页面各模块高度,换成scss样式
+	大面积删除了私有样式,重复部分写在了公共样式app.vue中
+	自定义的属性结构,展开折叠动画
+	完成第一级展开操作

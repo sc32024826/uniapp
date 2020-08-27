@@ -2,9 +2,9 @@
 	<view class="container">
 		<view class="logo">
 		</view>
-		<view class="flex row warp main">
+		<view class="row warp main">
 			<block v-for="(item,i) in optionList">
-				<view class="flex column box" @tap="jump(item.url)">
+				<view class="column box" @tap="jump(item.url)">
 					<text class="test" v-html="item.icon"></text>
 					<text class="title">{{item.title}}</text>
 				</view>
@@ -89,17 +89,7 @@
 		font-style: normal;
 	}
 
-	.flex {
-		display: flex;
-		flex-wrap: wrap;
-	}
-
-	.column {
-		flex-direction: column;
-	}
-
 	.row {
-		flex-direction: row;
 		justify-content: space-between;
 	}
 

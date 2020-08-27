@@ -113,3 +113,13 @@ export const QueryQtyWithSeq = () => {
 		url: '/sunrise/api/MESInterfaces/QueryQtyWithSeq'
 	})
 }
+
+/**
+ * 根据款色码信息返回对应的方案唯一键列表
+ */
+export const QueryRouteGuidsByMODCS = param => {
+	return uni.request({
+		url: '/sunrise/api/MESInterfaces/QueryRouteGuidsByMODCS',
+		data: param
+	})
+}

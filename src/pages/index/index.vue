@@ -1,5 +1,5 @@
 <template>
-	<div id="Container">
+	<div id="Container" class="row">
 	</div>
 </template>
 <script>
@@ -16,7 +16,7 @@
 				const [err, res] = await GetLoginfoByCode(data)
 				uni.hideLoading()
 				if (err) {
-					// console.log(err);
+					console.error(err);
 					uni.showModal({
 						content: err.errMsg,
 						showCancel: false
@@ -56,7 +56,7 @@
 						that._requestAwait(result)
 					},
 					onFail: function(err) {
-						// console.log(err)
+						console.error(err)
 					}
 				})
 			})
@@ -67,12 +67,9 @@
 <style lang="less" scoped>
 	#Container {
 		width: 100%;
-		display: flex;
 		justify-content: center;
-		flex-direction: column;
 
 		view {
-			// border: solid 1px red;
 			text-align: center;
 		}
 	}

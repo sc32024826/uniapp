@@ -7,13 +7,13 @@
 					<uni-swipe-action>
 						<view v-for="(v,i) in stationMsg.data" :key="i" class="width">
 							<uni-swipe-action-item :right-options="options" @click="bindClick($event,v)" @change="swipeChange()">
-								<view class="flex row">
-									<view class="flex row line">
+								<view class="row between wrap">
+									<view class="row between wrap line">
 										<view>款: {{v.StyleNo}}</view>
 										<view style="flex-shrink: 1;">色: {{v.ColorName}}</view>
 										<view style="flex-shrink: 1;">码: {{v.SizeName}}</view>
 									</view>
-									<view class="flex row line">
+									<view class="row between wrap line">
 										<view>单: {{v.MoNo}}</view>
 										<view>号: {{v.RackCode}}</view>
 										<view>{{v.Qty}}件</view>
@@ -30,7 +30,7 @@
 					<view class="infomsg">暂无数据</view>
 				</template>
 				<view class="scroll">
-					<view v-for="(v,i) in data" :key="i" class="solution" @click="showModal(v)">
+					<view v-for="(v,i) in data" :key="i" class="solution row" @click="showModal(v)">
 						<view class="no">{{i+1}}</view>
 						<view class="mo">{{v.MoNo}}</view>
 						<view class="style">{{v.StyleNo}}</view>
@@ -46,7 +46,7 @@
 <script>
 	import { mapState } from 'vuex'
 	import { uniCollapse, uniCollapseItem, uniSwipeAction, uniSwipeActionItem, uniLoadMore } from '@dcloudio/uni-ui'
-	import { GetStationAssign, doneRack } from '@/api/api.js'
+	import { GetStationAssign, doneRack, QueryInStationRackInfByStationGuid } from '@/api/api.js'
 
 	export default {
 		components: {
@@ -96,10 +96,15 @@
 					console.log(res)
 					uni.showModal({
 						content: res.data.msg,
-						showCancel: false
+						showCancel: false,
+						success: (res) => {
+							if (res.confirm) {
+								this.getRackStatus()
+							}
+						}
 					})
 				}
-				this.setData()
+
 			},
 			swipeChange(e) {
 				// console.log('左滑操作')
@@ -161,6 +166,28 @@
 						this.showTop = false
 					}
 				})
+			},
+			// 获取站内衣架信息,
+			async getRackStatus() {
+				let param = {
+					StationGuid: this.stationMsg.id
+				}
+				var [err, res] = await QueryInStationRackInfByStationGuid(param)
+				if (err) {
+					uni.showModal({
+						content: err,
+						showCancel: false
+					})
+				} else {
+					if (res.data.success == true) {
+						this.stationMsg.data = res.data.response
+					} else {
+						uni.showModal({
+							content: res.data.msg,
+							showCancel: false
+						})
+					}
+				}
 			}
 		},
 		mounted() {
@@ -171,18 +198,23 @@
 			nodata2() {
 				return this.data.length > 0 ? false : true
 			},
+			// 显示暂无数据
 			nodata() {
-				return this.stationMsg.data.length > 0 ? false : true
+				if (this.stationMsg.data) {
+					return this.stationMsg.data.length > 0 ? false : true
+				} else {
+					return true
+				}
 			}
 		},
 		watch: {
-			page(newv,ov) {
-				let haveShow = this.PageSize *  newv
+			page(newv, ov) {
+				let haveShow = this.PageSize * newv
 				this.more = this.dataCount > haveShow ? 'more' : 'noMore'
 			}
 		},
 		// 上拉 触底
-		async onReachBottom() {
+		onReachBottom() {
 			this.addData()
 			this.showTop = true
 		}
@@ -190,9 +222,6 @@
 </script>
 
 <style lang="less" scoped>
-	.debug {
-		border: solid 1rpx red;
-	}
 
 	#container {
 		width: 100%;
@@ -237,8 +266,6 @@
 		}
 
 		.solution {
-			display: flex;
-			flex-direction: row;
 			justify-content: space-around;
 
 			.no {
@@ -271,12 +298,6 @@
 			max-height: 80vh;
 		}
 
-		.scroll {
-			// overflow-y: scroll;
-			// -webkit-overflow-scrolling: touch;
-			// height: 80vh;
-		}
-
 		#junpToTop {
 			width: 80rpx;
 			height: 80rpx;
@@ -291,15 +312,5 @@
 			background-size: 50% 50%;
 
 		}
-	}
-
-	.flex {
-		display: flex;
-	}
-
-	.row {
-		flex-direction: row;
-		justify-content: space-between;
-		flex-wrap: wrap;
 	}
 </style>

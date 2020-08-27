@@ -74,7 +74,7 @@ const home = [{
 		path: '/pages/TreeData/TreeData',
 		name: 'TreeData',
 		meta: {
-			title: ''
+			title: '树形数据'
 		}
 	}
 ]

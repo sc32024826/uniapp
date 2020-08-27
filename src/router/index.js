@@ -10,6 +10,10 @@ Vue.use(Router)
 const router = new Router({
 	routes: [...modules] //路由表
 });
+
+const ENV = process.env.NODE_ENV
+
+console.log('当前环境',ENV)
 //全局路由前置守卫
 router.beforeEach((to, from, next) => {
 	if (to.meta.title) { document.title = to.meta.title }
@@ -22,10 +26,11 @@ router.beforeEach((to, from, next) => {
 		})
 	})
 	if (to.name == 'index') {
+		console.log('不需要登录 直接跳转')
 		next()
 	} else {
-		if (store.state.userName) {
-			// console.log(store.state.userName)
+		// 如果是开发模式则放行
+		if (store.state.userName || ENV === 'development' ) {
 			next()
 		} else {
 			router.push({ name: 'index' })

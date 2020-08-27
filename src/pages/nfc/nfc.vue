@@ -47,14 +47,13 @@
 	}
 </script>
 
-<style>
+<style scoped>
 	.flex{
 		display: flex;
 		width: 100%;
 		text-align: center;
 	}
 	.column{
-		flex-direction: column;
 		justify-content: center;
 	}
 </style>

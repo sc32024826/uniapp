@@ -1,9 +1,9 @@
 <template>
 	<view class="container">
 		<uni-collapse>
-			<view class="lineInfo" v-for="(item,i) in data" :key="i">
-				<view class="flex row DateBar">
-					<view class="flex row wrap infomation">
+			<view class="lineInfo column" v-for="(item,i) in data" :key="i">
+				<view class="row DateBar">
+					<view class="row wrap infomation">
 						<view>总数:{{item.ClothesQty}}</view>
 						<view>衣架数:{{item.NotFinishedRackQty}}</view>
 						<view>负载率:{{Math.round(item.LoadRatio*100)}}%</view>
@@ -14,17 +14,17 @@
 					</button>
 				</view>
 				<uni-collapse-item :title="item.LineID + '号线'" class="collapseitem" :open="showContent">
-					<view class="flex row wrap item">
-						<view class="box" v-for="(v,k) in item.list" :key="k"  v-if="item.list">
+					<view class="row wrap item">
+						<view class="box" v-for="(v,k) in item.list" :key="k" v-if="item.list">
 							<!-- @longpress="longpressfn" -->
 							<view @click="clickBox(v)">
 								<checkbox class="checkbox" v-show="showSelect" :checked="v.checked"></checkbox>
-								<view class="flex row">
+								<view class="row">
 									<view :class="v.Enable*v.EnableIn == false ? 'base stop':'base light'"></view>
 									<view>{{v.LineID}}-{{v.StationID}}</view>
 									<view>{{v.SeqName}}</view>
 								</view>
-								<view class="flex row">
+								<view class="row">
 									<view>{{v.EmpID}}-{{v.Name}}</view>
 									<view>{{v.RackCnt}}/{{v.RackCap}}</view>
 								</view>
@@ -35,6 +35,9 @@
 				</uni-collapse-item>
 			</view>
 		</uni-collapse>
+		<view class="footer">
+			<button type="primary" v-if="showSubmitBtn" @click="navigateToTree">提交</button>
+		</view>
 	</view>
 </template>
 
@@ -50,6 +53,7 @@
 		data() {
 			return {
 				data: [],
+				showSubmitBtn: false,
 				showSelect: false, // 是否显示多选框
 				showContent: false, // 是否展开下拉扩展框
 				stopJump: false, // 当触发多选时,改为true 禁止 跳转页面
@@ -82,7 +86,7 @@
 			},
 			async clickBox(v) {
 				if (this.stopJump) {
-					v.checked = ! v.checked
+					v.checked = !v.checked
 					return
 				}
 				uni.showLoading({
@@ -179,7 +183,7 @@
 				} else {
 					if (res.data.success == true) {
 						let data = res.data.response
-						
+
 						data.map(e => {
 							e = Object.assign(e, { checked: false })
 						})
@@ -226,10 +230,10 @@
 						_this.showSelect = true
 						_this.showContent = true
 						_this.stopJump = true
+						// 点击 选择之后 将按钮改成取消
 						_this.cancelSelect()
+						_this.showSubmitBtn = true
 					}
-				}).catch(e => {
-					console.log(e)
 				})
 			},
 			cancelSelect() {
@@ -242,15 +246,10 @@
 						_this.showSelect = false
 						_this.stopJump = false
 						_this.selectManay()
+						_this.showSubmitBtn = false
 					}
-				}).catch(e => {
-					console.log(e)
 				})
 			},
-			toggle(val) {
-				console.log('子组件 emit事件,传递的参数为: ', val)
-			},
-			//
 			delayGetData() {
 				//判断定时器是否结束
 				if (this.timerOver) {
@@ -271,17 +270,21 @@
 					}, 10000, true)
 					this.timerOver = false
 				}
+			},
+			// 跳转到treedata页面
+			navigateToTree(){
+				uni.navigateTo({
+					url:'/pages/TreeData/TreeData'
+				})
 			}
 		},
-		async mounted() {
+		mounted() {
 			// 加载数据
-			await this.getData()
+			this.getData()
 			// 显示 钉钉导航栏 右侧按钮
 			this.selectManay()
-			// 根据生产线数量生成一个 全部为false 的数组,用于控制每条生产线按钮的 禁用状态
-			console.log(this.data)
 		},
-		onHide() {
+		beforeDestroy() {
 			dd.biz.navigation.setRight({
 				show: false,
 				control: true,
@@ -293,12 +296,7 @@
 </script>
 
 <style lang="less" scopde>
-	//调试 规则
-	.debug {
-		border: solid 1rpx red;
-	}
 
-	// 正式规则
 	.container {
 		width: 100%;
 		text-align: center;
@@ -312,9 +310,6 @@
 		}
 
 		.lineInfo {
-			display: flex;
-			flex-direction: column;
-			justify-content: space-between;
 
 			.infomation view {
 				width: 250rpx;
@@ -338,7 +333,7 @@
 						width: 48%;
 						border: solid 2rpx #DCDEE2;
 						height: 200rpx;
-						margin:10rpx 5rpx 5rpx 5rpx;
+						margin: 10rpx 5rpx 5rpx 5rpx;
 						background-color: white;
 
 						.checkbox {
@@ -366,6 +361,14 @@
 
 		}
 
+		.footer {
+			width: 100%;
+			height: 6vh;
+			min-height: 100rpx;
+			position: fixed;
+			bottom: 0;
+			color: white;
+		}
 	}
 
 	uni-collapse {
@@ -376,12 +379,7 @@
 		display: none;
 	}
 
-	.flex {
-		display: flex;
-	}
-
 	.row {
-		flex-direction: row;
 		align-items: center;
 		justify-content: space-around;
 		margin: 10rpx 0rpx 10rpx 0rpx;
@@ -389,7 +387,6 @@
 
 	.wrap {
 		flex-wrap: wrap;
-		// align-items: flex-start;
 		justify-content: start;
 	}
 

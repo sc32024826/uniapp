@@ -1,8 +1,8 @@
 <template>
-	<view class="content">
-		<view class="head flex row">
+	<view class="content column">
+		<view class="head row">
 			<image :src="avatar" class="avatar"></image>
-			<view class="flex column name">
+			<view class="column name">
 				<text>{{userName}}</text>
 			</view>
 		</view>
@@ -58,8 +58,6 @@
 <style scoped lang="less">
 	.content {
 		width: 100%;
-		display: flex;
-		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		white-space: nowrap;
@@ -89,9 +87,7 @@
 
 
 		.body {
-			display: flex;
 			justify-content: center;
-			// border: solid 1rpx red;
 			min-height: 700rpx;
 
 			#qrcode {
@@ -107,13 +103,5 @@
 			border-top: solid 1rpx black;
 			text-align: center;
 		}
-	}
-
-	.flex {
-		display: flex;
-	}
-
-	.column {
-		flex-direction: column;
 	}
 </style>

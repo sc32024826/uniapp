@@ -16,11 +16,14 @@
 	/* 头条小程序需要把 iconfont 样式放到组件外 */
 	/* @import "components/m-icon/m-icon.css"; */
 	@import './static/common.css';
+
 	/*每个页面公共css */
 	page {
 		min-height: 100%;
 		display: flex;
 		font-size: 16px;
+		font-family: 'iconfont';
+		font-style: normal;
 	}
 
 	/* #ifdef MP-BAIDU */
@@ -130,5 +133,66 @@
 
 	button.primary {
 		background-color: #0faeff;
+	}
+
+	.debug {
+		border: solid 1rpx red;
+	}
+
+	.column {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.row {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.between {
+		justify-content: space-between;
+	}
+
+	.arround {
+		justify-content: space-around;
+	}
+
+	.cycle {
+		animation: turn 1s linear infinite;
+		-webkit-animation:turn 1s linear infinite;
+		
+	}
+
+	/* 
+	      turn : 定义的动画名称
+	      1s : 动画时间
+	      linear : 动画以何种运行轨迹完成一个周期
+	      infinite :规定动画应该无限次播放
+	     */
+	@keyframes turn {
+		0% {
+			transform: rotate(0deg);
+			-webkit-transform: rotate(0deg);
+		}
+
+		25% {
+			transform: rotate(90deg);
+			-webkit-transform: rotate(90deg);
+		}
+
+		50% {
+			transform: rotate(180deg);
+			-webkit-transform: rotate(180deg);
+		}
+
+		75% {
+			transform: rotate(270deg);
+			-webkit-transform: rotate(270deg);
+		}
+
+		100% {
+			transform: rotate(360deg);
+			-webkit-transform: rotate(360deg);
+		}
 	}
 </style>

@@ -1,8 +1,8 @@
 <template>
 	<view id="main">
-		<view class="flex column top" v-if="haveScaned">
-			<view class="flex column margin">
-				<view class="flex row space">
+		<view class="column top" v-if="haveScaned">
+			<view class="column margin">
+				<view class="row between">
 					<view @click="finishRack(RackCode)">衣架号:{{RackCode}}
 						<uni-icons type="info-filled" size="20" v-if="RackCode"></uni-icons>
 					</view>
@@ -17,46 +17,46 @@
 				<view v-if="Mo" @click="showList">数量:{{Qty}}
 					<uni-icons type="info-filled" size="20"></uni-icons>
 				</view>
-				<view class="flex row" v-if="Mo">
+				<view class="row" v-if="Mo">
 					<view class="currentSeq">当前工序:{{SeqCode}}-{{SeqName}}</view>
 					<view class="currentCustation">当前站:{{CurrentWorkLine}}-{{CurrentStationID}}</view>
 				</view>
 			</view>
 		</view>
-		<view class="flex row button-area">
+		<view class="row button-area">
 			<button type="primary" @click="nextScan"><text class="iconfont">&#xe6e5;</text>扫码</button>
 			<button type="primary" @click="inputHand"><text class="iconfont">&#xe601;</text>手输</button>
 		</view>
 		<view class="table">
-			<view class="flex row head">
-				<view class="cell station">站号</view>
-				<view class="flex column name">
-					<view class="cell">工号</view>
-					<view class="cell">姓名</view>
+			<view class="row head">
+				<view class="cell column station">站号</view>
+				<view class="column name">
+					<view class="cell column">工号</view>
+					<view class="cell column">姓名</view>
 				</view>
-				<view class="cell time">时间</view>
-				<view class="cell type">类型</view>
-				<view class="cell seq">工序</view>
-				<view class="cell count" @click="showList">数量</view>
+				<view class="cell column time">时间</view>
+				<view class="cell column type">类型</view>
+				<view class="cell column seq">工序</view>
+				<view class="cell column count" @click="showList">数量</view>
 			</view>
 			<view class="data">
 				<uni-collapse>
 					<block v-for="(item,key) in tableData" :key="key">
 						<uni-collapse-item :open="isOpen(item.RackCode)" :title="title(key,item.RackCode)" :class="[item.RackCode==RackCode?'item':'']">
 							<view v-for="(v,k) in item.ProcessRecords" :key="k">
-								<view :class="[v.RecordType == '进站' ? 'light' : 'flex row']">
-									<view class="cell station">{{v.StationID}}</view>
-									<view class="flex column name">
-										<view class="cell">{{v.EmployeeID}}</view>
-										<view class="cell">{{v.Name}}</view>
+								<view :class="[v.RecordType == '进站' ? 'light row' : 'row']">
+									<view class="cell column station">{{v.StationID}}</view>
+									<view class="column name">
+										<view class="cell column">{{v.EmployeeID}}</view>
+										<view class="cell column">{{v.Name}}</view>
 									</view>
-									<view class="cell time">{{v.Timestamp}}</view>
-									<view class="cell type">{{v.RecordType}}</view>
-									<view class="flex column seq">
-										<view class="cell">{{v.SeqCode}}</view>
-										<view class="cell">{{v.SeqName}}</view>
+									<view class="cell column time">{{v.Timestamp}}</view>
+									<view class="cell column type">{{v.RecordType}}</view>
+									<view class="column seq">
+										<view class="cell column">{{v.SeqCode}}</view>
+										<view class="cell column">{{v.SeqName}}</view>
 									</view>
-									<view class="cell count">{{v.Qty}}</view>
+									<view class="cell column count">{{v.Qty}}</view>
 								</view>
 							</view>
 						</uni-collapse-item>
@@ -64,7 +64,7 @@
 				</uni-collapse>
 			</view>
 		</view>
-		<view id="modal" v-show="inputByHand">
+		<view id="modal" v-show="inputByHand" class="row">
 			<view id="mask">
 				<text>手动输入衣架号</text>
 				<input type="number" placeholder="衣架号" v-model="RackCodeHD" />
@@ -250,5 +250,128 @@
 </script>
 
 <style lang="less" scoped>
-	@import url("./style.less");
+	#main {
+		width: 100%;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		.button-area{
+			width: 100%;
+			padding: 10rpx;
+		}
+		.button-area button{
+			width: 40%;
+		}
+		#modal{
+			position: fixed;
+			top:0;
+			z-index: 10;
+			width: 100%;
+			height: 100vh;
+			background-color: #cacaca;
+			opacity: 95%;
+			justify-content: center;
+			#mask{
+				margin-top: 10%;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				border-radius: 10rpx;
+				border: solid 2rpx black;
+				width: 90%;
+				height: 400rpx;
+				text{
+					margin: 10rpx;
+				}
+				input{
+					width: 50%;
+					height: 15%;
+					background-color: white;
+					border-radius: 10rpx;
+					text-align: center;
+					
+				}
+				view{
+					width: 80%;
+					display: flex;
+					justify-content: space-between;
+				}
+				button{
+					width: 40%;
+					margin: 30rpx 10rpx 10rpx 10rpx;
+				}
+			}
+		
+		}
+	}
+	
+	.head {
+		background-color: #F8F8F9;
+	}
+	
+	.cell {
+		justify-content: center;
+		border: solid 1rpx #DCDEE2;
+		min-height: 50rpx;
+	}
+	
+	.table {
+		text-align: center;
+	}
+	
+	//站号格
+	.station {
+		width: 16%;
+	}
+	
+	// 姓名格
+	.name {
+		width: 16%;
+	}
+	
+	// 时间格
+	.time {
+		width: 32%;
+		white-space: pre-wrap;
+	}
+	
+	// 类型格
+	.type {
+		width: 10%;
+	}
+	
+	// 工序
+	.seq {
+		width: 15%;
+	}
+	
+	// 数量
+	.count {
+		width: 11%;
+	}
+	
+	.light {
+		background: #CCCCCC;
+	}
+	
+	.red {
+		color: red;
+	}
+	.top{
+		font-size: 40rpx;
+	}
+	.currentSeq{
+		// border: solid 1px red;
+		flex-grow: 1;
+	}
+	.currentCustation{
+		// border: solid 1px red;
+		flex-grow: 2;
+	}
+	.item{
+		border: solid 1rpx #F8F8F9;
+		background-color:#2DB7F5;
+	}
+	
 </style>
