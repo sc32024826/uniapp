@@ -97,7 +97,7 @@
 				}
 			}
 		}, {
-			"path": "pages/TreeData/TreeData",
+			"path": "pages/TreeData/index",
 			"style": {
 				"app-plus": {
 					"titleNView": false

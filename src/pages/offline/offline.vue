@@ -104,7 +104,7 @@
 				let param = e.detail.value
 				param.indexOf('size') > -1 ? this.DoSize = true : this.DoSize = false
 				param.indexOf('color') > -1 ? this.DoColor = true : this.DoColor = false,
-					this.getDate()
+				this.getDate()
 			},
 			// 勾选列表行
 			checkboxChange(e) {
@@ -408,6 +408,7 @@
 			#toolbar {
 				margin: 5rpx;
 			}
+
 			#title {
 				height: 80rpx;
 				background-color: #53B4DF;
@@ -492,7 +493,7 @@
 		}
 	}
 
-	.row{
+	.row {
 		justify-content: space-around;
 	}
 

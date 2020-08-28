@@ -71,7 +71,7 @@ const home = [{
 		}
 	},
 	{
-		path: '/pages/TreeData/TreeData',
+		path: '/pages/TreeData/index',
 		name: 'TreeData',
 		meta: {
 			title: '树形数据'

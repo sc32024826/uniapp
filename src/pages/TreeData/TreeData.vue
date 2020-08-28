@@ -3,16 +3,21 @@
 		<!-- <mix-tree :list="treeData" @treeItemClick="treeItemClick"></mix-tree> -->
 		<block v-for="(v,i) in treeData" :key="i">
 			<view class="list row" @click="showChild(i,v)">
-				<block><text :class="v.open ? 'rotate-ani':'rotate-ani-rev'">&#xe65c;</text>{{v.name}}</block>
+				<block>
+					<text :class="v.open ? 'rotate-ani':'rotate-ani-rev'">&#xe65c;</text>
+
+					<text>{{v.name}}</text>
+				</block>
 				<text class="cycle center" v-show="v.loading">&#xe613;</text>
 			</view>
 			<block>
 				<view class="children">
-					<view v-for="(val,index) in v.children" :key="index" :class="v.open ? 'open-ani':'open-ani-rev'"
-					 @click="showChild2(val,index)">
+					<view v-for="(val,index) in v.children" :key="index" :class="v.open ? 'open-ani':'open-ani-rev'" @click="showChild2(val,index)">
 						<view>
 							<text :class="val.open ? 'rotate-ani':'rotate-ani-rev'">&#xe65c;</text>
-							{{val.name}}<text class="cycle center" v-show="val.loading">&#xe613;</text>
+							<checkbox class="checkBox"></checkbox>
+							<text>{{val.name}}</text>
+							<text class="cycle center" v-show="val.loading">&#xe613;</text>
 						</view>
 					</view>
 				</view>
@@ -23,15 +28,12 @@
 
 <script>
 	import { QueryRouteGuidsByMODCS } from '@/api/api.js'
-	// import mixTree from '@/components/mix-tree/mix-tree';
+	import { mapState } from 'vuex'
+
 	export default {
-		components: {
-			// mixTree
-		},
 		data() {
 			return {
 				response: [],
-				// ready: false,
 				treeData: []
 			}
 		},
@@ -52,12 +54,11 @@
 						showCancel: false
 					})
 				} else {
-					// console.log(res)
 					var tempArray = []
 					if (res.data.success == true) {
 						res.data.response.map((e, index) => {
 							let element = Object.assign(e, {
-								id: Number(pre + String(index + 1)),
+								id: pre + String(index + 1),
 								children: [],
 								open: false, // 展开状态标识 open 标识展开
 								loading: false //
@@ -76,6 +77,7 @@
 			},
 			// 点击款号 展开子项
 			async showChild(i, obj) {
+				let pre = i + 1
 				// 点击后 显示加载动画
 				// 已经获得数据 只展开或者这折叠
 				if (this.treeData[i].children.length > 0) {
@@ -89,8 +91,23 @@
 				let param = {
 					StyleCode: obj.name
 				}
-				let res = await this.getData('1', param)
-				console.log(res)
+				let res = await this.getData(pre, param)
+				// console.log(res)
+				res.map(e => {
+					let names = e.name.split(',')
+					// 移除 款号
+					names.shift()
+					// console.log(names)
+					//让name = 生产单号
+					e.name = names.shift().toString()
+					// 若 names 数组还有剩余 说明这个item 还有颜色 和尺码
+					if (names.length > 0) {
+						console.log('还有子项')
+						console.log(e)
+						e.children = names.shift().toString()
+					}
+				})
+
 				this.treeData[i].children = res
 				this.treeData[i].loading = false
 				this.treeData[i].open = !this.treeData[i].open
@@ -112,6 +129,9 @@
 		},
 		mounted() {
 			this.setData()
+		},
+		computed: {
+			...mapState(['selectGuids'])
 		}
 	}
 </script>
@@ -153,6 +173,7 @@
 		animation: open 0.5s ease 1;
 		-webkit-animation: open 0.5s ease 1;
 	}
+
 	.open-ani-rev {
 		height: 0rpx;
 		overflow: hidden;
@@ -164,13 +185,15 @@
 		animation: rotate 0.5s ease 1;
 		-webkit-animation: rotate 0.5s ease 1;
 	}
+
 	.rotate-ani-rev {
 		transform: rotate(-90deg);
 		-webkit-transform: rotate(-90deg);
 		animation: rotate_rev 0.5s ease 1;
 		-webkit-animation: rotate_rev 0.5s ease 1;
 	}
-	.right{
+
+	.right {
 		transform: rotate(-90deg);
 		-webkit-transform: rotate(-90deg);
 		font-size: 40rpx;
@@ -187,12 +210,13 @@
 			height: 80rpx;
 		}
 	}
+
 	@keyframes open_rev {
 		from {
 			opacity: 1;
 			height: 80rpx;
 		}
-	
+
 		to {
 			opacity: 0;
 			height: 0rpx;
@@ -210,12 +234,13 @@
 			-webkit-transform: rotate(0deg);
 		}
 	}
+
 	@keyframes rotate_rev {
 		0% {
 			transform: rotate(0deg);
 			-webkit-transform: rotate(0deg);
 		}
-	
+
 		100% {
 			transform: rotate(-90deg);
 			-webkit-transform: rotate(-90deg);

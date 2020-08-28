@@ -58,11 +58,12 @@
 				showContent: false, // 是否展开下拉扩展框
 				stopJump: false, // 当触发多选时,改为true 禁止 跳转页面
 				delay: {},
-				timerOver: true // 定时器是否结束的标志
+				timerOver: true, // 定时器是否结束的标志
+				selectedStationGuids: [] //选择的StationGuids
 			}
 		},
 		methods: {
-			...mapMutations(['setStationMsg']),
+			...mapMutations(['setStationMsg', 'setGuids']),
 			//控制按钮颜色
 			getButtontype(Status) {
 				if (!this.loading) {
@@ -87,6 +88,12 @@
 			async clickBox(v) {
 				if (this.stopJump) {
 					v.checked = !v.checked
+					if (v.checked) {
+						this.selectedStationGuids.push(v.StationGuid)
+					} else {
+						let No = this.selectedStationGuids.indexOf(v.StationGuid)
+						this.selectedStationGuids.splice(No, 1)
+					}
 					return
 				}
 				uni.showLoading({
@@ -272,10 +279,21 @@
 				}
 			},
 			// 跳转到treedata页面
-			navigateToTree(){
-				uni.navigateTo({
-					url:'/pages/TreeData/TreeData'
-				})
+			navigateToTree() {
+				let length = this.selectedStationGuids.length
+				if (length == 0) {
+					uni.showModal({
+						content: '您没有选择任何站点!',
+						showCancel: false
+					})
+					return
+				} else {
+					// vuex 存储选中的站点信息
+					this.setGuids(this.selectedStationGuids)
+					uni.redirectTo({
+						url: '/pages/TreeData/TreeData'
+					})
+				}
 			}
 		},
 		mounted() {
@@ -296,7 +314,6 @@
 </script>
 
 <style lang="less" scopde>
-
 	.container {
 		width: 100%;
 		text-align: center;

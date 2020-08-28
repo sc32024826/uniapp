@@ -1,11 +1,11 @@
 <template>
-	<view>
-		<template v-if="showLoading">
+	<view class="ly-width">
+		<template v-if="showLoading" class="ly-width">
 			<view class="ly-loader ly-flex-center">
 				<view class="ly-loader-inner">加载中...</view>
 			</view>
 		</template>
-		<template v-else>
+		<template v-else class="ly-width">
 			<view v-if="isEmpty || !visible" class="ly-empty">{{emptyText}}</view>
 			<view class="ly-tree" :class="{'is-empty': isEmpty || !visible}" role="tree" name="LyTreeExpand">
 				<ly-tree-node v-for="nodeId in childNodesId" 
@@ -508,6 +508,9 @@
 </script>
 
 <style>
+	.ly-width{
+		width: 100%;
+	}
 	.ly-tree {
 		position: relative;
 		cursor: default;

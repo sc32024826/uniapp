@@ -123,3 +123,14 @@ export const QueryRouteGuidsByMODCS = param => {
 		data: param
 	})
 }
+
+/**
+ * 根据方案唯一键列表设定站点对于此方案列表是否允许进衣
+ */
+export const SetStAssignByRouteGuids = param => {
+	return uni.request({
+		url: '/sunrise/api/MESInterfaces/SetStAssignByRouteGuids',
+		data: param,
+		method: 'PUT'
+	})
+}

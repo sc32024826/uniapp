@@ -7,8 +7,9 @@ const store = new Vuex.Store({
 	state: {
 		hasLogin: false,
 		userName: "",
-		tempData:[],
-		stationMsg:{}
+		tempData: [],
+		stationMsg: {},
+		selectGuids: []
 	},
 	mutations: {
 		login(state, userName) {
@@ -19,12 +20,15 @@ const store = new Vuex.Store({
 			state.userName = "";
 			state.hasLogin = false;
 		},
-		setTempData(state,data){
+		setTempData(state, data) {
 			// 深拷贝 数据
 			state.tempData = JSON.parse(JSON.stringify(data))
 		},
-		setStationMsg(state,data){
+		setStationMsg(state, data) {
 			state.stationMsg = data
+		},
+		setGuids(state, data) {
+			state.selectGuids = data
 		}
 	}
 })
