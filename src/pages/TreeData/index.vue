@@ -1,15 +1,16 @@
 <template>
-	<view class="container debug">
-		
-		<ly-tree v-if="isReady" :props="props" node-key="name" :load="loadNode" lazy show-checkbox @check="handleCheck"/>
-		<button type="primary" class="bottom" @click="submit">提交</button>
+	<view class="container">
+
+		<ly-tree v-if="isReady" :props="props" node-key="name" :load="loadNode" lazy show-checkbox @check="handleCheck"
+		 @node-click="handleNodeClick" :expandOnCheckNode="false" :checkStrictly="true" />
+		<button type="primary" class="bottom" @click="submit" :disabled="btnDisable">提交</button>
 	</view>
 </template>
 
 <script>
 	import LyTree from '@/components/ly-tree/ly-tree.vue'
 	import { QueryRouteGuidsByMODCS, SetStAssignByRouteGuids } from '@/api/api.js'
-	import { mapState } from 'vuex'
+	import { mapState, mapMutations } from 'vuex'
 
 	var _self;
 	var index_id = 1
@@ -21,12 +22,13 @@
 			return {
 				//为了确保页面加载完成后才去调用load方法，this指向正确
 				isReady: false,
-				// data: [],
 				props: {
 					label: 'name',
 					children: 'children',
 					isLeaf: 'leaf'
-				}
+				},
+				btnDisable: false,
+				selectRackGuids: new Set()
 			}
 		},
 		onLoad() {
@@ -34,6 +36,13 @@
 			this.isReady = true;
 		},
 		methods: {
+			handleNodeClick(obj) {
+				let msg = {
+					id: obj.data.id,
+					name: obj.data.name
+				}
+				console.log(JSON.stringify(msg))
+			},
 			/**
 			 * @param {Object} pre 表示级别的参数  父级 空   子级 1 
 			 * @param {Object} obj 接口参数
@@ -71,18 +80,29 @@
 			},
 			// 提交
 			submit() {
-				uni.showModal({
-					content: '提交',
-					showCancel: false
-				})
+				let choose = Array.from(this.selectRackGuids)
+				if (choose.length == 0) {
+					uni.showModal({
+						content: '没有勾选衣架',
+						showCancel: false
+					})
+				} else {
+					this.getCanEnter(choose, this.selectStationGuids)
+				}
+				//  防止按钮的多次点击
+				this.btnDisable = true
+				setTimeout(() => {
+					this.btnDisable = false
+				}, 1000)
 			},
 			// 后台请求 是否允许进衣
-			async getCanEnter() {
+			async getCanEnter(a, b) {
 				let param = {
-					stationGuids: [],
-					routeGuids: [],
+					stationGuids: b,
+					routeGuids: a,
 					opCode: 0 // 0:   1:  -1:
 				}
+				console.log(param)
 				var [err, res] = await SetStAssignByRouteGuids(param)
 
 				if (err) {
@@ -92,12 +112,25 @@
 					})
 				} else {
 					console.log(res)
+					if (res.data.success) {
+						uni.showLoading({})
+						setTimeout(() => {
+							uni.hideLoading()
+							uni.redirectTo({
+								url: '/pages/ProInfo/ProInfo'
+							})
+						}, 500)
+					} else {
+						uni.showModal({
+							content: res.data.msg,
+							showCancel: false
+						})
+					}
 				}
 			},
 			// 因为这个函数是在Vue实例以外的地方调用，如果函数内部需要用到this，需要改成_self
 			async loadNode(node, resolve) {
 				// _self.xxx; 这里用_self而不是this
-				console.log(_self)
 				if (node.level === 0) {
 					let data = await this.getData({})
 					resolve(data);
@@ -143,6 +176,15 @@
 							if (MO != e.name) {
 								temp.push(e)
 								MO = e.name
+							} else {
+								temp.filter(item => {
+									if (item.name == e.name) {
+										e.Guids.map(i => {
+											item.Guids.push(i)
+										})
+									}
+								})
+								// console.log(temp)
 							}
 						})
 						resolve(temp)
@@ -166,13 +208,25 @@
 						})
 						resolve(res)
 					}
-					if(node.level === 4) return resolve([])
+					if (node.level === 4) return resolve([])
 
 				}
 			},
-			handleCheck(obj){
-				console.log(obj)
+			handleCheck(obj) {
+				let checkedGuids = new Set()
+				console.log(JSON.stringify(obj.checkedNodes))
+
+				obj.checkedNodes.forEach(e => {
+					e.Guids.forEach(v => {
+						checkedGuids.add(v)
+					})
+				})
+
+				this.selectRackGuids = checkedGuids
 			}
+		},
+		computed: {
+			...mapState(['selectStationGuids'])
 		}
 	}
 </script>

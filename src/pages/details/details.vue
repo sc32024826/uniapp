@@ -66,10 +66,10 @@
 					}
 				}],
 				showTop: false,
-				more: 'more',
+				more: 'noMore',
 				pageCount: 1, //分页总数
 				page: 1, //当前页
-				dataCount: 15, //总条数
+				dataCount: 0, //总条数
 				PageSize: 40 //每页显示数量
 			}
 		},

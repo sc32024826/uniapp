@@ -9,7 +9,7 @@ const store = new Vuex.Store({
 		userName: "",
 		tempData: [],
 		stationMsg: {},
-		selectGuids: []
+		selectStationGuids: [] // 选择的站点guids
 	},
 	mutations: {
 		login(state, userName) {
@@ -27,8 +27,8 @@ const store = new Vuex.Store({
 		setStationMsg(state, data) {
 			state.stationMsg = data
 		},
-		setGuids(state, data) {
-			state.selectGuids = data
+		setStationGuids(state, data) {
+			state.selectStationGuids = data
 		}
 	}
 })

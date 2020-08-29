@@ -63,7 +63,7 @@
 			}
 		},
 		methods: {
-			...mapMutations(['setStationMsg', 'setGuids']),
+			...mapMutations(['setStationMsg', 'setStationGuids']),
 			//控制按钮颜色
 			getButtontype(Status) {
 				if (!this.loading) {
@@ -289,9 +289,9 @@
 					return
 				} else {
 					// vuex 存储选中的站点信息
-					this.setGuids(this.selectedStationGuids)
+					this.setStationGuids(this.selectedStationGuids)
 					uni.redirectTo({
-						url: '/pages/TreeData/TreeData'
+						url: '/pages/TreeData/index'
 					})
 				}
 			}
@@ -299,10 +299,12 @@
 		mounted() {
 			// 加载数据
 			this.getData()
+		},
+		onShow() {
 			// 显示 钉钉导航栏 右侧按钮
 			this.selectManay()
 		},
-		beforeDestroy() {
+		onHide() {
 			dd.biz.navigation.setRight({
 				show: false,
 				control: true,
