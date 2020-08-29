@@ -5,15 +5,15 @@
 				<view v-if="nodata" class="infomsg">暂无数据</view>
 				<view class="scroll1">
 					<uni-swipe-action>
-						<view v-for="(v,i) in stationMsg.data" :key="i" class="width">
+						<view v-for="(v,i) in stationMsg.data" :key="i" class="RackiTems">
 							<uni-swipe-action-item :right-options="options" @click="bindClick($event,v)" @change="swipeChange()">
-								<view class="row between wrap">
-									<view class="row between wrap line">
+								<view class="column full-width">
+									<view class="row line between">
 										<view>款: {{v.StyleNo}}</view>
 										<view style="flex-shrink: 1;">色: {{v.ColorName}}</view>
 										<view style="flex-shrink: 1;">码: {{v.SizeName}}</view>
 									</view>
-									<view class="row between wrap line">
+									<view class="row line between">
 										<view>单: {{v.MoNo}}</view>
 										<view>号: {{v.RackCode}}</view>
 										<view>{{v.Qty}}件</view>
@@ -250,19 +250,22 @@
 			}
 		}
 
-		.width:nth-child(even) {
+		.RackiTems:nth-child(even) {
 			background-color: #666666;
 			color: white;
 		}
 
-		.width:nth-child(odd) {
+		.RackiTems:nth-child(odd) {
 			background-color: #55aaff;
 			color: white;
 		}
 
-		.width {
-			border: solid 1rpx black;
+		.RackiTems {
+			// border: solid 1rpx black;
 			margin: 2rpx;
+			.full-width{
+				width: 100%;
+			}
 		}
 
 		.solution {
@@ -311,6 +314,9 @@
 			background-repeat: no-repeat;
 			background-size: 50% 50%;
 
+		}
+		.warp{
+			flex-wrap: wrap;
 		}
 	}
 </style>

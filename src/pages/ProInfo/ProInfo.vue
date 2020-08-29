@@ -332,6 +332,7 @@
 
 			.infomation view {
 				width: 250rpx;
+				padding-left: 10rpx;
 			}
 
 			.DateBar {
@@ -340,7 +341,6 @@
 
 				.runStop {
 					width: 300rpx;
-					margin-right: 5rpx;
 				}
 			}
 

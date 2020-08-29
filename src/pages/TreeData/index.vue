@@ -11,7 +11,7 @@
 	import LyTree from '@/components/ly-tree/ly-tree.vue'
 	import { QueryRouteGuidsByMODCS, SetStAssignByRouteGuids } from '@/api/api.js'
 	import { mapState, mapMutations } from 'vuex'
-
+	import * as dd from "dingtalk-jsapi"
 	var _self;
 	var index_id = 1
 	export default {
@@ -34,6 +34,14 @@
 		onLoad() {
 			_self = this;
 			this.isReady = true;
+		},
+		mounted() {
+			dd.biz.navigation.setRight({
+				show: false,
+				control: true,
+				text: '',
+				onSuccess: function() {}
+			})
 		},
 		methods: {
 			handleNodeClick(obj) {
@@ -234,7 +242,6 @@
 <style lang="scss" scoped>
 	.container {
 		width: 100vw;
-
 		.bottom {
 			margin: 10rpx;
 			width: calc(100vw - 20rpx);

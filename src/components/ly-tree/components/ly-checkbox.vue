@@ -48,7 +48,7 @@
 	.ly-radio {
 		color: #606266;
 		font-weight: 500;
-		font-size: 28rpx;
+		font-size: 50rpx;
 		cursor: pointer;
 		user-select: none;
 		padding-right: 16rpx
@@ -155,8 +155,8 @@
 		border-radius: 4rpx;
 		-webkit-box-sizing: border-box;
 		box-sizing: border-box;
-		width: 28rpx;
-		height: 28rpx;
+		width: 60rpx;
+		height: 60rpx;
 		background-color: #FFF;
 		z-index: 1;
 		-webkit-transition: border-color .25s cubic-bezier(.71, -.46, .29, 1.46), background-color .25s cubic-bezier(.71, -.46, .29, 1.46);
@@ -174,16 +174,16 @@
 		-webkit-box-sizing: content-box;
 		box-sizing: content-box;
 		content: "";
-		border: 2rpx solid #FFF;
+		border: 4rpx solid #FFF;
 		border-left: 0;
 		border-top: 0;
-		height: 14rpx;
-		left: 10rpx;
+		height: 40rpx;
+		left: 20rpx;
 		position: absolute;
 		top: 2rpx;
 		-webkit-transform: rotate(45deg) scaleY(0);
 		transform: rotate(45deg) scaleY(0);
-		width: 6rpx;
+		width: 18rpx;
 		-webkit-transition: -webkit-transform .15s ease-in .05s;
 		transition: -webkit-transform .15s ease-in .05s;
 		transition: transform .15s ease-in .05s;

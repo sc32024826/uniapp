@@ -302,12 +302,12 @@
 	}
 
 	.ly-tree-node__label {
-		font-size: 28rpx
+		font-size: 50rpx
 	}
 
 	.ly-tree-node__loading-icon {
 		margin-right: 16rpx;
-		font-size: 40rpx;
+		font-size: 50rpx;
 		color: #C0C4CC;
 		-webkit-animation: rotating 2s linear infinite;
 		animation: rotating 2s linear infinite
@@ -349,7 +349,7 @@
 
 	.ly-iconfont {
 		font-family: "ly-iconfont";
-		font-size: 30rpx;
+		font-size: 50rpx;
 		font-style: normal;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
@@ -377,6 +377,7 @@
 			transform: rotateZ(360deg)
 		}
 	}
+	
 
 	/* animate-end */
 </style>
