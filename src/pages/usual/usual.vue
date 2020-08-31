@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="container">
 		
 	</view>
 </template>
@@ -22,6 +22,11 @@
 	}
 </script>
 
-<style>
+<style lang="less" scoped>
+	.container{
+		width: 100%;
+		height: 100vh;
+		background-color: green;
+	}
 
 </style>

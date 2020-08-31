@@ -1,5 +1,6 @@
 <template>
-	<div id="Container" class="row">
+	<div id="Container" class="column">
+		<text v-if="show">当前平台不支持本应用</text>
 	</div>
 </template>
 <script>
@@ -9,7 +10,9 @@
 	import { mapMutations } from 'vuex'
 	export default {
 		data() {
-			return {}
+			return {
+				show: false
+			}
 		},
 		methods: {
 			async _requestAwait(data) {
@@ -45,21 +48,30 @@
 
 		},
 		created() {
-			uni.showLoading({
-				title: '正在请求数据!'
-			})
 			let that = this
-			dd.ready(function() {
-				dd.runtime.permission.requestAuthCode({
-					corpId: "ding04dfeb3807df4a9d35c2f4657eb6378f",
-					onSuccess: function(result) {
-						that._requestAwait(result)
-					},
-					onFail: function(err) {
-						console.error(err)
-					}
+			let env = dd.env.platform
+			if (env == 'notInDingTalk') {
+				uni.showModal({
+					content: '需要在钉钉中打开!',
+					showCancel: false
 				})
-			})
+				this.show = true
+			} else {
+				uni.showLoading({
+					title: '正在请求数据!'
+				})
+				dd.ready(function() {
+					dd.runtime.permission.requestAuthCode({
+						corpId: "ding04dfeb3807df4a9d35c2f4657eb6378f",
+						onSuccess: function(result) {
+							that._requestAwait(result)
+						},
+						onFail: function(err) {
+							console.error(err)
+						}
+					})
+				})
+			}
 		}
 	}
 </script>
@@ -68,6 +80,7 @@
 	#Container {
 		width: 100%;
 		justify-content: center;
+		align-items: center;
 
 		view {
 			text-align: center;

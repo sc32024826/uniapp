@@ -26,13 +26,11 @@
 
 			</uni-collapse-item>
 			<uni-collapse-item title="已分配的方案" :open="true" class="collapseitem">
-				<!-- <uni-swipe-action-item> -->
 				<ly-tree :tree-data="data" node-key="ID" :props="defaultProps"/>
-				<!-- </uni-swipe-action-item> -->
 			</uni-collapse-item>
 		</uni-collapse>
 		<view id="junpToTop" @click="junpToTop" v-show="showTop"></view>
-		<!-- <drawer ref="myDrawer" class="drawer"></drawer> -->
+		<drawer v-show="render" ref="myDrawer" class="drawer" :station="sid" @change="drawerClose()"></drawer>
 	</view>
 </template>
 
@@ -56,6 +54,8 @@
 		data() {
 			return {
 				guid: '', //当前站点的guid
+				sid:'',
+				emp:'',
 				RackData: [], // 站内衣架
 				none: true, // 没有数据的时候显示 暂无数据
 				data: [], // 树状数据
@@ -70,15 +70,11 @@
 				defaultProps:{
 					children: 'Child',
 					label: 'name'
-				}
+				},
+				render: false //渲染子组件
 			}
 		},
 		computed: {
-			// none: () => {
-			// 	return that.$nextTick(() => {
-			// 		return that.RackData.length == 0 ? true : false
-			// 	})
-			// }
 		},
 		methods: {
 			bindClick(e, v) {
@@ -142,7 +138,7 @@
 						})
 					} else {
 						this.data = res.data.response
-						console.log(this.data)
+						// console.log(this.data)
 						uni.hideLoading()
 					}
 				}
@@ -192,7 +188,9 @@
 					control: true,
 					text: '更多',
 					onSuccess: function() {
+						_this.render = true
 						_this.$refs.myDrawer.open()
+						_this.$refs.myDrawer.setCurrentEmp(_this.emp)
 					}
 				})
 			}
@@ -205,13 +203,10 @@
 			// 分配方案
 			this.getAssignResult()
 		},
-		// 上拉 触底
-		onReachBottom() {
-			// this.addData()
-			// this.showTop = true
-		},
 		onLoad(options) {
 			this.guid = options.guid
+			this.sid = options.sid
+			this.emp = options.emp
 		}
 	}
 </script>
@@ -233,11 +228,11 @@
 		}
 
 		.line {
-			width: 100%;
+			width: 95%;
+			margin-left: 20rpx;
 
 			view {
-				padding: 4rpx;
-				margin-top: 4rpx;
+				margin-top: 8rpx;
 				margin-bottom: 4rpx;
 				white-space: nowrap;
 				overflow: hidden;
@@ -256,7 +251,6 @@
 		}
 
 		.RackiTems {
-			// border: solid 1rpx black;
 			margin: 2rpx;
 
 			.full-width {

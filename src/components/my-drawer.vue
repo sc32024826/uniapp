@@ -1,6 +1,8 @@
 <template>
 	<view class="container">
 		<uni-drawer ref="dra" mode="right">
+			<view class="label">当前站点:</view>
+			<view class="uni-input">{{station}}</view>
 			<view class="label"> 当前职工:</view>
 			<picker :range="employee" range-key="label" mode='selector' :value="index" @change="change" @touchmove.prevent.stop>
 				<view class="uni-input">{{employee.length == 0 ? '' : employee[index].label}}</view>
@@ -23,6 +25,14 @@
 		components: {
 			uniDrawer
 		},
+		props: {
+			station: {
+				type: String
+			},
+			current: {
+				type: String
+			}
+		},
 		data() {
 			return {
 				employee: [],
@@ -30,11 +40,8 @@
 			}
 		},
 		created() {
-			console.log('组件 drawer created')
+			console.log('子组件 创建')
 			this.getEmployeeData()
-		},
-		mounted() {
-
 		},
 		methods: {
 			login() {
@@ -59,8 +66,6 @@
 				} else {
 					if (res.data.success) {
 						this.employee = res.data.response
-						// console.log(res.data.response)
-						console.log('employee 设置完成')
 					} else {
 						uni.showModal({
 							content: res.data.msg,
@@ -71,6 +76,12 @@
 			},
 			change(e) {
 				this.index = e.target.value
+			},
+			setCurrentEmp(data) {
+				let index = this.employee.findIndex((m)=>
+					m.label.replace(/\s/g,'') == data
+				)
+				this.index = index
 			}
 		}
 	}
@@ -89,7 +100,8 @@
 	.uni-input {
 		margin-left: 30rpx;
 	}
-	.label{
+
+	.label {
 		margin-top: 10rpx;
 		margin-left: 10rpx;
 		font-weight: bold;

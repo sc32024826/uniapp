@@ -98,8 +98,12 @@
 					}
 					return
 				}
+				// 生产线号-站号
+				let s = v.LineID + '-'+ v.StationID
+				// 职工信息
+				let emp = v.EmpID + '-' +v.Name
 				uni.navigateTo({
-					url:'/pages/details/details?guid=' + v.StationGuid
+					url:'/pages/details/details?guid=' + v.StationGuid + '&sid=' + s + '&emp=' + emp
 				})
 			},
 			close() {

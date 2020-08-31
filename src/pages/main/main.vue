@@ -61,6 +61,8 @@
 			}
 		},
 		onShow() {
+			let env = dd.env.platform
+			if (env == 'notInDingTalk') return
 			dd.biz.navigation.setRight({
 				show: false,
 				control: true,
@@ -70,11 +72,11 @@
 				}
 			})
 			dd.biz.navigation.setLeft({
-				show: false,
+				show: true,
 				control: true,
-				text: '',
+				text: '关闭',
 				onSuccess: function() {
-			
+					dd.biz.navigation.close()
 				}
 			})
 		}
@@ -126,6 +128,7 @@
 		}
 		.main{
 			padding: 10rpx;
+			height: 80vh;
 		}
 	}
 </style>
