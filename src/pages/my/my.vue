@@ -6,7 +6,7 @@
 				<text>{{userName}}</text>
 			</view>
 		</view>
-		<view class="body">
+		<view class="body column">
 			<view id="qrcode"></view>
 		</view>
 		<view class="footer">
@@ -63,11 +63,13 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		justify-content: space-between;
 
 		.head {
-			width: 90%;
+			height: 10vh;
+			width: 100%;
 			margin: 20rpx;
-			padding: 10rpx;
+			// padding: 10rpx;
 			border-bottom: solid 1rpx #000000;
 
 			.name {
@@ -87,8 +89,10 @@
 
 
 		.body {
-			justify-content: center;
+			height: 70vh;
 			min-height: 700rpx;
+			width: 100%;
+			align-items: center;
 
 			#qrcode {
 				width: 128px;
@@ -98,7 +102,7 @@
 			}
 		}
 		.footer{
-			width: 90%;
+			width: 100%;
 			height: 50rpx;
 			border-top: solid 1rpx black;
 			text-align: center;

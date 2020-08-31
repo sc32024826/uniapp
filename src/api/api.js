@@ -134,3 +134,11 @@ export const SetStAssignByRouteGuids = param => {
 		method: 'PUT'
 	})
 }
+/**
+ * 获取在职员工列表
+ */
+export const QueryEmployee = () => {
+	return uni.request({
+		url: '/sunrise/api/BaseInfo/QueryEmployee'
+	})
+}

@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 
-		<ly-tree v-if="isReady" :props="props" node-key="name" :load="loadNode" lazy show-checkbox @check="handleCheck"
+		<ly-tree v-if="isReady" :props="props" node-key="id" :load="loadNode" lazy show-checkbox @check="handleCheck"
 		 @node-click="handleNodeClick" :expandOnCheckNode="false" :checkStrictly="true" />
 		<button type="primary" class="bottom" @click="submit" :disabled="btnDisable">提交</button>
 	</view>
@@ -36,6 +36,8 @@
 			this.isReady = true;
 		},
 		mounted() {
+			let env = dd.env.platform
+			if (env == 'notInDingTalk') return
 			dd.biz.navigation.setRight({
 				show: false,
 				control: true,

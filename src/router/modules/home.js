@@ -74,7 +74,7 @@ const home = [{
 		path: '/pages/TreeData/index',
 		name: 'TreeData',
 		meta: {
-			title: '款色分配'
+			title: '站点方案分配'
 		}
 	}
 ]

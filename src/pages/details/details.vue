@@ -1,11 +1,11 @@
 <template>
-	<view id="container">
+	<view id="container" :class="isUps == true ? 'prevent':''">
 		<uni-collapse>
 			<uni-collapse-item title="站内衣架" :open="true" class="collapseitem">
-				<view v-if="nodata" class="infomsg">暂无数据</view>
+				<view v-if="none" class="infomsg">暂无数据</view>
 				<view class="scroll1">
 					<uni-swipe-action>
-						<view v-for="(v,i) in stationMsg.data" :key="i" class="RackiTems">
+						<view v-for="(v,i) in RackData" :key="i" class="RackiTems">
 							<uni-swipe-action-item :right-options="options" @click="bindClick($event,v)" @change="swipeChange()">
 								<view class="column full-width">
 									<view class="row line between">
@@ -25,53 +25,60 @@
 				</view>
 
 			</uni-collapse-item>
-			<uni-collapse-item title="已分配的方案" :open="true">
-				<template v-if="nodata2">
-					<view class="infomsg">暂无数据</view>
-				</template>
-				<view class="scroll">
-					<view v-for="(v,i) in data" :key="i" class="solution row" @click="showModal(v)">
-						<view class="no">{{i+1}}</view>
-						<view class="mo">{{v.MoNo}}</view>
-						<view class="style">{{v.StyleNo}}</view>
-					</view>
-					<uni-load-more :status="more" v-if="!nodata2"></uni-load-more>
-				</view>
+			<uni-collapse-item title="已分配的方案" :open="true" class="collapseitem">
+				<!-- <uni-swipe-action-item> -->
+				<ly-tree :tree-data="data" node-key="ID" :props="defaultProps"/>
+				<!-- </uni-swipe-action-item> -->
 			</uni-collapse-item>
 		</uni-collapse>
 		<view id="junpToTop" @click="junpToTop" v-show="showTop"></view>
+		<!-- <drawer ref="myDrawer" class="drawer"></drawer> -->
 	</view>
 </template>
 
 <script>
-	import { mapState } from 'vuex'
+	import LyTree from '@/components/ly-tree/ly-tree.vue'
 	import { uniCollapse, uniCollapseItem, uniSwipeAction, uniSwipeActionItem, uniLoadMore } from '@dcloudio/uni-ui'
 	import { GetStationAssign, doneRack, QueryInStationRackInfByStationGuid } from '@/api/api.js'
-
+	import * as dd from "dingtalk-jsapi"
+	import drawer from '@/components/my-drawer.vue'
+	
+	var that = this
 	export default {
 		components: {
 			uniCollapse,
 			uniCollapseItem,
 			uniSwipeAction,
 			uniSwipeActionItem,
-			uniLoadMore
+			LyTree,
+			drawer
 		},
 		data() {
 			return {
-				data: [],
+				guid: '', //当前站点的guid
+				RackData: [], // 站内衣架
+				none: true, // 没有数据的时候显示 暂无数据
+				data: [], // 树状数据
+				isUps: false, // 是否有上层打开
 				options: [{
 					'text': '结束衣架',
 					'style': {
 						"backgroundColor": "#dd524d"
 					}
 				}],
-				showTop: false,
-				more: 'noMore',
-				pageCount: 1, //分页总数
-				page: 1, //当前页
-				dataCount: 0, //总条数
-				PageSize: 40 //每页显示数量
+				showTop: false, // 显示回到顶部的按钮
+				defaultProps:{
+					children: 'Child',
+					label: 'name'
+				}
 			}
+		},
+		computed: {
+			// none: () => {
+			// 	return that.$nextTick(() => {
+			// 		return that.RackData.length == 0 ? true : false
+			// 	})
+			// }
 		},
 		methods: {
 			bindClick(e, v) {
@@ -79,19 +86,22 @@
 					content: '设置该衣架为已完成状态!',
 					success: (res) => {
 						if (res.confirm) {
-							uni.showLoading({
-								title: '请稍后'
-							})
 							this.setRackFinished(v.RackCode)
 						}
 					}
 				})
 			},
 			async setRackFinished(Code) {
+				uni.showLoading({
+					title: '请稍后'
+				})
 				var [err, res] = await doneRack(Code)
 				uni.hideLoading()
 				if (err) {
-					console.log(err)
+					uni.showModal({
+						content: err,
+						showCancel: false
+					})
 				} else {
 					console.log(res)
 					uni.showModal({
@@ -109,55 +119,33 @@
 			swipeChange(e) {
 				// console.log('左滑操作')
 			},
-			/**
-			 * @param {Object} PageIndex 页
-			 * @param {Object} PageSize 每页数据
-			 */
-			async getData(PageIndex, PageSize) {
-				let param = {
-					StationGuid: this.stationMsg.id,
-					PageIndex: PageIndex,
-					PageSize: PageSize
+			// 获得该站点分配方案
+			async getAssignResult() {
+				uni.showLoading({
+					title: '请稍后'
+				})
+				let para = {
+					StationGuid: this.guid
 				}
-				var [err, res] = await GetStationAssign(param)
+				var [err, res] = await GetStationAssign(para)
+
 				if (err) {
 					uni.showModal({
 						content: err,
 						showCancel: false
 					})
 				} else {
-					let a = res.data.response
-					console.log(a);
-					this.pageCount = a.pageCount
-					this.page = a.page
-					this.dataCount = a.dataCount
-					this.PageSize = a.PageSize
-					return a.data
-
+					if (!res.data.success) {
+						uni.showModal({
+							content: res.data.msg,
+							showCancel: false
+						})
+					} else {
+						this.data = res.data.response
+						console.log(this.data)
+						uni.hideLoading()
+					}
 				}
-			},
-			showModal(item) {
-				let str = item.MoNo + '\n' + item.StyleNo + '\n' + item.ColorName + '\n' + item.SizeName
-				uni.showModal({
-					content: str,
-					showCancel: false
-				})
-			},
-			async setData() {
-				this.data = await this.getData(this.page, this.PageSize)
-			},
-			//拼接数据
-			async addData() {
-				// 显示正在加载
-				this.more = 'loading'
-				//如果 数据量 大于当前显示的 则加载新的
-				if (this.dataCount > this.page * this.PageSize) {
-					let newdata = await this.getData(this.page + 1, this.PageSize)
-					this.data = this.data.concat(newdata)
-				} else {
-					this.more = 'noMore'
-				}
-				// this.more = 'more'
 			},
 			junpToTop() {
 				uni.pageScrollTo({
@@ -169,8 +157,11 @@
 			},
 			// 获取站内衣架信息,
 			async getRackStatus() {
+				uni.showLoading({
+					title: '请稍后'
+				})
 				let param = {
-					StationGuid: this.stationMsg.id
+					StationGuid: this.guid
 				}
 				var [err, res] = await QueryInStationRackInfByStationGuid(param)
 				if (err) {
@@ -180,7 +171,9 @@
 					})
 				} else {
 					if (res.data.success == true) {
-						this.stationMsg.data = res.data.response
+						this.RackData = res.data.response
+						this.none = false
+						uni.hideLoading()
 					} else {
 						uni.showModal({
 							content: res.data.msg,
@@ -188,47 +181,49 @@
 						})
 					}
 				}
+			},
+			// 钉钉导航栏 右侧按钮设置
+			setRightBtn() {
+				let env = dd.env.platform
+				if (env == 'notInDingTalk') return
+				var _this = this
+				dd.biz.navigation.setRight({
+					show: true,
+					control: true,
+					text: '更多',
+					onSuccess: function() {
+						_this.$refs.myDrawer.open()
+					}
+				})
 			}
 		},
 		mounted() {
-			this.setData()
-		},
-		computed: {
-			...mapState(['stationMsg']),
-			nodata2() {
-				return this.data.length > 0 ? false : true
-			},
-			// 显示暂无数据
-			nodata() {
-				if (this.stationMsg.data) {
-					return this.stationMsg.data.length > 0 ? false : true
-				} else {
-					return true
-				}
-			}
-		},
-		watch: {
-			page(newv, ov) {
-				let haveShow = this.PageSize * newv
-				this.more = this.dataCount > haveShow ? 'more' : 'noMore'
-			}
+			// 衣架信息
+			this.getRackStatus()
+			// 右侧按钮显示
+			this.setRightBtn()
+			// 分配方案
+			this.getAssignResult()
 		},
 		// 上拉 触底
 		onReachBottom() {
-			this.addData()
-			this.showTop = true
+			// this.addData()
+			// this.showTop = true
+		},
+		onLoad(options) {
+			this.guid = options.guid
 		}
 	}
 </script>
 
 <style lang="less" scoped>
-
 	#container {
 		width: 100%;
 		// height: 100vh;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		z-index: 1;
 
 		.infomsg {
 			width: 100%;
@@ -263,7 +258,8 @@
 		.RackiTems {
 			// border: solid 1rpx black;
 			margin: 2rpx;
-			.full-width{
+
+			.full-width {
 				width: 100%;
 			}
 		}
@@ -315,8 +311,24 @@
 			background-size: 50% 50%;
 
 		}
-		.warp{
+
+		.warp {
 			flex-wrap: wrap;
 		}
+
+		.drawer {
+			z-index: 10;
+		}
+
+		/* 起到固定的作用 ,从而解决原页面触摸穿透的问题*/
+		.prevent {
+			width: 100%;
+			height: 100%;
+			position: fixed;
+			top: 0;
+			left: 0;
+			overflow: hidden;
+		}
+
 	}
 </style>

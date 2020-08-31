@@ -38,18 +38,20 @@
 		<view class="footer">
 			<button type="primary" v-if="showSubmitBtn" @click="navigateToTree">提交</button>
 		</view>
+		
 	</view>
 </template>
 
 <script>
 	import { uniCollapse, uniCollapseItem } from '@dcloudio/uni-ui'
+	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
 	import { GetStationStatus, GetLineStatus, QueryInStationRackInfByStationGuid, SetLinePause } from '@/api/api.js'
 	import groupBy from './classify.js'
 	import { mapMutations } from 'vuex'
 	import * as dd from "dingtalk-jsapi"
 
 	export default {
-		components: { uniCollapse, uniCollapseItem },
+		components: { uniCollapse, uniCollapseItem, uniDrawer },
 		data() {
 			return {
 				data: [],
@@ -96,35 +98,9 @@
 					}
 					return
 				}
-				uni.showLoading({
-					title: '正在查询,请稍后!'
+				uni.navigateTo({
+					url:'/pages/details/details?guid=' + v.StationGuid
 				})
-				let para = {
-					StationGuid: v.StationGuid
-				}
-				const [err, res] = await QueryInStationRackInfByStationGuid(para)
-				uni.hideLoading()
-				if (err) {
-					uni.showModal({
-						content: err,
-						showCancel: false
-					})
-				} else {
-					if (res.data.success == true) {
-						this.setStationMsg({
-							id: v.StationGuid,
-							data: res.data.response
-						})
-						uni.navigateTo({
-							url: '/pages/details/details'
-						})
-					} else {
-						uni.showModal({
-							content: '错误',
-							showCancel: false
-						})
-					}
-				}
 			},
 			close() {
 				this.showSelect = false
@@ -225,9 +201,12 @@
 					})
 				})
 				this.data = part_2
+				uni.hideLoading()
 			},
 			// 复选
 			selectManay() {
+				let env = dd.env.platform
+				if (env == 'notInDingTalk') return
 				var _this = this
 				dd.biz.navigation.setRight({
 					show: true,
@@ -244,6 +223,8 @@
 				})
 			},
 			cancelSelect() {
+				let env = dd.env.platform
+				if (env == 'notInDingTalk') return
 				var _this = this
 				dd.biz.navigation.setRight({
 					show: true,
@@ -298,6 +279,9 @@
 		},
 		mounted() {
 			// 加载数据
+			uni.showLoading({
+				title:'请稍后'
+			})
 			this.getData()
 		},
 		onShow() {
@@ -305,6 +289,8 @@
 			this.selectManay()
 		},
 		onHide() {
+			let env = dd.env.platform
+			if (env == 'notInDingTalk') return
 			dd.biz.navigation.setRight({
 				show: false,
 				control: true,
