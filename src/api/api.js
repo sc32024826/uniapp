@@ -142,3 +142,13 @@ export const QueryEmployee = () => {
 		url: '/sunrise/api/BaseInfo/QueryEmployee'
 	})
 }
+/**
+ * 根据站点唯一键设定站点员工登陆状态
+ */
+export const SetStationLoginByStationGuid = param => {
+	return uni.request({
+		url: '/sunrise/api/MESInterfaces/SetStationLoginByStationGuid',
+		data: param,
+		method: 'PUT'
+	})
+}

@@ -158,10 +158,10 @@
 			},
 			// 获得数据
 			async getData() {
-				var part_1 = []
-				var part_2 = []
+				var lineData = []
+				var stationData = []
 				let para = ''
-				const [err, res] = await GetStationStatus(para)
+				var [err, res] = await GetStationStatus(para)
 				if (err) {
 					uni.showModal({
 						content: err,
@@ -174,38 +174,39 @@
 						data.map(e => {
 							e = Object.assign(e, { checked: false })
 						})
-						part_1 = groupBy(data, 'LineID')
+						lineData = groupBy(data, 'LineID')
 					}
 				}
 				let param = ''
-				const [error, result] = await GetLineStatus(param)
+				var [error, result] = await GetLineStatus(param)
 				if (error) {
 					uni.showModal({
 						content: error,
 						showCancel: false
 					})
 				} else {
-					part_2 = result.data
-				}
-				part_2.map(m => {
-					part_1.forEach(e => {
-						if (m.LineID == e.name) {
-							let tt = m.Status == 1 ? '运行' : '停止'
-							let type = m.Status == 1 ? 'primary' : 'warn'
-							m = Object.assign(m, {
-								list: e.list,
-								bt: {
-									text: tt,
-									type: type,
-									load: false,
-									disabled: false
-								}
-							})
-						}
+					stationData = result.data
+					stationData.map(m => {
+						lineData.forEach(e => {
+							if (m.LineID == e.name) {
+								let tt = m.Status == 1 ? '运行' : '停止'
+								let type = m.Status == 1 ? 'primary' : 'warn'
+								m = Object.assign(m, {
+									list: e.list,
+									bt: {
+										text: tt,
+										type: type,
+										load: false,
+										disabled: false
+									}
+								})
+							}
+						})
 					})
-				})
-				this.data = part_2
-				uni.hideLoading()
+					this.data = stationData
+					uni.hideLoading()
+				}
+				
 			},
 			// 复选
 			selectManay() {
@@ -226,6 +227,7 @@
 					}
 				})
 			},
+			// 取消
 			cancelSelect() {
 				let env = dd.env.platform
 				if (env == 'notInDingTalk') return
@@ -282,25 +284,23 @@
 			}
 		},
 		mounted() {
+			// 显示导航栏右侧按钮
+			this.selectManay()
 			// 加载数据
 			uni.showLoading({
 				title:'请稍后'
 			})
 			this.getData()
 		},
+		// 显示的时候 属性数据
 		onShow() {
-			// 显示 钉钉导航栏 右侧按钮
+			this.data = []
+			// 显示导航栏右侧按钮
 			this.selectManay()
-		},
-		onHide() {
-			let env = dd.env.platform
-			if (env == 'notInDingTalk') return
-			dd.biz.navigation.setRight({
-				show: false,
-				control: true,
-				text: '',
-				onSuccess: function() {}
+			uni.showLoading({
+				title:'请稍后'
 			})
+			this.getData()
 		}
 	}
 </script>
@@ -371,10 +371,10 @@
 		}
 
 		.footer {
+			position: fixed;
 			width: 100%;
 			height: 6vh;
 			min-height: 100rpx;
-			position: fixed;
 			bottom: 0;
 			color: white;
 		}

@@ -53,8 +53,6 @@
 		methods: {
 			// 跳转页面
 			jump(url) {
-				console.log('页面跳转')
-				console.log(url)
 				uni.navigateTo({
 					url: url
 				})

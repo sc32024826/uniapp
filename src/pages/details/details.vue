@@ -30,7 +30,7 @@
 			</uni-collapse-item>
 		</uni-collapse>
 		<view id="junpToTop" @click="junpToTop" v-show="showTop"></view>
-		<drawer v-show="render" ref="myDrawer" class="drawer" :station="sid" @change="drawerClose()"></drawer>
+		<drawer v-show="render" ref="myDrawer" class="drawer" :station="sid" :guid="guid" @change="drawerClose()"></drawer>
 	</view>
 </template>
 
@@ -73,8 +73,6 @@
 				},
 				render: false //渲染子组件
 			}
-		},
-		computed: {
 		},
 		methods: {
 			bindClick(e, v) {
@@ -138,7 +136,6 @@
 						})
 					} else {
 						this.data = res.data.response
-						// console.log(this.data)
 						uni.hideLoading()
 					}
 				}
@@ -204,7 +201,7 @@
 			this.getAssignResult()
 		},
 		onLoad(options) {
-			this.guid = options.guid
+			this.guid = options.guid // station guid
 			this.sid = options.sid
 			this.emp = options.emp
 		}
