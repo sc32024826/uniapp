@@ -61,14 +61,36 @@
 		onShow() {
 			let env = dd.env.platform
 			if (env == 'notInDingTalk') return
-			dd.biz.navigation.setRight({
-				show: false,
-				control: true,
-				text: '',
-				onSuccess: function() {
-
-				}
+			// 设置右侧多个按钮
+			dd.biz.navigation.setMenu({
+				backgroundColor: "#ADD8E6",
+				textColor: "#ADD8E611",
+				items: [{
+						"id": "1", //字符串
+						"iconId": "file", //字符串，图标命名
+						"text": "帮助"
+					},
+					{
+						"id": "2",
+						"iconId": "photo",
+						"text": "dierge"
+					},
+					{
+						"id": "3",
+						"iconId": "setting",
+						"text": "disange",
+					},
+					{
+						"id": "4",
+						"iconId": "time",
+						"text": "disige"
+					}
+				],
+				onSuccess: function(data) {
+					console.log(data)
+				},
 			})
+			// 左侧导航按钮  仅支持ios  android 不支持
 			dd.biz.navigation.setLeft({
 				show: true,
 				control: true,
@@ -82,7 +104,6 @@
 </script>
 
 <style lang="less" scoped>
-
 	.test {
 		font-family: 'iconfont';
 		font-size: 150rpx;
@@ -114,6 +135,7 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+
 		.logo {
 			// width: 100%;
 			height: 250rpx;
@@ -124,7 +146,8 @@
 			margin: 10rpx;
 
 		}
-		.main{
+
+		.main {
 			padding: 10rpx;
 			height: 80vh;
 		}

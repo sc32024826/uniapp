@@ -1,11 +1,12 @@
 <template>
-	<view class="container" @tap.prevent.stop>
+	<view class="container">
 		<uni-drawer ref="dra" mode="right" @change="toggleShow">
 			<view class="label">当前站点:</view>
-			<view class="uni-input">{{station}}</view>
+			<view class="uni-input">{{station.name}}</view>
 			<view class="label"> 当前职工:</view>
+			<view class="uni-input">{{currentEmp}}</view>
 			<picker :range="employee" range-key="label" mode='selector' :value="index" @change="change">
-				<view class="uni-input">{{currentEmp}}</view>
+				<view class="uni-input">{{employee[index].label}}</view>
 			</picker>
 			<view class="functionList">
 				<button type="primary" @click="login" :disabled="btnLoginDisable">职工登录</button>
@@ -20,48 +21,42 @@
 <script>
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
 	import { QueryEmployee, SetStationLoginByStationGuid } from '@/api/api.js'
+	import { mapState, mapMutations } from 'vuex'
 
 	export default {
 		components: {
 			uniDrawer
 		},
-		props: {
-			// 站点名称  1-1
-			station: {
-				type: String
-			},
-			current: {
-				type: String
-			},
-			// 站点guid
-			guid: {
-				type: String
-			}
-		},
 		data() {
 			return {
-				employee: [],
+				employee: [{ label: '无职工', value: '' }],
 				index: 0,
 				btnLoginDisable: false,
 				btnLogoutDisable: false,
-				currentEmp: '无职工',
-				indexBak: 0, // 用于当更改职工后又取消操作时的 数据缓存
-				stationEmp: ''
+				currentEmp: '无职工'
 			}
 		},
 		created() {
-			this.getEmployeeData()
+			// 获取职工列表
+		},
+		computed: {
+			...mapState(['station'])
+		},
+		async mounted() {
+			this.employee = await this.getEmployeeData()
+			this.currentEmp = this.station.emp == 'null-null' ? '' : this.station.emp
 		},
 		methods: {
+			...mapMutations(['setStationData', 'setStationEmp']),
 			login() {
-
 				let param = {
-					StationGuid: this.guid,
-					EmployeeGuid: this.index != -1 ? this.employee[this.index].value : ''
+					StationGuid: this.station.guid,
+					EmployeeGuid: this.employee[this.index].value,
+					emp: this.employee[this.index].label
 				}
 				if (this.index > -1) {
 					uni.showModal({
-						content: '职工: ' + this.currentEmp + ' 登录站点: ' + this.station,
+						content: '职工: ' + this.employee[this.index].label + ' 登录站点: ' + this.station.name,
 						success: (res) => {
 							if (res.confirm) {
 								this.setStationStation(param)
@@ -84,18 +79,18 @@
 			// 员工登出
 			logout() {
 				let param = {
-					StationGuid: this.guid,
-					EmployeeGuid: ''
+					StationGuid: this.station.guid,
+					EmployeeGuid: '',
+					emp: ''
 				}
-				console.log(this.currentEmp)
-				if (this.stationEmp == '无职工') {
+				if (this.station.emp == 'null-null') {
 					uni.showModal({
-						content: '当前站点没有职工需要下线',
+						content: '当前站点没有职工登录',
 						showCancel: false
 					})
 				} else {
 					uni.showModal({
-						content: '确定登出 ' + this.stationEmp + ' ?',
+						content: '确定登出 ' + this.station.emp + ' ?',
 						success: (res) => {
 							if (res.confirm) {
 								this.setStationStation(param)
@@ -125,7 +120,7 @@
 					})
 				} else {
 					if (res.data.success) {
-						this.employee = res.data.response
+						return res.data.response
 					} else {
 						uni.showModal({
 							content: res.data.msg,
@@ -134,34 +129,24 @@
 					}
 				}
 			},
-			// picker 切换 此时index 必定大于-1  因此不需要判断-1 情况
+			// picker 切换 
 			change(e) {
 				console.log(e)
 				this.index = e.target.value
-				this.currentEmp = this.employee[this.index].label
+				// this.currentEmp = this.employee[this.index].label
 			},
 			//抽屉的开启和关闭时触发
 			toggleShow(val) {
-				if (!val) {
-					console.log('抽屉 未操作关闭  重新设定初始值', this.indexBak)
-					this.index = this.indexBak
-					this.currentEmp = this.index == -1 ? '无职工' : this.employee[this.index].label
-				}
-			},
-			setCurrentEmp(data) {
-				let index = this.employee.findIndex((m) =>
-					m.label.replace(/\s/g, '') == data
-				)
-				this.index = index
-				this.indexBak = index
-				this.stationEmp = index == -1 ? '无职工' : this.employee[index].label
-				this.currentEmp = index == -1 ? '无职工' : this.employee[index].label
-			},
-			// 根据站点唯一键设定站点员工登陆状态
-			async setStationStation(param) {
 
+			},
+			// 根据站点唯一键设定站点员工登陆状态  
+			async setStationStation(param) {
 				console.log(param)
-				var [err, res] = await SetStationLoginByStationGuid(param)
+				let para = {
+					StationGuid: param.StationGuid,
+					EmployeeGuid: param.EmployeeGuid
+				}
+				var [err, res] = await SetStationLoginByStationGuid(para)
 				if (err) {
 					uni.showModal({
 						content: err,
@@ -173,6 +158,10 @@
 							content: res.data.msg,
 							showCancel: false
 						})
+						// 更新当前站点的登录员工
+						this.setStationEmp(param.emp)
+						this.currentEmp = this.station.emp
+						console.log(this.station)
 					} else {
 						uni.showModal({
 							content: res.data.msg,
@@ -182,6 +171,7 @@
 				}
 			}
 		}
+
 	}
 </script>
 
@@ -196,7 +186,10 @@
 	}
 
 	.uni-input {
-		margin-left: 30rpx;
+		height: 50rpx;
+		// margin-left: 30rpx;
+		width: 100%;
+		text-align: center;
 	}
 
 	.label {

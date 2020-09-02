@@ -9,7 +9,13 @@ const store = new Vuex.Store({
 		userName: "",
 		tempData: [],
 		stationMsg: {},
-		selectStationGuids: [] // 选择的站点guids
+		selectStationGuids: [], // 选择的站点guids
+		// 站点的信息
+		station: {
+			name: '',
+			emp: '',
+			guid: ''
+		}
 	},
 	mutations: {
 		login(state, userName) {
@@ -29,7 +35,14 @@ const store = new Vuex.Store({
 		},
 		setStationGuids(state, data) {
 			state.selectStationGuids = data
+		},
+		setStationData(state, data) {
+			state.station = data
+		},
+		setStationEmp(state, data) {
+			state.station.emp = data
 		}
+
 	}
 })
 

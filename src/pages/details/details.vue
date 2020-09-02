@@ -26,11 +26,11 @@
 
 			</uni-collapse-item>
 			<uni-collapse-item title="已分配的方案" :open="true" class="collapseitem">
-				<ly-tree :tree-data="data" node-key="ID" :props="defaultProps"/>
+				<ly-tree :tree-data="data" node-key="ID" :props="defaultProps" />
 			</uni-collapse-item>
 		</uni-collapse>
 		<view id="junpToTop" @click="junpToTop" v-show="showTop"></view>
-		<drawer v-show="render" ref="myDrawer" class="drawer" :station="sid" :guid="guid" @change="drawerClose()"></drawer>
+		<drawer v-show="render" ref="myDrawer" class="drawer"></drawer>
 	</view>
 </template>
 
@@ -40,7 +40,8 @@
 	import { GetStationAssign, doneRack, QueryInStationRackInfByStationGuid } from '@/api/api.js'
 	import * as dd from "dingtalk-jsapi"
 	import drawer from '@/components/my-drawer.vue'
-	
+	import { mapMutations } from 'vuex'
+
 	var that = this
 	export default {
 		components: {
@@ -54,8 +55,8 @@
 		data() {
 			return {
 				guid: '', //当前站点的guid
-				sid:'',
-				emp:'',
+				sid: '',
+				emp: '',
 				RackData: [], // 站内衣架
 				none: true, // 没有数据的时候显示 暂无数据
 				data: [], // 树状数据
@@ -67,7 +68,7 @@
 					}
 				}],
 				showTop: false, // 显示回到顶部的按钮
-				defaultProps:{
+				defaultProps: {
 					children: 'Child',
 					label: 'name'
 				},
@@ -75,6 +76,7 @@
 			}
 		},
 		methods: {
+			...mapMutations(['setStationData']),
 			bindClick(e, v) {
 				uni.showModal({
 					content: '设置该衣架为已完成状态!',
@@ -187,7 +189,6 @@
 					onSuccess: function() {
 						_this.render = true
 						_this.$refs.myDrawer.open()
-						_this.$refs.myDrawer.setCurrentEmp(_this.emp)
 					}
 				})
 			}
@@ -202,8 +203,12 @@
 		},
 		onLoad(options) {
 			this.guid = options.guid // station guid
-			this.sid = options.sid
-			this.emp = options.emp
+			console.log(options)
+			this.setStationData({
+				name: options.sid,
+				emp: options.emp,
+				guid: options.guid
+			})
 		}
 	}
 </script>
