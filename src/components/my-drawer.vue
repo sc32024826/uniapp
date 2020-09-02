@@ -36,9 +36,6 @@
 				currentEmp: '无职工'
 			}
 		},
-		created() {
-			// 获取职工列表
-		},
 		computed: {
 			...mapState(['station'])
 		},
@@ -131,13 +128,7 @@
 			},
 			// picker 切换 
 			change(e) {
-				console.log(e)
 				this.index = e.target.value
-				// this.currentEmp = this.employee[this.index].label
-			},
-			//抽屉的开启和关闭时触发
-			toggleShow(val) {
-
 			},
 			// 根据站点唯一键设定站点员工登陆状态  
 			async setStationStation(param) {
@@ -161,7 +152,6 @@
 						// 更新当前站点的登录员工
 						this.setStationEmp(param.emp)
 						this.currentEmp = this.station.emp
-						console.log(this.station)
 					} else {
 						uni.showModal({
 							content: res.data.msg,

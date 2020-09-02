@@ -13,30 +13,32 @@
 						<text class="iconfont">{{item.bt.text == '停止'? '&#xe74b;' : '&#xe65b;'}}</text>{{item.bt.text}}
 					</button>
 				</view>
-				<uni-collapse-item :title="item.LineID + '号线'" class="collapseitem" :open="showContent">
-					<view class="row wrap item">
-						<view class="box" v-for="(v,k) in item.list" :key="k" v-if="item.list">
-							<!-- @longpress="longpressfn" -->
-							<view @click="clickBox(v)">
-								<checkbox class="checkbox" v-show="showSelect" :checked="v.checked"></checkbox>
-								<view class="row">
-									<view :class="v.Enable*v.EnableIn == false ? 'base stop':'base light'"></view>
-									<view>{{v.LineID}}-{{v.StationID}}</view>
-									<view>{{v.SeqName}}</view>
-								</view>
-								<view class="row">
-									<view>{{v.EmpID}}-{{v.Name}}</view>
-									<view>{{v.RackCnt}}/{{v.RackCap}}</view>
+				<template>
+					<uni-collapse-item :title="item.LineID + '号线'" class="collapseitem" :open="showContent">
+						<view class="row wrap item">
+							<view class="box" v-for="(v,k) in item.list" :key="k" v-if="item.list">
+								<!-- @longpress="longpressfn" -->
+								<view @click="clickBox(v)">
+									<checkbox class="checkbox" v-show="showSelect" :checked="v.checked"></checkbox>
+									<view class="row">
+										<view :class="v.Enable*v.EnableIn == false ? 'base stop':'base light'"></view>
+										<view>{{v.LineID}}-{{v.StationID}}</view>
+										<view>{{v.SeqName}}</view>
+									</view>
+									<view class="row">
+										<view>{{v.EmpID}}-{{v.Name}}</view>
+										<view>{{v.RackCnt}}/{{v.RackCap}}</view>
+									</view>
 								</view>
 							</view>
+							<view v-if="!item.list">暂无数据</view>
 						</view>
-						<view v-if="!item.list">暂无数据</view>
-					</view>
-				</uni-collapse-item>
+					</uni-collapse-item>
+				</template>
 			</view>
 		</uni-collapse>
-		<view class="footer">
-			<button type="primary" v-if="showSubmitBtn" @click="navigateToTree">提交</button>
+		<view class="footer" v-if="showSubmitBtn">
+			<button type="primary"  @click="navigateToTree">提交</button>
 		</view>
 		
 	</view>
