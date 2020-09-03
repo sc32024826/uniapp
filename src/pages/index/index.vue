@@ -5,7 +5,6 @@
 </template>
 <script>
 	import * as dd from "dingtalk-jsapi"
-	import store from '../../store/index.js'
 	import { GetLoginfoByCode } from '@/api/api.js'
 	import { mapMutations } from 'vuex'
 	export default {
@@ -21,7 +20,7 @@
 				if (err) {
 					console.error(err);
 					uni.showModal({
-						content: err.errMsg,
+						content: 'dingtalk Servers:' + err.errMsg,
 						showCancel: false
 					});
 				} else {
@@ -36,7 +35,7 @@
 					} else {
 						// console.log(res);
 						uni.showModal({
-							content: res.data.msg,
+							content: 'dingtalk Servers - 钉钉内部应用免登 api :\n' + res.data.msg,
 							showCancel: false
 						});
 					}
@@ -46,6 +45,9 @@
 			},
 			...mapMutations(['login'])
 
+		},
+		onLoad(options){
+			console.log(options)
 		},
 		created() {
 			let that = this
@@ -60,6 +62,7 @@
 				uni.showLoading({
 					title: '正在请求数据!'
 				})
+
 				dd.ready(function() {
 					dd.runtime.permission.requestAuthCode({
 						corpId: "ding04dfeb3807df4a9d35c2f4657eb6378f",
@@ -67,10 +70,14 @@
 							that._requestAwait(result)
 						},
 						onFail: function(err) {
-							console.error(err)
+							uni.showModal({
+								content: '钉钉免登失败,请重启应用.'
+							})
 						}
 					})
+
 				})
+
 			}
 		}
 	}

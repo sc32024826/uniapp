@@ -8,100 +8,72 @@
 	"pages": [{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "ShanYing",
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "ShanYing"
 			}
 		},
 		{
 			"path": "pages/main/main",
 			"style": {
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "ShanYing"
 			}
 		},
 		{
 			"path": "pages/my/my",
 			"style": {
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "我的"
 			}
 		},
 		{
 			"path": "pages/usual/usual",
 			"style": {
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "常用功能"
 			}
 		},
 		{
 			"path": "pages/work/work",
 			"style": {
 				"navigationBarTitleText": "任务分配",
-				"enablePullDownRefresh": true,
-				"app-plus": {
-					"titleNView": false
-				}
+				"enablePullDownRefresh": true
 			}
 		},
 		{
 			"path": "pages/ProcessRecord/ProcessRecord",
 			"style": {
-				"navigationBarTitleText": "加工记录",
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "加工记录"
 			}
 		},
 		{
 			"path": "pages/nfc/nfc",
 			"style": {
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "NFC读卡"
 			}
 		},
 		{
 			"path": "pages/ProInfo/ProInfo",
 			"style": {
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "今日生产情况"
 			}
 		},
 		{
 			"path": "pages/offline/offline",
 			"style": {
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "衣架下线"
 			}
 		},
 		{
 			"path": "pages/details/details",
 			"style": {
-				"navigationBarTitleText": "站点信息",
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "站点信息"
 			}
 		}, {
 			"path": "pages/beforeOffline/beforeOffline",
 			"style": {
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "生产线"
 			}
 		}, {
 			"path": "pages/TreeData/index",
 			"style": {
-				"app-plus": {
-					"titleNView": false
-				}
+				"navigationBarTitleText": "站点方案分配"
 			}
 		}
 	],
@@ -130,8 +102,7 @@
 		]
 	},
 	"globalStyle": {
-		"navigationBarTextStyle": "white",
-		"navigationBarBackgroundColor": "#0faeff",
+		"navigationStyle":"custom",
 		"backgroundColor": "#fbf9fe",
 		"usingComponents": {
 			"ly-tree-node": "/components/ly-tree/ly-tree-node"

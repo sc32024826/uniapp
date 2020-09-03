@@ -1,7 +1,28 @@
 <script>
+	import Vue from 'vue'
 	export default {
 		onLaunch: function() {
-			console.log('App Launch');
+			uni.getSystemInfo({
+				success: function(e) {
+					Vue.prototype.statusBar = e.statusBarHeight
+					// #ifndef MP
+					if (e.platform == 'android') {
+						Vue.prototype.customBar = e.statusBarHeight + 50
+					} else {
+						Vue.prototype.customBar = e.statusBarHeight + 45
+					}
+					// #endif
+
+					// #ifdef MP-WEIXIN
+					let custom = wx.getMenuButtonBoundingClientRect()
+					Vue.prototype.customBar = custom.bottom + custom.top - e.statusBarHeight
+					// #endif
+
+					// #ifdef MP-ALIPAY
+					Vue.prototype.customBar = e.statusBarHeight + e.titleBarHeight
+					// #endif
+				}
+			})
 		},
 		onShow: function() {
 			console.log('App Show');
@@ -12,7 +33,7 @@
 	}
 </script>
 
-<style>
+<style lang="less">
 	/* 头条小程序需要把 iconfont 样式放到组件外 */
 	/* @import "components/m-icon/m-icon.css"; */
 	@import './static/common.css';
@@ -23,7 +44,10 @@
 		display: flex;
 		font-size: 16px;
 		font-family: 'iconfont';
-		font-style: normal;
+		font-style: normal; 
+		// 解决刘海屏的方法 需要在manifest.json 中配置安全区
+		// padding-top: constant(safe-area-inset-top); 
+		// padding-top: env(safe-area-inset-top);
 	}
 
 	/* #ifdef MP-BAIDU */
@@ -159,8 +183,8 @@
 
 	.cycle {
 		animation: turn 1s linear infinite;
-		-webkit-animation:turn 1s linear infinite;
-		
+		-webkit-animation: turn 1s linear infinite;
+
 	}
 
 	/* 
@@ -195,5 +219,4 @@
 			-webkit-transform: rotate(360deg);
 		}
 	}
-	
 </style>

@@ -1,10 +1,15 @@
 <template>
 	<view class="container">
+		<uni-nav-bar fixed status-bar>
+			<view class="center">工作台</view>
+			<view slot="left" @click="close" class="icon-back">关闭</view>
+			<view slot="right">帮助</view>
+		</uni-nav-bar>
 		<view class="logo">
 		</view>
 		<view class="row warp main">
 			<block v-for="(item,i) in optionList">
-				<view class="column box" @tap="jump(item.url)">
+				<view class="column box" @click="jump(item.url)">
 					<text class="test" v-html="item.icon"></text>
 					<text class="title">{{item.title}}</text>
 				</view>
@@ -16,10 +21,13 @@
 
 <script>
 	import { mapState } from 'vuex'
+	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 	import * as dd from "dingtalk-jsapi"
 
 	export default {
-		computed: mapState(['hasLogin', 'userName']),
+		components: {
+			uniNavBar
+		},
 		data() {
 			return {
 				optionList: [{
@@ -37,11 +45,6 @@
 						icon: '&#xe691;',
 						title: '生产情况'
 					},
-					// {
-					// 	url: '/pages/offline/offline',
-					// 	icon: '&#xe6bb;',
-					// 	title: '衣架下线'
-					// },
 					{
 						url: '/pages/beforeOffline/beforeOffline',
 						icon: '&#xe705;',
@@ -56,50 +59,20 @@
 				uni.navigateTo({
 					url: url
 				})
+			},
+			showhelp() {
+				console.log('帮助')
+			},
+			close() {
+				let env = dd.env.platform
+				if (env != 'notInDingTalk') {
+					dd.biz.navigation.close()
+				}else{
+					console.log('关闭页面')
+				}
 			}
 		},
-		onShow() {
-			let env = dd.env.platform
-			if (env == 'notInDingTalk') return
-			// 设置右侧多个按钮
-			dd.biz.navigation.setMenu({
-				backgroundColor: "#ADD8E6",
-				textColor: "#ADD8E611",
-				items: [{
-						"id": "1", //字符串
-						"iconId": "file", //字符串，图标命名
-						"text": "帮助"
-					},
-					{
-						"id": "2",
-						"iconId": "photo",
-						"text": "dierge"
-					},
-					{
-						"id": "3",
-						"iconId": "setting",
-						"text": "disange",
-					},
-					{
-						"id": "4",
-						"iconId": "time",
-						"text": "disige"
-					}
-				],
-				onSuccess: function(data) {
-					console.log(data)
-				},
-			})
-			// 左侧导航按钮  仅支持ios  android 不支持
-			dd.biz.navigation.setLeft({
-				show: true,
-				control: true,
-				text: '关闭',
-				onSuccess: function() {
-					dd.biz.navigation.close()
-				}
-			})
-		}
+		computed: mapState(['hasLogin', 'userName']),
 	}
 </script>
 
@@ -137,7 +110,6 @@
 		text-overflow: ellipsis;
 
 		.logo {
-			// width: 100%;
 			height: 250rpx;
 			background-image: url("@/static/img/Title.jpg");
 			background-size: cover;

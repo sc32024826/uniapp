@@ -1,5 +1,10 @@
 <template>
 	<view id="container">
+		<uni-nav-bar fixed status-bar>
+			<view class="center">衣架下线</view>
+			<view slot="left" @click="goback" class="icon-back">返回</view>
+			<view slot="right"><text @tap="showHelp" class="marginR">帮助</text></view>
+		</uni-nav-bar>
 		<view id="head">
 			<view id="toolbar" class="row center">
 				<view class="dropdown">
@@ -64,11 +69,13 @@
 	import { mapState, mapMutations } from 'vuex'
 	import format from '../../utils/data/format.js'
 	import { uniPopup, uniPopupMessage } from '@dcloudio/uni-ui'
+	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 
 	export default {
 		components: {
 			uniPopup,
-			uniPopupMessage
+			uniPopupMessage,
+			uniNavBar
 		},
 		data() {
 			return {
@@ -319,6 +326,12 @@
 					content: res,
 					showCancel: false
 				})
+			},
+			goback() {
+				uni.navigateBack({})
+			},
+			showHelp() {
+				console.log('帮助')
 			}
 		},
 		async onLoad(option) {

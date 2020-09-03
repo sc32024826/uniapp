@@ -1,5 +1,5 @@
 {
-	"name": "login-template",
+	"name": "ShanYing",
 	"appid": "__UNI__972211E",
 	"description": "登录模板",
 	"versionName": "1.0.0",
@@ -44,6 +44,11 @@
 			"ios": {},
 			/* SDK配置 */
 			"sdkConfigs": {}
+		},
+		"safearea": {
+			"bottom": {
+				"offset": "none"
+			}
 		}
 	},
 	/* 快应用特有相关 */

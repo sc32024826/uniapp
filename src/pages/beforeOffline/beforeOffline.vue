@@ -1,5 +1,10 @@
 <template>
 	<view id="container">
+		<uni-nav-bar fixed status-bar>
+			<view class="center">生产线</view>
+			<view slot="left" @click="goback" class="icon-back">返回</view>
+			<view slot="right"><text @tap="showHelp" class="marginR">帮助</text></view>
+		</uni-nav-bar>
 		<view id="head" class="head row between">
 			<view>生产线</view>
 			<view>衣架数</view>
@@ -58,7 +63,11 @@
 
 <script>
 	import { GetLineStatus, QueryQtyWithSeq } from '@/api/api.js'
+	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 	export default {
+		components:{
+			uniNavBar
+		},
 		data() {
 			return {
 				lines: [],
@@ -103,6 +112,12 @@
 				uni.navigateTo({
 					url: '/pages/offline/offline?SeqCode=' + obj.SeqCode + '&SeqName=' + obj.SeqName
 				})
+			},
+			goback() {
+				uni.navigateBack({})
+			},
+			showHelp() {
+				console.log('帮助')
 			}
 		},
 		computed: {

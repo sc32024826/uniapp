@@ -1,5 +1,10 @@
 <template>
 	<view class="container">
+		<uni-nav-bar fixed status-bar>
+			<view class="center">今日生产情况</view>
+			<view slot="left" @click="goback" class="icon-back">返回</view>
+			<view slot="right" class="marginR"><text @tap="showHelp" class="marginR">帮助</text><text @tap="selectItems" >{{navBtnRight}}</text></view>
+		</uni-nav-bar>
 		<uni-collapse>
 			<view class="lineInfo column" v-for="(item,i) in data" :key="i">
 				<view class="row DateBar">
@@ -38,9 +43,9 @@
 			</view>
 		</uni-collapse>
 		<view class="footer" v-if="showSubmitBtn">
-			<button type="primary"  @click="navigateToTree">提交</button>
+			<button type="primary" @click="navigateToTree">提交</button>
 		</view>
-		
+
 	</view>
 </template>
 
@@ -51,9 +56,10 @@
 	import groupBy from './classify.js'
 	import { mapMutations } from 'vuex'
 	import * as dd from "dingtalk-jsapi"
+	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 
 	export default {
-		components: { uniCollapse, uniCollapseItem, uniDrawer },
+		components: { uniCollapse, uniCollapseItem, uniDrawer, uniNavBar },
 		data() {
 			return {
 				data: [],
@@ -63,7 +69,8 @@
 				stopJump: false, // 当触发多选时,改为true 禁止 跳转页面
 				delay: {},
 				timerOver: true, // 定时器是否结束的标志
-				selectedStationGuids: [] //选择的StationGuids
+				selectedStationGuids: [], //选择的StationGuids
+				navBtnRight: '选择'
 			}
 		},
 		methods: {
@@ -101,11 +108,11 @@
 					return
 				}
 				// 生产线号-站号
-				let s = v.LineID + '-'+ v.StationID
+				let s = v.LineID + '-' + v.StationID
 				// 职工信息
-				let emp = v.EmpID + '-' +v.Name
+				let emp = v.EmpID + '-' + v.Name
 				uni.navigateTo({
-					url:'/pages/details/details?guid=' + v.StationGuid + '&sid=' + s + '&emp=' + emp
+					url: '/pages/details/details?guid=' + v.StationGuid + '&sid=' + s + '&emp=' + emp
 				})
 			},
 			close() {
@@ -208,43 +215,26 @@
 					this.data = stationData
 					uni.hideLoading()
 				}
-				
+
 			},
 			// 复选
-			selectManay() {
-				let env = dd.env.platform
-				if (env == 'notInDingTalk') return
-				var _this = this
-				dd.biz.navigation.setRight({
-					show: true,
-					control: true,
-					text: '选择',
-					onSuccess: function() {
-						_this.showSelect = true
-						_this.showContent = true
-						_this.stopJump = true
-						// 点击 选择之后 将按钮改成取消
-						_this.cancelSelect()
-						_this.showSubmitBtn = true
-					}
-				})
-			},
-			// 取消
-			cancelSelect() {
-				let env = dd.env.platform
-				if (env == 'notInDingTalk') return
-				var _this = this
-				dd.biz.navigation.setRight({
-					show: true,
-					control: true,
-					text: '取消',
-					onSuccess: function() {
-						_this.showSelect = false
-						_this.stopJump = false
-						_this.selectManay()
-						_this.showSubmitBtn = false
-					}
-				})
+			selectItems() {
+				if (this.navBtnRight == '选择') {
+					this.showSelect = true
+					this.showContent = true
+					this.stopJump = true
+					// 点击 选择之后 将按钮改成取消
+					this.navBtnRight = '取消'
+					this.showSubmitBtn = true
+				} else{
+					this.showSelect = false
+					this.showContent = false
+					this.stopJump = false
+					// 点击 选择之后 将按钮改成取消
+					this.navBtnRight = '选择'
+					this.showSubmitBtn = false
+				}
+				
 			},
 			delayGetData() {
 				//判断定时器是否结束
@@ -283,26 +273,35 @@
 						url: '/pages/TreeData/index'
 					})
 				}
+			},
+			goback() {
+				uni.navigateBack({})
+			},
+			showHelp(){
+				console.log('帮助')
 			}
 		},
 		mounted() {
+			// console.log('mounted')
 			// 显示导航栏右侧按钮
-			this.selectManay()
+			// this.selectManay()
 			// 加载数据
 			uni.showLoading({
-				title:'请稍后'
+				title: '请稍后'
 			})
 			this.getData()
 		},
 		// 显示的时候 属性数据
 		onShow() {
-			this.data = []
+			// console.log('onshow')
+			// this.selectManay()
+			// this.data = []
 			// 显示导航栏右侧按钮
-			this.selectManay()
-			uni.showLoading({
-				title:'请稍后'
-			})
-			this.getData()
+			// this.selectManay()
+			// uni.showLoading({
+			// 	title: '请稍后'
+			// })
+			// this.getData()
 		}
 	}
 </script>
@@ -414,5 +413,8 @@
 
 	.stop {
 		background: red;
+	}
+	.marginR{
+		margin-right: 30rpx;
 	}
 </style>

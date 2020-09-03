@@ -1,14 +1,26 @@
 <template>
-	<view class="flex column">
-		<view>请靠近您的ID卡</view>
-		<view>{{state}}</view>
-		<view>{{log}}</view>
+	<view>
+		<uni-nav-bar fixed status-bar>
+			<view class="center">NFC</view>
+			<view slot="left" @click="goback" class="icon-back">返回</view>
+			<view slot="right"><text @tap="showHelp" class="marginR">帮助</text></view>
+		</uni-nav-bar>
+		<view class="flex column full-height">
+			<view>请靠近您的ID卡</view>
+			<view>{{state}}</view>
+			<view>{{log}}</view>
+		</view>
 	</view>
+
 </template>
 
 <script>
 	import * as dd from "dingtalk-jsapi"
+	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 	export default {
+		components: {
+			uniNavBar
+		},
 		data() {
 			return {
 				state: '',
@@ -16,6 +28,12 @@
 			}
 		},
 		methods: {
+			goback() {
+				uni.navigateBack({})
+			},
+			showHelp() {
+				console.log('帮助')
+			}
 		},
 		onShow() {
 			let _this = this
@@ -30,16 +48,16 @@
 						})
 					},
 					onFail: function(err) {
-						_this.log = err.tagId  // 4e:26:cc:1f
+						_this.log = err.tagId // 4e:26:cc:1f
 						// 先将16位数据 以:为间隔存入数组
 						let arr = err.tagId.split(':')
 						// 逆序 并 数组转字符串 并 删除 ','
-						let str = arr.reverse().toString().replace(/,/g,'')
+						let str = arr.reverse().toString().replace(/,/g, '')
 						_this.state = str
 						uni.showModal({
 							content: str
 						})
-						
+
 					}
 				})
 			})
@@ -48,12 +66,9 @@
 </script>
 
 <style scoped>
-	.flex{
-		display: flex;
-		width: 100%;
-		text-align: center;
-	}
-	.column{
+	.full-height {
+		height: 70%;
 		justify-content: center;
+		text-align: center;
 	}
 </style>

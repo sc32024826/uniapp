@@ -1,5 +1,14 @@
 <template>
-	<view id="container" :class="isUps == true ? 'prevent':''">
+	<view id="container">
+		<uni-nav-bar fixed status-bar>
+			<view class="center">站点详情</view>
+			<view slot="left" @click="goback" class="icon-back">返回</view>
+			<view slot="right" class="marginR"><text @tap="showHelp" class="marginR">帮助</text><text @tap="openDrawer">更多</text></view>
+		</uni-nav-bar>
+		<view class="head">
+			<view>当前站点:{{sid}}</view>
+			<view>当前站点登录员工:{{emp}}</view>
+		</view>
 		<uni-collapse>
 			<uni-collapse-item title="站内衣架" :open="true" class="collapseitem">
 				<view v-if="none" class="infomsg">暂无数据</view>
@@ -41,6 +50,7 @@
 	import * as dd from "dingtalk-jsapi"
 	import drawer from '@/components/my-drawer.vue'
 	import { mapMutations } from 'vuex'
+	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 
 	var that = this
 	export default {
@@ -50,7 +60,8 @@
 			uniSwipeAction,
 			uniSwipeActionItem,
 			LyTree,
-			drawer
+			drawer,
+			uniNavBar
 		},
 		data() {
 			return {
@@ -60,7 +71,6 @@
 				RackData: [], // 站内衣架
 				none: true, // 没有数据的时候显示 暂无数据
 				data: [], // 树状数据
-				isUps: false, // 是否有上层打开
 				options: [{
 					'text': '结束衣架',
 					'style': {
@@ -177,33 +187,28 @@
 					}
 				}
 			},
-			// 钉钉导航栏 右侧按钮设置
-			setRightBtn() {
-				let env = dd.env.platform
-				if (env == 'notInDingTalk') return
-				var _this = this
-				dd.biz.navigation.setRight({
-					show: true,
-					control: true,
-					text: '更多',
-					onSuccess: function() {
-						_this.render = true
-						_this.$refs.myDrawer.open()
-					}
-				})
+			goback() {
+				uni.navigateBack({})
+			},
+			showHelp() {
+				console.log('帮助')
+			},
+			openDrawer(){
+				this.render = true
+				this.$refs.myDrawer.open()
 			}
 		},
 		mounted() {
 			// 衣架信息
 			this.getRackStatus()
-			// 右侧按钮显示
-			this.setRightBtn()
 			// 分配方案
 			this.getAssignResult()
 		},
 		onLoad(options) {
 			this.guid = options.guid // station guid
 			console.log(options)
+			this.emp = options.emp == 'null-null' ? '无' : options.emp
+			this.sid = options.sid
 			this.setStationData({
 				name: options.sid,
 				emp: options.emp,
@@ -216,12 +221,17 @@
 <style lang="less" scoped>
 	#container {
 		width: 100%;
-		// height: 100vh;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		z-index: 1;
-
+		.head{
+			background-color: #0079FF;
+			color: white;
+			padding-left: 30rpx;
+			padding-top: 20rpx;
+			padding-bottom: 20rpx;
+		}
 		.infomsg {
 			width: 100%;
 			text-align: center;
@@ -317,14 +327,18 @@
 		}
 
 		/* 起到固定的作用 ,从而解决原页面触摸穿透的问题*/
-		.prevent {
-			width: 100%;
-			height: 100%;
-			position: fixed;
-			top: 0;
-			left: 0;
-			overflow: hidden;
-		}
+		// .prevent {
+		// 	width: 100%;
+		// 	height: 100%;
+		// 	position: fixed;
+		// 	top: 0;
+		// 	left: 0;
+		// 	overflow: hidden;
+		// }
 
+	}
+
+	.marginR {
+		margin-right: 20rpx;
 	}
 </style>

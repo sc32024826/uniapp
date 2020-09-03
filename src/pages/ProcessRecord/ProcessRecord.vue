@@ -1,5 +1,10 @@
 <template>
 	<view id="main">
+		<uni-nav-bar fixed status-bar>
+			<view class="center">记录查询</view>
+			<view slot="left" @click="goback" class="icon-back">返回</view>
+			<view slot="right"><text @tap="showHelp" class="marginR">帮助</text></view>
+		</uni-nav-bar>
 		<view class="column top" v-if="haveScaned">
 			<view class="column margin">
 				<view class="row between">
@@ -68,7 +73,7 @@
 			<view id="mask">
 				<text>手动输入衣架号</text>
 				<input type="number" placeholder="衣架号" v-model="RackCodeHD" />
-				<view >
+				<view>
 					<button type="default" size="mini" @click="closeModal">取消</button>
 					<button type="primary" size="mini" @click="submit">提交</button>
 				</view>
@@ -82,9 +87,9 @@
 	import { dateFormat, ISO8601 } from "./dateFormat.js"
 	import { QueryProcessingHistoryByRackCode, doneRack } from '@/api/api.js'
 	import { uniCollapse, uniCollapseItem } from '@dcloudio/uni-ui'
-
+	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 	export default {
-		components: { uniCollapse, uniCollapseItem },
+		components: { uniCollapse, uniCollapseItem, uniNavBar },
 		data() {
 			return {
 				tableData: [],
@@ -102,7 +107,7 @@
 				haveScaned: false,
 				BarCodes: [],
 				inputByHand: false,
-				RackCodeHD:''
+				RackCodeHD: ''
 			}
 		},
 		onLoad: function() {
@@ -118,9 +123,9 @@
 						_this._requestAwait(data.text)
 					},
 					onFail: function(err) {
-						
+
 					}
-				}).catch(e=>{
+				}).catch(e => {
 					console.log(e)
 				})
 			},
@@ -236,14 +241,20 @@
 			inputHand() {
 				this.inputByHand = true
 			},
-			closeModal(){
+			closeModal() {
 				this.inputByHand = false
 			},
-			submit(){
+			submit() {
 				this._requestAwait(this.RackCodeHD)
 				this.inputByHand = false
 				this.RackCodeHD = ''
 				this.haveScaned = true
+			},
+			goback() {
+				uni.navigateBack({})
+			},
+			showHelp() {
+				console.log('帮助')
 			}
 		}
 	}
@@ -255,23 +266,27 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		.button-area{
+
+		.button-area {
 			width: 100%;
 			padding: 10rpx;
 		}
-		.button-area button{
+
+		.button-area button {
 			width: 40%;
 		}
-		#modal{
+
+		#modal {
 			position: fixed;
-			top:0;
+			top: 0;
 			z-index: 10;
 			width: 100%;
 			height: 100vh;
 			background-color: #cacaca;
 			opacity: 95%;
 			justify-content: center;
-			#mask{
+
+			#mask {
 				margin-top: 10%;
 				display: flex;
 				flex-direction: column;
@@ -281,97 +296,104 @@
 				border: solid 2rpx black;
 				width: 90%;
 				height: 400rpx;
-				text{
+
+				text {
 					margin: 10rpx;
 				}
-				input{
+
+				input {
 					width: 50%;
 					height: 15%;
 					background-color: white;
 					border-radius: 10rpx;
 					text-align: center;
-					
+
 				}
-				view{
+
+				view {
 					width: 80%;
 					display: flex;
 					justify-content: space-between;
 				}
-				button{
+
+				button {
 					width: 40%;
 					margin: 30rpx 10rpx 10rpx 10rpx;
 				}
 			}
-		
+
 		}
 	}
-	
+
 	.head {
 		background-color: #F8F8F9;
 	}
-	
+
 	.cell {
 		justify-content: center;
 		border: solid 1rpx #DCDEE2;
 		min-height: 50rpx;
 	}
-	
+
 	.table {
 		text-align: center;
 	}
-	
+
 	//站号格
 	.station {
 		width: 16%;
 	}
-	
+
 	// 姓名格
 	.name {
 		width: 16%;
 	}
-	
+
 	// 时间格
 	.time {
 		width: 32%;
 		white-space: pre-wrap;
 	}
-	
+
 	// 类型格
 	.type {
 		width: 10%;
 	}
-	
+
 	// 工序
 	.seq {
 		width: 15%;
 	}
-	
+
 	// 数量
 	.count {
 		width: 11%;
 	}
-	
+
 	.light {
 		background: #CCCCCC;
 	}
-	
+
 	.red {
 		color: red;
 	}
-	.top{
+
+	.top {
 		font-size: 40rpx;
 	}
-	.currentSeq{
+
+	.currentSeq {
 		// border: solid 1px red;
 		flex-grow: 1;
 	}
-	.currentCustation{
+
+	.currentCustation {
 		// border: solid 1px red;
 		flex-grow: 2;
 	}
-	.item{
+
+	.item {
 		border: solid 1rpx #F8F8F9;
-		background-color:#2DB7F5;
+		background-color: #2DB7F5;
 	}
-	
 </style>

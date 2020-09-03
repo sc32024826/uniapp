@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<uni-drawer ref="dra" mode="right" @change="toggleShow">
+		<uni-drawer ref="dra" mode="right">
 			<view class="label">当前站点:</view>
 			<view class="uni-input">{{station.name}}</view>
 			<view class="label"> 当前职工:</view>
