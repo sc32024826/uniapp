@@ -4,6 +4,7 @@ import App from './App'
 import store from './store'
 import router from './router'
 import { RouterMount } from 'uni-simple-router'
+
 Vue.config.productionTip = false
 
 Vue.prototype.$store = store

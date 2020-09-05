@@ -285,7 +285,7 @@
 			z-index: 10;
 			width: 100%;
 			height: 100vh;
-			background-color: #cacaca;
+			background-color: rgba(201, 201, 201, 1);
 			opacity: 95%;
 
 			#mask {
@@ -295,7 +295,7 @@
 				justify-content: center;
 				align-items: center;
 				border-radius: 10rpx;
-				border: solid 2rpx black;
+				border: solid 2rpx #e3e3e3;
 				width: 90vw;
 				height: 400rpx;
 				margin-left: 5vw;
@@ -329,12 +329,12 @@
 	}
 
 	.head {
-		background-color: #F8F8F9;
+		background-color: #9ad3de;
 	}
 
 	.cell {
 		justify-content: center;
-		border: solid 1rpx #DCDEE2;
+		border: solid 1rpx #c9c9c9;
 		min-height: 50rpx;
 	}
 
@@ -374,7 +374,7 @@
 	}
 
 	.light {
-		background: #CCCCCC;
+		background: #e3e3e3;
 	}
 
 	.red {
@@ -386,18 +386,16 @@
 	}
 
 	.currentSeq {
-		// border: solid 1px red;
 		flex-grow: 1;
 	}
 
 	.currentCustation {
-		// border: solid 1px red;
 		flex-grow: 2;
 	}
 
 	.item {
-		border: solid 1rpx #F8F8F9;
-		background-color: #2DB7F5;
+		border: solid 1rpx #c9c9c9;
+		background-color: #89bdd3;
 	}
 
 	.help {
@@ -406,7 +404,6 @@
 		position: fixed;
 		top: 0;
 		z-index: 2;
-		background-color: red;
 		image{
 			margin-top: 44px;
 			width: 100%;

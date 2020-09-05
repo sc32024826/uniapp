@@ -3,7 +3,7 @@
 		<uni-nav-bar fixed status-bar>
 			<view class="center">常用功能</view>
 			<view slot="left" @click="close" class="icon-back">关闭</view>
-			<view slot="right"><text @tap="showHelp" >帮助</text></view>
+			<view slot="right"><text @tap="showHelp" >&#xe677;</text></view>
 		</uni-nav-bar>
 	</view>
 </template>

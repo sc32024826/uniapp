@@ -19,21 +19,19 @@
 	}
 </script>
 
-<style lang="less">
+<style lang="scss">
 	/* 头条小程序需要把 iconfont 样式放到组件外 */
 	/* @import "components/m-icon/m-icon.css"; */
 	@import './static/common.css';
-
+    @import './style.scss';
+    
 	/*每个页面公共css */
 	page {
 		min-height: 100%;
 		display: flex;
-		font-size: 16px;
+		font-size: 14px;
 		font-family: 'iconfont';
 		font-style: normal; 
-		// 解决刘海屏的方法 需要在manifest.json 中配置安全区
-		// padding-top: constant(safe-area-inset-top); 
-		// padding-top: env(safe-area-inset-top);
 	}
 
 	/* #ifdef MP-BAIDU */
@@ -142,7 +140,7 @@
 	}
 
 	button.primary {
-		background-color: #0faeff;
+		background-color: #0fbcf9;
 	}
 
 	.debug {
@@ -163,7 +161,7 @@
 		justify-content: space-between;
 	}
 
-	.arround {
+	.around {
 		justify-content: space-around;
 	}
 

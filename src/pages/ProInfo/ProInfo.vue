@@ -8,10 +8,10 @@
 				<text @tap="selectItems">{{navBtnRight}}</text>
 			</view>
 		</uni-nav-bar>
-		<uni-collapse>
+		<uni-collapse class="mx wd">
 			<view class="lineInfo column" v-for="(item,i) in data" :key="i">
-				<view class="row DateBar">
-					<view class="row wrap infomation">
+				<view class="row DateBar my">
+					<view class="row wrap infomation my">
 						<view>总数:{{item.ClothesQty}}</view>
 						<view>衣架数:{{item.NotFinishedRackQty}}</view>
 						<view>负载率:{{Math.round(item.LoadRatio*100)}}%</view>
@@ -25,17 +25,16 @@
 					<uni-collapse-item :title="item.LineID + '号线'" class="collapseitem" :open="showContent">
 						<view class="row wrap item">
 							<view class="box" v-for="(v,k) in item.list" :key="k" v-if="item.list">
-								<!-- @longpress="longpressfn" -->
-								<view @click="clickBox(v)">
-									<checkbox class="checkbox" v-show="showSelect" :checked="v.checked"></checkbox>
+								<view @click="clickBox(v)" class="ht debug">
+									<checkbox class="checkbox" v-if="showSelect" :checked="v.checked"></checkbox>
 									<view class="row">
 										<view :class="v.Enable*v.EnableIn == false ? 'base stop':'base light'"></view>
-										<view>{{v.LineID}}-{{v.StationID}}</view>
-										<view>{{v.SeqName}}</view>
+										<view class="wd-50">{{v.LineID}}-{{v.StationID}}</view>
+										<view class="wd-50">{{v.SeqName}}</view>
 									</view>
-									<view class="row">
-										<view>{{v.EmpID}}-{{v.Name}}</view>
-										<view>{{v.RackCnt}}/{{v.RackCap}}</view>
+									<view class="row ">
+										<view class="wd-50 al-c">{{v.EmpID}}-{{v.Name}}</view>
+										<view class="wd-50 al-c">{{v.RackCnt}}/{{v.RackCap}}</view>
 									</view>
 								</view>
 							</view>
@@ -54,12 +53,11 @@
 
 <script>
 	import { uniCollapse, uniCollapseItem } from '@dcloudio/uni-ui'
+	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
 	import { GetStationStatus, GetLineStatus, QueryInStationRackInfByStationGuid, SetLinePause } from '@/api/api.js'
 	import groupBy from './classify.js'
 	import { mapMutations } from 'vuex'
-	import * as dd from "dingtalk-jsapi"
-	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 
 	export default {
 		components: { uniCollapse, uniCollapseItem, uniDrawer, uniNavBar },
@@ -229,15 +227,14 @@
 					// 点击 选择之后 将按钮改成取消
 					this.navBtnRight = '取消'
 					this.showSubmitBtn = true
-				} else{
+				} else {
 					this.showSelect = false
-					this.showContent = false
 					this.stopJump = false
 					// 点击 选择之后 将按钮改成取消
 					this.navBtnRight = '选择'
 					this.showSubmitBtn = false
 				}
-				
+
 			},
 			delayGetData() {
 				//判断定时器是否结束
@@ -280,31 +277,15 @@
 			goback() {
 				uni.navigateBack({})
 			},
-			showHelp(){
+			showHelp() {
 				console.log('帮助')
 			}
 		},
 		mounted() {
-			// console.log('mounted')
-			// 显示导航栏右侧按钮
-			// this.selectManay()
-			// 加载数据
 			uni.showLoading({
 				title: '请稍后'
 			})
 			this.getData()
-		},
-		// 显示的时候 属性数据
-		onShow() {
-			// console.log('onshow')
-			// this.selectManay()
-			// this.data = []
-			// 显示导航栏右侧按钮
-			// this.selectManay()
-			// uni.showLoading({
-			// 	title: '请稍后'
-			// })
-			// this.getData()
 		}
 	}
 </script>
@@ -317,6 +298,10 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+
+		.wd {
+			width: calc(100vw - 20rpx);
+		}
 
 		.ToolBar {
 			position: fixed;
@@ -340,28 +325,41 @@
 
 			.collapseitem {
 				.item {
-					padding: 10rpx 0rpx 10rpx 0rpx;
+					justify-content: space-between;
+					padding-bottom: 5rpx;
+					padding-top: 5rpx;
+					background-color: white;
 
 					.box {
-						width: 48%;
-						border: solid 2rpx #DCDEE2;
-						height: 200rpx;
-						margin: 10rpx 5rpx 5rpx 5rpx;
+						width: calc((100vw - 34rpx)/2);
+						border: solid 1rpx #DCDEE2;
+						height: 150rpx;
 						background-color: white;
+						margin-top: 5rpx;
+						margin-bottom: 5rpx;
+
+						.ht {
+							height: 100%;
+						}
 
 						.checkbox {
 							float: right;
-							margin-left: -50%;
-							z-index: 10;
+						}
+
+						.wd-50 {
+							width: 100rpx;
 						}
 					}
+				}
+
+				.item:after {
+					content: ' ';
+					flex: auto;
 				}
 			}
 
 			.collapseitem:nth-child(even) {
-				.item {
-					background-color: #666699;
-				}
+				.item {}
 
 			}
 
@@ -395,7 +393,7 @@
 	.row {
 		align-items: center;
 		justify-content: space-around;
-		margin: 10rpx 0rpx 10rpx 0rpx;
+		// margin: 10rpx 0rpx 10rpx 0rpx;
 	}
 
 	.wrap {
@@ -417,7 +415,8 @@
 	.stop {
 		background: red;
 	}
-	.marginR{
+
+	.marginR {
 		margin-right: 30rpx;
 	}
 </style>

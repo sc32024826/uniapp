@@ -5,8 +5,23 @@
 			<view slot="left" @click="close" class="icon-back">关闭</view>
 			<view slot="right" @tap="showhelp"><text>&#xe677;</text></view>
 		</uni-nav-bar>
-		<view class="logo">
-		</view>
+		<swiper :autoplay="true" :indicatorDots="true" indicatorActiveColor="white" circular>
+			<swiper-item>
+				<view class="logo"></view>
+			</swiper-item>
+			<swiper-item>
+				<image src="@/static/banner/1.jpg" class="wd"></image>
+			</swiper-item>
+			<swiper-item>
+				<image src="@/static/banner/2.jpg" class="wd"></image>
+			</swiper-item>
+			<swiper-item>
+				<image src="@/static/banner/3.jpg" class="wd"></image>
+			</swiper-item>
+			<swiper-item>
+				<image src="@/static/banner/4.jpg" class="wd"></image>
+			</swiper-item>
+		</swiper>
 		<view class="row warp main">
 			<block v-for="(item,i) in optionList">
 				<view class="box" @click="jump(item.url)">
@@ -140,6 +155,10 @@
 		justify-content: start;
 		flex-wrap: wrap;
 	}
+	.wd{
+		margin: 10rpx;
+		width: calc(100vw - 20rpx);
+	}
 
 	.container {
 		width: 100%;
@@ -163,7 +182,7 @@
 			justify-content: space-between;
 			.box {
 				align-items: center;
-				background-color: #55aaff;
+				background-color: #89bdd3;
 				height: 200rpx;
 				width: calc((100vw - 50rpx)/4);
 				display: flex;
@@ -171,6 +190,8 @@
 				flex-wrap: wrap;
 				justify-content: center;
 				margin-bottom: 10rpx;
+				color: #323232;
+				padding-bottom: 10rpx;
 			}
 		}
 
@@ -179,7 +200,7 @@
 			height: 100%;
 			position: fixed;
 			top: 0;
-			background-color: rgba(0, 0, 0, 0.5);
+			background-color: rgba(201, 201, 201, 0.5);
 			z-index: 2;
 
 			.swiper {
@@ -189,7 +210,7 @@
 					color: white;
 					font-size: 200rpx;
 					display: block;
-					margin-top: 340rpx;
+					margin-top: 350rpx;
 					transform: scale(1, 1.2)
 				}
 
@@ -217,12 +238,12 @@
 
 		.hideHelp {
 			border-radius: 10rpx;
-			border: solid 1rpx white;
+			border: solid 1rpx #e3e3e3;
 			width: 40vw;
 			margin: 0 auto;
 			text-align: center;
-			color: black;
-			background-color: white;
+			color: #000;
+			background-color: #89bdd3;
 			height: 50rpx;
 		}
 

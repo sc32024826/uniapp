@@ -30,7 +30,7 @@
 		methods: {
 			makeCode() {
 				var qrcode = new QRCode('qrcode', {
-					text: this.userName,
+					text: this.userName || 'this is empty',
 					width: 128,
 					height: 128,
 					colorDark: '#000000',
@@ -48,7 +48,6 @@
 		mounted() {
 			this.makeCode()
 			this.app_version = process.env.VUE_APP_VERSION
-			// console.log(process.env);
 		}
 
 	}
@@ -70,10 +69,9 @@
 			width: 100%;
 			margin: 20rpx;
 			// padding: 10rpx;
-			border-bottom: solid 1rpx #000000;
+			border-bottom: solid 1rpx #c7c7c7;
 
 			.name {
-				// border: solid 1rpx #0077AA;
 				margin-left: 50rpx;
 				width: 50%;
 				text-align: center;
@@ -83,13 +81,12 @@
 				border-radius: 20rpx;
 				width: 128rpx;
 				height: 128rpx;
-				/* flex-grow: 1; */
 			}
 		}
 
 
 		.body {
-			height: 70vh;
+			height: calc(70vh - 44px);
 			min-height: 700rpx;
 			width: 100%;
 			align-items: center;
@@ -104,7 +101,8 @@
 		.footer{
 			width: 100%;
 			height: 50rpx;
-			border-top: solid 1rpx black;
+			border-top: solid 1rpx #c7c7c7;
+			color: #c7c7c7;
 			text-align: center;
 		}
 	}
