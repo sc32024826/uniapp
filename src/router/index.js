@@ -3,8 +3,6 @@ import Vue from 'vue'
 //这里仅示范npm安装方式的引入，其它方式引入请看最上面【安装】部分
 import Router from 'uni-simple-router'
 import store from '@/store'
-import * as dd from "dingtalk-jsapi"
-
 
 Vue.use(Router)
 //初始化
@@ -19,12 +17,6 @@ console.log('当前环境', ENV)
 router.beforeEach((to, from, next) => {
 	console.log(to)
 	if (to.meta.title) { document.title = to.meta.title }
-	let env = dd.env.platform
-	if (env != 'notInDingTalk') {
-		dd.biz.navigation.hideBar({
-			hidden:true
-		})
-	}
 
 	if (to.name == 'index') {
 		next()

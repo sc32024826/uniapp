@@ -3,7 +3,10 @@
 		<uni-nav-bar fixed status-bar>
 			<view class="center">站点详情</view>
 			<view slot="left" @click="goback" class="icon-back">返回</view>
-			<view slot="right" class="marginR"><text @tap="showHelp" class="marginR">帮助</text><text @tap="openDrawer">更多</text></view>
+			<view slot="right" class="marginR">
+				<text @tap="showHelp" class="marginR">&#xe677;</text>
+				<text @tap="openDrawer">更多</text>
+			</view>
 		</uni-nav-bar>
 		<view class="head">
 			<view>当前站点:{{sid}}</view>

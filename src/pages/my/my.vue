@@ -56,6 +56,7 @@
 
 <style scoped lang="less">
 	.content {
+		padding-top: 44px;
 		width: 100%;
 		justify-content: center;
 		align-items: center;

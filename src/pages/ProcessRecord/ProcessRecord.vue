@@ -3,13 +3,12 @@
 		<uni-nav-bar fixed status-bar>
 			<view class="center">记录查询</view>
 			<view slot="left" @click="goback" class="icon-back">返回</view>
-			<view slot="right"><text @tap="showHelp" class="marginR">帮助</text></view>
+			<view slot="right"><text @tap="showHelp" class="marginR"><text>&#xe677;</text></text></view>
 		</uni-nav-bar>
 		<view class="column top" v-if="haveScaned">
 			<view class="column margin">
 				<view class="row between">
-					<view @click="finishRack(RackCode)">衣架号:{{RackCode}}
-						<uni-icons type="info-filled" size="20" v-if="RackCode"></uni-icons>
+					<view @click="finishRack(RackCode)">衣架号:{{RackCode}}<text>&#xe679;</text>
 					</view>
 					<view v-if="Status == 3" class="red debug">已完成</view>
 					<view v-if="Status == 4" class="red debug">已完成4</view>
@@ -19,8 +18,7 @@
 					<view>生产单:{{Mo}}</view>
 				</view>
 				<view v-if="Mo">款色码:{{StyleID}} - {{Color}} - {{SizeName}}</view>
-				<view v-if="Mo" @click="showList">数量:{{Qty}}
-					<uni-icons type="info-filled" size="20"></uni-icons>
+				<view v-if="Mo" @click="showList">数量:{{Qty}}<text>&#xe679;</text>
 				</view>
 				<view class="row" v-if="Mo">
 					<view class="currentSeq">当前工序:{{SeqCode}}-{{SeqName}}</view>
@@ -79,6 +77,9 @@
 				</view>
 			</view>
 		</view>
+		<view v-if="helpView" class="help">
+			<image src="@/static/help/scan.jpg"></image>
+		</view>
 	</view>
 </template>
 
@@ -107,7 +108,8 @@
 				haveScaned: false,
 				BarCodes: [],
 				inputByHand: false,
-				RackCodeHD: ''
+				RackCodeHD: '',
+				helpView: false
 			}
 		},
 		onLoad: function() {
@@ -116,18 +118,19 @@
 		methods: {
 			scanCode() {
 				let _this = this
-				dd.biz.util.scan({
-					type: "all", // type 为 all、qrCode、barCode，默认是all。
-					onSuccess: function(data) {
-						_this.haveScaned = true
-						_this._requestAwait(data.text)
-					},
-					onFail: function(err) {
+				let env = dd.env.platform
+				if (env != 'notInDingTalk') {
+					dd.biz.util.scan({
+						type: "all", // type 为 all、qrCode、barCode，默认是all。
+						onSuccess: function(data) {
+							_this.haveScaned = true
+							_this._requestAwait(data.text)
+						},
+						onFail: function(err) {
 
-					}
-				}).catch(e => {
-					console.log(e)
-				})
+						}
+					})
+				}
 			},
 			// 继续下个扫码
 			nextScan() {
@@ -254,7 +257,7 @@
 				uni.navigateBack({})
 			},
 			showHelp() {
-				console.log('帮助')
+				this.helpView = !this.helpView
 			}
 		}
 	}
@@ -284,18 +287,18 @@
 			height: 100vh;
 			background-color: #cacaca;
 			opacity: 95%;
-			justify-content: center;
 
 			#mask {
-				margin-top: 10%;
+				margin-top: 10vh;
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
 				align-items: center;
 				border-radius: 10rpx;
 				border: solid 2rpx black;
-				width: 90%;
+				width: 90vw;
 				height: 400rpx;
+				margin-left: 5vw;
 
 				text {
 					margin: 10rpx;
@@ -395,5 +398,19 @@
 	.item {
 		border: solid 1rpx #F8F8F9;
 		background-color: #2DB7F5;
+	}
+
+	.help {
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top: 0;
+		z-index: 2;
+		background-color: red;
+		image{
+			margin-top: 44px;
+			width: 100%;
+			height: 100%;
+		}
 	}
 </style>

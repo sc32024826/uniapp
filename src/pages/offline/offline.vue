@@ -3,7 +3,7 @@
 		<uni-nav-bar fixed status-bar>
 			<view class="center">衣架下线</view>
 			<view slot="left" @click="goback" class="icon-back">返回</view>
-			<view slot="right"><text @tap="showHelp" class="marginR">帮助</text></view>
+			<view slot="right"><text @tap="showHelp" class="marginR">&#xe677;</text></view>
 		</uni-nav-bar>
 		<view id="head">
 			<view id="toolbar" class="row center">
@@ -439,7 +439,7 @@
 		}
 
 		#list {
-			height: calc(93vh - 74px);
+			height: calc(93vh - 118px);
 			overflow: scroll;
 
 			.stripe:nth-child(even) {

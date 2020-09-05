@@ -3,18 +3,66 @@
 		<uni-nav-bar fixed status-bar>
 			<view class="center">工作台</view>
 			<view slot="left" @click="close" class="icon-back">关闭</view>
-			<view slot="right">帮助</view>
+			<view slot="right" @tap="showhelp"><text>&#xe677;</text></view>
 		</uni-nav-bar>
 		<view class="logo">
 		</view>
 		<view class="row warp main">
 			<block v-for="(item,i) in optionList">
-				<view class="column box" @click="jump(item.url)">
-					<text class="test" v-html="item.icon"></text>
-					<text class="title">{{item.title}}</text>
+				<view class="box" @click="jump(item.url)">
+					<view class="icon" v-html="item.icon"></view>
+					<view>{{item.title}}</view>
 				</view>
-
 			</block>
+		</view>
+		<view class="help" v-if="helpView">
+			<swiper class="swiper" :indicatorDots="true" indicatorActiveColor="white">
+				<swiper-item>
+					<text class="icon-box"></text>
+					<view class="msg">
+						<li>
+							扫描衣架二维码获得衣架信息
+						</li>
+						<li>
+							手动输入衣架号获得衣架信息
+						</li>
+						<li>
+							设置衣架为已经完成
+						</li>
+						<li>
+							查询衣架的历史记录
+						</li>
+						<li>
+							查询衣架上的衣服信息
+						</li>
+					</view>
+				</swiper-item>
+				<swiper-item>
+					<text class="icon-box margin-left"></text>
+					<view class="msg">
+						<li>
+							扫描员工卡片获得员工卡号
+						</li>
+					</view>
+				</swiper-item>
+				<swiper-item>
+					<text class="icon-box margin-left-2"></text>
+					<view class="msg">
+						<li>
+							扫描员工卡片获得员工卡号
+						</li>
+					</view>
+				</swiper-item>
+				<swiper-item>
+					<text class="icon-box margin-left-3"></text>
+					<view class="msg">
+						<li>
+							扫描员工卡片获得员工卡号
+						</li>
+					</view>
+				</swiper-item>
+			</swiper>
+			<view @click="understand" class="hideHelp">我知道了</view>
 		</view>
 	</view>
 </template>
@@ -50,7 +98,8 @@
 						icon: '&#xe705;',
 						title: '生产线'
 					}
-				]
+				],
+				helpView: false //是否显示帮助信息
 			}
 		},
 		methods: {
@@ -61,53 +110,42 @@
 				})
 			},
 			showhelp() {
-				console.log('帮助')
+				this.helpView = !this.helpView
 			},
 			close() {
 				let env = dd.env.platform
 				if (env != 'notInDingTalk') {
 					dd.biz.navigation.close()
-				}else{
+				} else {
 					console.log('关闭页面')
 				}
+			},
+			understand() {
+				this.helpView = false
 			}
 		},
-		computed: mapState(['hasLogin', 'userName']),
+		computed: {
+			...mapState(['hasLogin', 'userName'])
+		}
 	}
 </script>
 
 <style lang="less" scoped>
-	.test {
-		font-family: 'iconfont';
+	
+	.icon {
 		font-size: 150rpx;
-		font-style: normal;
-	}
-
-	.row {
-		justify-content: space-between;
 	}
 
 	.wrap {
+		justify-content: start;
 		flex-wrap: wrap;
 	}
-
-	.title {
-		text-align: center;
-	}
-
-	.box {
-		margin-top: 4rpx;
-		margin-right: 4rpx;
-		align-items: center;
-	}
-
-
 
 	.container {
 		width: 100%;
 		white-space: nowrap;
 		overflow: hidden;
-		text-overflow: ellipsis;
+		position: fixed;
 
 		.logo {
 			height: 250rpx;
@@ -115,13 +153,78 @@
 			background-size: cover;
 			background-repeat: no-repeat;
 			background-position: center;
-			margin: 10rpx;
+			margin: 10rpx 10rpx 0 10rpx;
 
 		}
 
 		.main {
-			padding: 10rpx;
-			height: 80vh;
+			margin: 10rpx;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			.box {
+				align-items: center;
+				background-color: #55aaff;
+				height: 200rpx;
+				width: calc((100vw - 50rpx)/4);
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				justify-content: center;
+				margin-bottom: 10rpx;
+			}
 		}
+
+		.help {
+			width: 100%;
+			height: 100%;
+			position: fixed;
+			top: 0;
+			background-color: rgba(0, 0, 0, 0.5);
+			z-index: 2;
+
+			.swiper {
+				height: 80vh;
+
+				.icon-box {
+					color: white;
+					font-size: 200rpx;
+					display: block;
+					margin-top: 340rpx;
+					transform: scale(1, 1.2)
+				}
+
+				.margin-left {
+					margin-left: 24vw;
+				}
+
+				.margin-left-2 {
+					margin-left: 49vw;
+				}
+
+				.margin-left-3 {
+					margin-left: 74vw;
+				}
+
+				.msg {
+					margin-top: 50rpx;
+					color: white;
+					text-indent: 2em;
+				}
+
+
+			}
+		}
+
+		.hideHelp {
+			border-radius: 10rpx;
+			border: solid 1rpx white;
+			width: 40vw;
+			margin: 0 auto;
+			text-align: center;
+			color: black;
+			background-color: white;
+			height: 50rpx;
+		}
+
 	}
 </style>

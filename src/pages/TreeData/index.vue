@@ -1,6 +1,10 @@
 <template>
 	<view class="container">
-
+		<uni-nav-bar fixed status-bar>
+			<view class="center">站点方案分配</view>
+			<view slot="left" @click="goback" class="icon-back">返回</view>
+			<view slot="right"><text @tap="showHelp" class="marginR">&#xe677;</text></view>
+		</uni-nav-bar>
 		<ly-tree v-if="isReady" :props="props" node-key="id" :load="loadNode" lazy show-checkbox @check="handleCheck"
 		 @node-click="handleNodeClick" :expandOnCheckNode="false" :checkStrictly="true" />
 		<button type="primary" class="bottom" @click="submit" :disabled="btnDisable">提交</button>
@@ -11,12 +15,13 @@
 	import LyTree from '@/components/ly-tree/ly-tree.vue'
 	import { QueryRouteGuidsByMODCS, SetStAssignByRouteGuids } from '@/api/api.js'
 	import { mapState, mapMutations } from 'vuex'
-	import * as dd from "dingtalk-jsapi"
+	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 	var _self;
 	var index_id = 1
 	export default {
 		components: {
-			LyTree
+			LyTree,
+			uniNavBar
 		},
 		data() {
 			return {
@@ -36,16 +41,15 @@
 			this.isReady = true;
 		},
 		mounted() {
-			let env = dd.env.platform
-			if (env == 'notInDingTalk') return
-			dd.biz.navigation.setRight({
-				show: false,
-				control: true,
-				text: '',
-				onSuccess: function() {}
-			})
+
 		},
 		methods: {
+			goback() {
+				uni.navigateBack({})
+			},
+			showHelp() {
+
+			},
 			handleNodeClick(obj) {
 				let msg = {
 					id: obj.data.id,
@@ -244,11 +248,21 @@
 <style lang="scss" scoped>
 	.container {
 		width: 100vw;
+
+		ly-tree {
+			margin-top: 50rpx;
+		}
+
 		.bottom {
 			margin: 10rpx;
 			width: calc(100vw - 20rpx);
 			position: fixed;
 			bottom: 0;
+			z-index: 10;
+		}
+
+		uni-nav-bar {
+			z-index: 2;
 		}
 	}
 </style>

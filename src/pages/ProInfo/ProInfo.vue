@@ -3,7 +3,10 @@
 		<uni-nav-bar fixed status-bar>
 			<view class="center">今日生产情况</view>
 			<view slot="left" @click="goback" class="icon-back">返回</view>
-			<view slot="right" class="marginR"><text @tap="showHelp" class="marginR">帮助</text><text @tap="selectItems" >{{navBtnRight}}</text></view>
+			<view slot="right" class="marginR">
+				<text @tap="showHelp" class="marginR">&#xe677;</text>
+				<text @tap="selectItems">{{navBtnRight}}</text>
+			</view>
 		</uni-nav-bar>
 		<uni-collapse>
 			<view class="lineInfo column" v-for="(item,i) in data" :key="i">
@@ -375,7 +378,7 @@
 			position: fixed;
 			width: 100%;
 			height: 6vh;
-			min-height: 100rpx;
+			// min-height: 100rpx;
 			bottom: 0;
 			color: white;
 		}
