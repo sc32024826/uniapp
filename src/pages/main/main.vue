@@ -24,7 +24,7 @@
 		</swiper>
 		<view class="row warp main">
 			<block v-for="(item,i) in optionList">
-				<view class="box" @click="jump(item.url)">
+				<view class="box primary" @click="jump(item.url)">
 					<view class="icon" v-html="item.icon"></view>
 					<view>{{item.title}}</view>
 				</view>
@@ -77,7 +77,7 @@
 					</view>
 				</swiper-item>
 			</swiper>
-			<view @click="understand" class="hideHelp">我知道了</view>
+			<view @click="understand" class="hideHelp py primary">我知道了</view>
 		</view>
 	</view>
 </template>
@@ -182,7 +182,6 @@
 			justify-content: space-between;
 			.box {
 				align-items: center;
-				background-color: #89bdd3;
 				height: 200rpx;
 				width: calc((100vw - 50rpx)/4);
 				display: flex;
@@ -200,7 +199,7 @@
 			height: 100%;
 			position: fixed;
 			top: 0;
-			background-color: rgba(201, 201, 201, 0.5);
+			background-color: rgba(165, 165, 165, 0.8);
 			z-index: 2;
 
 			.swiper {
@@ -228,7 +227,6 @@
 
 				.msg {
 					margin-top: 50rpx;
-					color: white;
 					text-indent: 2em;
 				}
 
@@ -242,8 +240,6 @@
 			width: 40vw;
 			margin: 0 auto;
 			text-align: center;
-			color: #000;
-			background-color: #89bdd3;
 			height: 50rpx;
 		}
 

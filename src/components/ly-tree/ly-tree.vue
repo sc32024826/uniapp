@@ -514,9 +514,7 @@
 	.ly-tree {
 		position: relative;
 		cursor: default;
-		background: #FFF;
 		color: #606266;
-		padding: 30rpx;
 	}
 	
 	.ly-tree.is-empty {

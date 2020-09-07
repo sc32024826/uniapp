@@ -5,8 +5,11 @@
 			<view slot="left" @click="goback" class="icon-back">返回</view>
 			<view slot="right"><text @tap="showHelp" class="marginR">&#xe677;</text></view>
 		</uni-nav-bar>
-		<ly-tree v-if="isReady" :props="props" node-key="id" :load="loadNode" lazy show-checkbox @check="handleCheck"
-		 @node-click="handleNodeClick" :expandOnCheckNode="false" :checkStrictly="true" />
+		<view class="mx">
+			<ly-tree class="ly-tree mt" v-if="isReady" :props="props" node-key="id" :load="loadNode" lazy show-checkbox @check="handleCheck"
+			 @node-click="handleNodeClick" :expandOnCheckNode="false" :checkStrictly="true" />
+		</view>
+
 		<button type="primary" class="bottom" @click="submit" :disabled="btnDisable">提交</button>
 	</view>
 </template>
@@ -249,8 +252,8 @@
 	.container {
 		width: 100vw;
 
-		ly-tree {
-			margin-top: 50rpx;
+		.ly-tree {
+			background-color: #e3e3e3;
 		}
 
 		.bottom {

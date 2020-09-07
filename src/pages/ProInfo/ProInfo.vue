@@ -339,8 +339,7 @@
 						border: solid 1rpx #DCDEE2;
 						height: 180rpx;
 						background-color: white;
-						margin-top: 5rpx;
-						margin-bottom: 5rpx;
+						margin-top: 10rpx;
 						display: block;
 
 						.ht {

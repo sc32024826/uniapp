@@ -6,7 +6,7 @@
 			<view slot="right"><text @tap="showHelp" class="marginR">&#xe677;</text></view>
 		</uni-nav-bar>
 		<view id="head">
-			<view id="toolbar" class="row center">
+			<view id="toolbar" class="row center py">
 				<view class="dropdown">
 					<picker @change="bindPickerChange" :value="index" :range="array">
 						<view>选择工序: {{array[index]}}</view>
@@ -21,11 +21,11 @@
 					</label>
 				</checkbox-group>
 			</view>
-			<view id="title" class="row vertical-center">
+			<view id="title" class="row vertical-center primary">
 				<checkbox-group @change="selectAll">
 					<checkbox value="1" ref="selectAll" :checked="allselect"></checkbox>
 				</checkbox-group>
-				<view class="white" style="width: 400rpx;">款号-颜色-尺码</view>
+				<view class="white " style="width: 400rpx;">款号-颜色-尺码</view>
 				<view class="white" style="width: 80rpx;">线上</view>
 				<view class="white" style="width: 100rpx;">下线数</view>
 			</view>
@@ -406,11 +406,10 @@
 
 	#container {
 		width: 100%;
+		height: 100vh;
 		text-align: center;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		// display: flex;
-		// flex-direction: column;
 
 		#head {
 			width: 100%;
@@ -424,7 +423,6 @@
 
 			#title {
 				height: 80rpx;
-				background-color: #53B4DF;
 			}
 
 			.errorMsg {
@@ -439,7 +437,8 @@
 		}
 
 		#list {
-			height: calc(93vh - 118px);
+			margin-top: 20rpx;
+			height: calc(93vh - 138px);
 			overflow: scroll;
 
 			.stripe:nth-child(even) {
