@@ -49,12 +49,19 @@
 .primary{
 	background-color: #00aaff;
 }
+.warn{
+	background-color: #ffaa00;
+}
 // 基本背景颜色
 .grey{
 	color: #e3e3e3;
 }
 .white{
 	color: white;
+}
+.bd{
+	font-size: 1.2em;
+	font-weight: 700;
 }
 
 // flex 相关

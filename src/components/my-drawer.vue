@@ -2,7 +2,12 @@
 	<view class="container">
 		<uni-drawer ref="dra" mode="right">
 			<view class="label">当前站点:</view>
-			<view class="uni-input">{{station.name}}</view>
+			<view class="uni-input" v-if="showSingle">{{station.name}}</view>
+			<view class="" v-if="showList">
+				<ul>
+					<li v-for="(item,index) of stationList" :key="index">{{item}}</li>
+				</ul>
+			</view>
 			<view class="label"> 当前职工:</view>
 			<view class="uni-input">{{currentEmp}}</view>
 			<picker :range="employee" range-key="label" mode='selector' :value="index" @change="change">
@@ -27,17 +32,33 @@
 		components: {
 			uniDrawer
 		},
+		props: {
+			stationList: {
+				type: Array
+			}
+		},
 		data() {
 			return {
 				employee: [{ label: '无职工', value: '' }],
 				index: 0,
 				btnLoginDisable: false,
 				btnLogoutDisable: false,
-				currentEmp: '无职工'
+				currentEmp: '无职工',
+				showSingle: true,
+				showList: false
 			}
 		},
 		computed: {
 			...mapState(['station'])
+		},
+		watch:{
+			stationList(val){
+				console.log(val);
+				if(val.length != 0){
+					this.showSingle = false
+					this.showList = true
+				}
+			}
 		},
 		async mounted() {
 			this.employee = await this.getEmployeeData()
@@ -177,7 +198,6 @@
 
 	.uni-input {
 		height: 50rpx;
-		// margin-left: 30rpx;
 		width: 100%;
 		text-align: center;
 	}

@@ -45,22 +45,23 @@
 			</view>
 		</uni-collapse>
 		<view class="footer" v-if="showSubmitBtn">
-			<button type="primary" @click="navigateToTree">提交</button>
+			<button type="primary" @click="navigateToTree">确认选择</button>
 		</view>
-
+		<drawer v-show="render" ref="myDrawer" class="drawer" :station-list="selectedStation"></drawer>
 	</view>
 </template>
 
 <script>
+	import { mapMutations } from 'vuex'
+	import groupBy from './classify.js'
+	import drawer from '@/components/my-drawer.vue'
 	import { uniCollapse, uniCollapseItem } from '@dcloudio/uni-ui'
 	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
 	import { GetStationStatus, GetLineStatus, QueryInStationRackInfByStationGuid, SetLinePause } from '@/api/api.js'
-	import groupBy from './classify.js'
-	import { mapMutations } from 'vuex'
 
 	export default {
-		components: { uniCollapse, uniCollapseItem, uniDrawer, uniNavBar },
+		components: { uniCollapse, uniCollapseItem, uniDrawer, uniNavBar, drawer },
 		data() {
 			return {
 				data: [],
@@ -71,7 +72,9 @@
 				delay: {},
 				timerOver: true, // 定时器是否结束的标志
 				selectedStationGuids: [], //选择的StationGuids
-				navBtnRight: '选择'
+				selectedStation: [],
+				navBtnRight: '选择',
+				render: false // 控制抽屉的开启和关闭
 			}
 		},
 		methods: {
@@ -98,22 +101,24 @@
 				this.stopJump = true
 			},
 			async clickBox(v) {
+				// 生产线号-站号
+				let sname = v.LineID + '-' + v.StationID
 				if (this.stopJump) {
 					v.checked = !v.checked
 					if (v.checked) {
 						this.selectedStationGuids.push(v.StationGuid)
+						this.selectedStation.push(sname)
 					} else {
 						let No = this.selectedStationGuids.indexOf(v.StationGuid)
 						this.selectedStationGuids.splice(No, 1)
+						this.selectedStation.splice(No, 1)
 					}
 					return
 				}
-				// 生产线号-站号
-				let s = v.LineID + '-' + v.StationID
 				// 职工信息
 				let emp = v.EmpID + '-' + v.Name
 				uni.navigateTo({
-					url: '/pages/details/details?guid=' + v.StationGuid + '&sid=' + s + '&emp=' + emp
+					url: '/pages/details/details?guid=' + v.StationGuid + '&sid=' + sname + '&emp=' + emp
 				})
 			},
 			close() {
@@ -261,6 +266,11 @@
 			},
 			// 提交按钮 跳转到treedata页面
 			navigateToTree() {
+				console.log('打开抽屉');
+				this.render = true
+				this.$refs.myDrawer.open()
+
+				return
 				let length = this.selectedStationGuids.length
 				if (length == 0) {
 					uni.showModal({
@@ -288,6 +298,20 @@
 				title: '请稍后'
 			})
 			this.getData()
+		},
+		onLoad() {
+			uni.startPullDownRefresh();
+		},
+		onPullDownRefresh() {
+			console.log('refresh');
+			this.data = []
+			uni.showLoading({
+				title: '请稍后'
+			})
+			this.getData()
+			setTimeout(function() {
+				uni.stopPullDownRefresh();
+			}, 1000);
 		}
 	}
 </script>
@@ -344,12 +368,14 @@
 
 						.ht {
 							height: 100%;
-							.row{
+
+							.row {
 								align-items: flex-end;
 								justify-content: space-around;
 								margin-top: 20rpx;
 							}
-							.special{
+
+							.special {
 								width: 80%;
 								margin-left: 10rpx;
 							}

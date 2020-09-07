@@ -1,5 +1,5 @@
 <template>
-	<view id="container">
+	<view class="container">
 		<uni-nav-bar fixed status-bar>
 			<view class="center">站点详情</view>
 			<view slot="left" @click="goback" class="icon-back">返回</view>
@@ -8,16 +8,17 @@
 				<text @tap="openDrawer">更多</text>
 			</view>
 		</uni-nav-bar>
-		<view class="head">
+		<view class="head mx">
 			<view>当前站点:{{sid}}</view>
 			<view>当前站点登录员工:{{emp}}</view>
 		</view>
 		<uni-collapse>
-			<uni-collapse-item title="站内衣架" :open="true" class="collapseitem">
+			<uni-collapse-item title="站内衣架" :open="true" class="collapseitem mx">
 				<view v-if="none" class="infomsg">暂无数据</view>
 				<view class="scroll1">
 					<uni-swipe-action>
-						<view v-for="(v,i) in RackData" :key="i" class="RackiTems">
+						<view v-for="(v,i) in RackData" :key="i" class="RackiTems" :style="v.Processed ? 'background-color: #ffaa00;' :''"
+						 @click="JumpRecode(v.RackCode)">
 							<uni-swipe-action-item :right-options="options" @click="bindClick($event,v)" @change="swipeChange()">
 								<view class="column full-width">
 									<view class="row line between">
@@ -37,7 +38,7 @@
 				</view>
 
 			</uni-collapse-item>
-			<uni-collapse-item title="已分配的方案" :open="true" class="collapseitem">
+			<uni-collapse-item title="已分配的方案" :open="true" class="collapseitem mx">
 				<ly-tree :tree-data="data" node-key="ID" :props="defaultProps" />
 			</uni-collapse-item>
 		</uni-collapse>
@@ -163,6 +164,11 @@
 					}
 				})
 			},
+			JumpRecode(code) {
+				uni.navigateTo({
+					url: '../ProcessRecord/ProcessRecord?code=' + code
+				})
+			},
 			// 获取站内衣架信息,
 			async getRackStatus() {
 				uni.showLoading({
@@ -196,7 +202,7 @@
 			showHelp() {
 				console.log('帮助')
 			},
-			openDrawer(){
+			openDrawer() {
 				this.render = true
 				this.$refs.myDrawer.open()
 			}
@@ -209,7 +215,6 @@
 		},
 		onLoad(options) {
 			this.guid = options.guid // station guid
-			console.log(options)
 			this.emp = options.emp == 'null-null' ? '无' : options.emp
 			this.sid = options.sid
 			this.setStationData({
@@ -222,19 +227,21 @@
 </script>
 
 <style lang="less" scoped>
-	#container {
+	.container {
 		width: 100%;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		z-index: 1;
-		.head{
+
+		.head {
 			background-color: #0079FF;
 			color: white;
 			padding-left: 30rpx;
 			padding-top: 20rpx;
 			padding-bottom: 20rpx;
 		}
+
 		.infomsg {
 			width: 100%;
 			text-align: center;

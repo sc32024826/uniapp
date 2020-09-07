@@ -31,7 +31,7 @@
 			<button type="primary" @click="inputHand"><text class="iconfont">&#xe601;</text>手输</button>
 		</view>
 		<view class="table">
-			<view class="row head">
+			<view class="row primary white bd">
 				<view class="cell column station">站号</view>
 				<view class="column name">
 					<view class="cell column">工号</view>
@@ -45,9 +45,10 @@
 			<view class="data">
 				<uni-collapse>
 					<block v-for="(item,key) in tableData" :key="key">
-						<uni-collapse-item :open="isOpen(item.RackCode)" :title="title(key,item.RackCode)" :class="[item.RackCode==RackCode?'item':'']">
+						<uni-collapse-item :open="isOpen(item.RackCode)" :title="title(key,item.RackCode)" 
+											:class="[item.RackCode==RackCode?'item':'']">
 							<view v-for="(v,k) in item.ProcessRecords" :key="k">
-								<view :class="[v.RecordType == '进站' ? 'light row' : 'row']">
+								<view :class="[v.RecordType == '进站' ? 'light row white' : 'row']">
 									<view class="cell column station">{{v.StationID}}</view>
 									<view class="column name">
 										<view class="cell column">{{v.EmployeeID}}</view>
@@ -112,8 +113,13 @@
 				helpView: false
 			}
 		},
-		onLoad: function() {
-			this.scanCode()
+		onLoad(options) {
+			if (options.code) {
+				this._requestAwait(options.code)
+				this.haveScaned = true
+			} else {
+				this.scanCode()
+			}
 		},
 		methods: {
 			scanCode() {
@@ -127,7 +133,10 @@
 							_this._requestAwait(data.text)
 						},
 						onFail: function(err) {
-
+							uni.showModal({
+								content: err,
+								showCancel: false
+							})
 						}
 					})
 				}
@@ -161,7 +170,7 @@
 					});
 				} else {
 					let target = res.data.response
-					console.log(target)
+					// console.log(target)
 					this.Qty = target.Qty
 					this.Mo = target.Mo
 					this.Color = target.Color
@@ -328,10 +337,6 @@
 		}
 	}
 
-	.head {
-		background-color: #9ad3de;
-	}
-
 	.cell {
 		justify-content: center;
 		border: solid 1rpx #c9c9c9;
@@ -374,7 +379,7 @@
 	}
 
 	.light {
-		background: #e3e3e3;
+		background: #00aaff;
 	}
 
 	.red {
@@ -395,7 +400,7 @@
 
 	.item {
 		border: solid 1rpx #c9c9c9;
-		background-color: #89bdd3;
+		background-color: white;
 	}
 
 	.help {
@@ -404,7 +409,8 @@
 		position: fixed;
 		top: 0;
 		z-index: 2;
-		image{
+
+		image {
 			margin-top: 44px;
 			width: 100%;
 			height: 100%;

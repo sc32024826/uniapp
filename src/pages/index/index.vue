@@ -1,5 +1,5 @@
 <template>
-	<div id="Container" class="column">
+	<div class="Container column">
 		<text v-if="show">当前平台不支持本应用</text>
 	</div>
 </template>
@@ -84,7 +84,7 @@
 </script>
 
 <style lang="less" scoped>
-	#Container {
+	.Container {
 		width: 100%;
 		justify-content: center;
 		align-items: center;

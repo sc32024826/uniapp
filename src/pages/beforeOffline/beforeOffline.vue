@@ -80,6 +80,9 @@
 				details: []
 			}
 		},
+		onLoad() {
+			uni.startPullDownRefresh()
+		},
 		mounted() {
 			uni.showLoading({
 				title: '加载中'
@@ -99,7 +102,6 @@
 					})
 				} else {
 					this.lines = res.data
-					// console.log(this.lines);
 				}
 			},
 			async showLineInfo() {
@@ -169,6 +171,19 @@
 				})
 				return qty
 			}
+		},
+		onPullDownRefresh() {
+			this.lines = []
+			this.details = []
+			uni.showLoading({
+				title: '加载中'
+			})
+			this.getData()
+			this.showLineInfo()
+			uni.hideLoading()
+			setTimeout(()=>{
+				uni.stopPullDownRefresh()
+			},1000)
 		}
 	}
 </script>
