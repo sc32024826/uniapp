@@ -25,7 +25,7 @@
 					<uni-collapse-item :title="item.LineID + '号线'" class="collapseitem" :open="showContent">
 						<view class="row wrap item">
 							<view class="box" v-for="(v,k) in item.list" :key="k" v-if="item.list">
-								<checkbox class="checkbox" v-if="showSelect" :checked="v.checked"></checkbox>
+								<checkbox class="checkbox" v-if="showSelect" :checked="v.checked" @click="clickBox(v)"></checkbox>
 								<view @click="clickBox(v)" class="ht">
 									<view class="row special">
 										<view :class="v.Enable*v.EnableIn == false ? 'base stop':'base light'"></view>
@@ -220,7 +220,9 @@
 			},
 			// 复选
 			selectItems() {
-				if (this.navBtnRight == '选择') {
+				console.log('点击了 导航栏右侧按钮')
+				if (this.navBtnRight === '选择') {
+					console.log('选择')
 					this.showSelect = true
 					this.showContent = true
 					this.stopJump = true
@@ -257,7 +259,7 @@
 					this.timerOver = false
 				}
 			},
-			// 跳转到treedata页面
+			// 提交按钮 跳转到treedata页面
 			navigateToTree() {
 				let length = this.selectedStationGuids.length
 				if (length == 0) {
