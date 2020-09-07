@@ -5,58 +5,64 @@
 			<view slot="left" @click="goback" class="icon-back">返回</view>
 			<view slot="right"><text @tap="showHelp" class="marginR">&#xe677;</text></view>
 		</uni-nav-bar>
-		<view id="head" class="head row between">
-			<view>生产线</view>
-			<view>衣架数</view>
-			<view>衣服数</view>
-			<view>负载率</view>
-		</view>
-		<view class="ProductLines" v-for="(v,i) in lines" :key="i">
-			<view class="row between items">
-				<view>生产线{{v.LineID}}</view>
-				<view>{{v.NotFinishedRackQty}}</view>
-				<view>{{v.ClothesQty}}</view>
-				<view>{{Math.round(v.LoadRatio*100)}} % </view>
-			</view>
-		</view>
-		<view class="sum row between">
-			<view>合计:</view>
-			<view>{{RackQty}}</view>
-			<view>{{ClothesQty}}</view>
-			<view></view>
-		</view>
-		<view id="details">
-			<view class="row between head">
-				<view id="seq" class="column">工序</view>
-				<view class="grow2">
-					<view id="online">在线</view>
-					<view class="row between">
-						<view>衣架数</view>
-						<view>衣服数</view>
-					</view>
-				</view>
-				<view class="grow2">
-					<view id="in">站内</view>
-					<view class="row between">
-						<view>衣架数</view>
-						<view>衣服数</view>
-					</view>
-				</view>
-			</view>
-			<view class="details row between" v-for="(v,i) in details" :key="i" @click="naviTo(v)">
-				<view>{{v.SeqName}}</view>
-				<view>{{v.OnlineCount}}</view>
-				<view>{{v.OnlineQty}}</view>
-				<view>{{v.InStationCount}}</view>
-				<view>{{v.InStationQty}}</view>
-			</view>
-			<view class="row between yellow">
-				<view>合计:</view>
-				<view>{{OnlineCount}}</view>
-				<view>{{OnlineQty}}</view>
-				<view>{{InStationCount}}</view>
-				<view>{{InStationQty}}</view>
-			</view>
+		<view class="mx">
+
+			<table class="table">
+				<thead>
+					<tr>
+						<th>生产线</th>
+						<th>衣架数</th>
+						<th>衣服数</th>
+						<th>负载率</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="(v,i) in lines" :key="i">
+						<td>生产线{{v.LineID}}</td>
+						<td>{{v.NotFinishedRackQty}}</td>
+						<td>{{v.ClothesQty}}</td>
+						<td>{{Math.round(v.LoadRatio*100)}} % </td>
+					</tr>
+					<tr class="primary white">
+						<td>合计</td>
+						<td>{{RackQty}}</td>
+						<td>{{ClothesQty}}</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+			<table class="table">
+				<thead>
+					<tr>
+						<th rowspan='2'>工序</th>
+						<th colspan='2'>在线</th>
+						<th colspan='2'>站内</th>
+
+					</tr>
+					<tr>
+						<th>衣架数</th>
+						<th>衣服数</th>
+						<th>衣架数</th>
+						<th>衣服数</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="(v,i) in details" :key="i" @click="naviTo(v)">
+						<td>{{v.SeqName}}</td>
+						<td>{{v.OnlineCount}}</td>
+						<td>{{v.OnlineQty}}</td>
+						<td>{{v.InStationCount}}</td>
+						<td>{{v.InStationQty}}</td>
+					</tr>
+					<tr class="primary white">
+						<td>合计</td>
+						<td>{{OnlineCount}}</td>
+						<td>{{OnlineQty}}</td>
+						<td>{{InStationCount}}</td>
+						<td>{{InStationQty}}</td>
+					</tr>
+				</tbody>
+			</table>
 		</view>
 	</view>
 </template>
@@ -65,7 +71,7 @@
 	import { GetLineStatus, QueryQtyWithSeq } from '@/api/api.js'
 	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 	export default {
-		components:{
+		components: {
 			uniNavBar
 		},
 		data() {
@@ -135,30 +141,30 @@
 				})
 				return qty
 			},
-			InStationCount(){
+			InStationCount() {
 				let qty = 0
-				this.details.map(m=>{
+				this.details.map(m => {
 					qty += m.InStationCount
 				})
 				return qty
 			},
-			InStationQty(){
+			InStationQty() {
 				let qty = 0
-				this.details.map(m=>{
+				this.details.map(m => {
 					qty += m.InStationQty
 				})
 				return qty
 			},
-			OnlineCount(){
+			OnlineCount() {
 				let qty = 0
-				this.details.map(m=>{
+				this.details.map(m => {
 					qty += m.OnlineCount
 				})
 				return qty
 			},
-			OnlineQty(){
+			OnlineQty() {
 				let qty = 0
-				this.details.map(m=>{
+				this.details.map(m => {
 					qty += m.OnlineQty
 				})
 				return qty
@@ -173,94 +179,30 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		text-align: center;
 
-		#head {
-			background-color: #00aaff;
-			color: white;
-			padding: 10rpx;
-
-			view {
-				text-align: center;
-				min-width: 60rpx;
-				// border: solid 1rpx red;
-			}
-		}
-
-		.ProductLines {
-			.items {
-				padding: 30rpx 10rpx 30rpx 10rpx;
-
-				view {
-					width: 100rpx;
-				}
-			}
-		}
-
-		.sum {
-			padding: 10rpx;
-			background-color: #ffff00;
-
-			view {
-				width: 100rpx;
-			}
-		}
-
-		.ProductLines:nth-child(even) {}
-
-		.ProductLines:nth-child(odd) {
-			background-color: #bababa;
-		}
-
-		#details {
-			padding-top: 20rpx;
-
-			.head {
+		.table {
+			width: 100%;
+			margin-bottom: 20rpx;
+			th {
+				color: white;
+				font-size: 1.2em;
 				background-color: #00aaff;
-				padding: 10rpx;
-				color: white;
-				view{
-					margin-left: 10rpx;
-				}
-				.grow2{
-					flex-grow: 2;
-				}
-				#seq {
-					width: 120rpx;
-					justify-content: center;
-				}
-
-				#online {
-					flex-grow: 2;
-					text-align: center;
-					border-bottom: solid 1rpx white;
-				}
-
-				#in {
-					flex-grow: 2;
-					text-align: center;
-					border-bottom: solid 1rpx white;
-				}
-
+				padding-top: 10rpx;
+				padding-bottom: 10rpx;
 			}
 
-			.details {
-				view {
-					padding: 20rpx 0 20rpx 0;
-					// border-left: solid 1rpx red;
-					min-width: 120rpx;
-					text-align: center;
-				}
+			td {
+				padding-top: 10rpx;
+				padding-bottom: 10rpx;
 			}
+		}
 
-			.details:nth-child(odd) {
-				background-color: #00aa30;
-				color: white;
-			}
-			.yellow{
-				background-color: #ffff00;
-				padding:10rpx 20rpx 10rpx 20rpx;
-			}
+		.table,
+		th,
+		td {
 
+			border: solid 1rpx #00aaff;
 		}
 	}
 </style>

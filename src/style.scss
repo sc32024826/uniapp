@@ -1,3 +1,6 @@
+.m{
+	margin: 10rpx;
+}
 .mx {
     margin-left : 10rpx;
     margin-right: 10rpx;
@@ -35,4 +38,23 @@
 }
 .al-c{
 	text-align: center;
+}
+// 基本颜色
+.primary{
+	background-color: #00aaff;
+}
+// 基本背景颜色
+.grey{
+	color: #e3e3e3;
+}
+.white{
+	color: white;
+}
+
+// flex 相关
+.jc-c{
+	justify-content: center;
+}
+.grow-2 {
+	flex-grow: 2;
 }

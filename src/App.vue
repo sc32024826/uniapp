@@ -32,6 +32,7 @@
 		font-size: 14px;
 		font-family: 'iconfont';
 		font-style: normal; 
+		background-color: #e3e3e3;
 	}
 
 	/* #ifdef MP-BAIDU */

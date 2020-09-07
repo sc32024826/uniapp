@@ -320,6 +320,8 @@
 
 				.runStop {
 					width: 300rpx;
+					margin-right: 10rpx;
+					border-radius: 30rpx;
 				}
 			}
 
@@ -328,7 +330,7 @@
 					justify-content: space-between;
 					padding-bottom: 5rpx;
 					padding-top: 5rpx;
-					background-color: white;
+					background-color: #e3e3e3;
 
 					.box {
 						width: calc((100vw - 34rpx)/2);
@@ -363,26 +365,12 @@
 					}
 				}
 			}
-
-			.collapseitem:nth-child(even) {
-				.item {}
-
-			}
-
-			.collapseitem:nth-child(odd) {
-				.item {
-					background-color: #CCCCCC;
-
-				}
-			}
-
 		}
 
 		.footer {
 			position: fixed;
 			width: 100%;
 			height: 6vh;
-			// min-height: 100rpx;
 			bottom: 0;
 			color: white;
 		}
@@ -404,12 +392,12 @@
 	.base {
 		width: 50rpx;
 		height: 50rpx;
-		border: solid 1rpx green;
+		// border: solid 1rpx green;
 		margin-top: 10rpx;
 	}
 
 	.light {
-		background: green;
+		background: #38a800;
 	}
 
 	.stop {
