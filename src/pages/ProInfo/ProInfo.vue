@@ -25,14 +25,14 @@
 					<uni-collapse-item :title="item.LineID + '号线'" class="collapseitem" :open="showContent">
 						<view class="row wrap item">
 							<view class="box" v-for="(v,k) in item.list" :key="k" v-if="item.list">
-								<view @click="clickBox(v)" class="ht debug">
-									<checkbox class="checkbox" v-if="showSelect" :checked="v.checked"></checkbox>
-									<view class="row">
+								<checkbox class="checkbox" v-if="showSelect" :checked="v.checked"></checkbox>
+								<view @click="clickBox(v)" class="ht">
+									<view class="row special">
 										<view :class="v.Enable*v.EnableIn == false ? 'base stop':'base light'"></view>
 										<view class="wd-50">{{v.LineID}}-{{v.StationID}}</view>
 										<view class="wd-50">{{v.SeqName}}</view>
 									</view>
-									<view class="row ">
+									<view class="row">
 										<view class="wd-50 al-c">{{v.EmpID}}-{{v.Name}}</view>
 										<view class="wd-50 al-c">{{v.RackCnt}}/{{v.RackCap}}</view>
 									</view>
@@ -333,28 +333,34 @@
 					.box {
 						width: calc((100vw - 34rpx)/2);
 						border: solid 1rpx #DCDEE2;
-						height: 150rpx;
+						height: 180rpx;
 						background-color: white;
 						margin-top: 5rpx;
 						margin-bottom: 5rpx;
+						display: block;
 
 						.ht {
 							height: 100%;
+							.row{
+								align-items: flex-end;
+								justify-content: space-around;
+								margin-top: 20rpx;
+							}
+							.special{
+								width: 80%;
+								margin-left: 10rpx;
+							}
 						}
 
 						.checkbox {
 							float: right;
+							margin-top: 10rpx;
 						}
 
 						.wd-50 {
 							width: 100rpx;
 						}
 					}
-				}
-
-				.item:after {
-					content: ' ';
-					flex: auto;
 				}
 			}
 
@@ -388,12 +394,6 @@
 
 	uni-collapse::-webkit-scrollbar {
 		display: none;
-	}
-
-	.row {
-		align-items: center;
-		justify-content: space-around;
-		// margin: 10rpx 0rpx 10rpx 0rpx;
 	}
 
 	.wrap {
