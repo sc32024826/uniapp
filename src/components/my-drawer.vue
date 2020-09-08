@@ -5,7 +5,7 @@
 			<view class="uni-input" v-if="showSingle">{{station.name}}</view>
 			<view class="" v-if="showList">
 				<ul>
-					<li v-for="(item,index) of stationList" :key="index">{{item}}</li>
+					<li v-for="(item,index) of stationList" :key="index">{{item.name}}</li>
 				</ul>
 			</view>
 			<view class="label"> 当前职工:</view>
@@ -51,10 +51,9 @@
 		computed: {
 			...mapState(['station'])
 		},
-		watch:{
-			stationList(val){
-				console.log(val);
-				if(val.length != 0){
+		watch: {
+			stationList(val) {
+				if (val.length != 0) {
 					this.showSingle = false
 					this.showList = true
 				}
@@ -66,61 +65,115 @@
 		},
 		methods: {
 			...mapMutations(['setStationData', 'setStationEmp']),
+			// 员工登录
 			login() {
-				let param = {
-					StationGuid: this.station.guid,
-					EmployeeGuid: this.employee[this.index].value,
-					emp: this.employee[this.index].label
-				}
-				if (this.index > -1) {
+				this.btnLoginDisable = true
+				this.$refs.dra.close()
+				setTimeout(() => {
+					this.btnLoginDisable = false
+				}, 1000)
+				// 多选站点模式
+				if (this.stationList && this.stationList.length > 1) {
+					// console.log('多站点模式');
 					uni.showModal({
-						content: '职工: ' + this.employee[this.index].label + ' 登录站点: ' + this.station.name,
+						content: '多站点模式会多次请求,请耐心等待!',
 						success: (res) => {
 							if (res.confirm) {
-								this.setStationStation(param)
+								let length = this.stationList.length
+								let stop = false
+								this.stationList.map((item, index) => {
+									if (index == length - 1) {
+										stop = true
+									}
+									let param = {
+										StationGuid: item.guid,
+										EmployeeGuid: this.employee[this.index].value,
+										emp: this.employee[this.index].label,
+										stop: stop
+									}
+									this.setStationStationMult(param)
+								})
 							}
-							this.btnLoginDisable = true
-							this.$refs.dra.close()
-							setTimeout(() => {
-								this.btnLoginDisable = false
-							}, 1000)
 						}
 					})
 				} else {
-					uni.showModal({
-						content: '你没有选择职工,若要登出请选择职工登出',
-						showCancel: false
-					})
+					// 单站点模式
+					let param = {
+						StationGuid: this.station.guid,
+						EmployeeGuid: this.employee[this.index].value,
+						emp: this.employee[this.index].label
+					}
+					if (this.index > -1) {
+						uni.showModal({
+							content: '职工: ' + this.employee[this.index].label + ' 登录站点: ' + this.station.name,
+							success: (res) => {
+								if (res.confirm) {
+									this.setStationStation(param)
+								}
+							}
+						})
+					} else {
+						uni.showModal({
+							content: '你没有选择职工,若要登出请选择职工登出',
+							showCancel: false
+						})
+					}
 				}
-
 			},
 			// 员工登出
 			logout() {
-				let param = {
-					StationGuid: this.station.guid,
-					EmployeeGuid: '',
-					emp: ''
-				}
-				if (this.station.emp == 'null-null') {
+				this.btnLogoutDisable = true
+				this.$refs.dra.close()
+				setTimeout(() => {
+					this.btnLogoutDisable = false
+				}, 1000)
+				// 多选站点模式
+				if (this.stationList && this.stationList.length > 1) {
 					uni.showModal({
-						content: '当前站点没有职工登录',
-						showCancel: false
-					})
-				} else {
-					uni.showModal({
-						content: '确定登出 ' + this.station.emp + ' ?',
+						content: '多站点模式会多次请求,请耐心等待!',
 						success: (res) => {
 							if (res.confirm) {
-								this.setStationStation(param)
+								let length = this.stationList.length
+								let stop = false
+								this.stationList.map((item, index) => {
+									if (index == length - 1) {
+										stop = true
+									}
+									let param = {
+										StationGuid: item.guid,
+										EmployeeGuid: '',
+										emp: '',
+										stop: stop
+									}
+									this.setStationStationMult(param)
+								})
 							}
-							this.btnLogoutDisable = true
-							this.$refs.dra.close()
-							setTimeout(() => {
-								this.btnLogoutDisable = false
-							}, 1000)
 						}
 					})
+				} else {
+					let param = {
+						StationGuid: this.station.guid,
+						EmployeeGuid: '',
+						emp: ''
+					}
+					if (this.station.emp == 'null-null') {
+						uni.showModal({
+							content: '当前站点没有职工登录',
+							showCancel: false
+						})
+					} else {
+						uni.showModal({
+							content: '确定登出 ' + this.station.emp + ' ?',
+							success: (res) => {
+								if (res.confirm) {
+									this.setStationStation(param)
+								}
+
+							}
+						})
+					}
 				}
+
 			},
 			open() {
 				this.$refs.dra.open()
@@ -153,33 +206,11 @@
 			},
 			// 根据站点唯一键设定站点员工登陆状态  
 			async setStationStation(param) {
-				console.log(param)
-				let para = {
-					StationGuid: param.StationGuid,
-					EmployeeGuid: param.EmployeeGuid
-				}
-				var [err, res] = await SetStationLoginByStationGuid(para)
-				if (err) {
-					uni.showModal({
-						content: err,
-						showCancel: false
-					})
-				} else {
-					if (res.data.success) {
-						uni.showModal({
-							content: res.data.msg,
-							showCancel: false
-						})
-						// 更新当前站点的登录员工
-						this.setStationEmp(param.emp)
-						this.currentEmp = this.station.emp
-					} else {
-						uni.showModal({
-							content: res.data.msg,
-							showCancel: false
-						})
-					}
-				}
+				this.$emit('onRequest',param)
+			},
+			// 多选站点时 会多次请求  需要屏蔽 多次 showModal
+			async setStationStationMult(param) {
+				this.$emit('onRequestMult', param)
 			}
 		}
 

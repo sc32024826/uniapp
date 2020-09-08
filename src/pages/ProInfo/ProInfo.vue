@@ -47,7 +47,7 @@
 		<view class="footer" v-if="showSubmitBtn">
 			<button type="primary" @click="navigateToTree">确认选择</button>
 		</view>
-		<drawer v-show="render" ref="myDrawer" class="drawer" :station-list="selectedStation"></drawer>
+		<drawer v-show="render" ref="myDrawer" class="drawer" :station-list="selectedStation" @onRequestMult="requestMult"></drawer>
 	</view>
 </template>
 
@@ -58,7 +58,13 @@
 	import { uniCollapse, uniCollapseItem } from '@dcloudio/uni-ui'
 	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
-	import { GetStationStatus, GetLineStatus, QueryInStationRackInfByStationGuid, SetLinePause } from '@/api/api.js'
+	import {
+		GetStationStatus,
+		GetLineStatus,
+		QueryInStationRackInfByStationGuid,
+		SetLinePause,
+		SetStationLoginByStationGuid
+	} from '@/api/api.js'
 
 	export default {
 		components: { uniCollapse, uniCollapseItem, uniDrawer, uniNavBar, drawer },
@@ -74,7 +80,8 @@
 				selectedStationGuids: [], //选择的StationGuids
 				selectedStation: [],
 				navBtnRight: '选择',
-				render: false // 控制抽屉的开启和关闭
+				render: false, // 控制抽屉的开启和关闭
+				errList: [] // 站点复选时 提交 存放错误次数等信息
 			}
 		},
 		methods: {
@@ -107,7 +114,10 @@
 					v.checked = !v.checked
 					if (v.checked) {
 						this.selectedStationGuids.push(v.StationGuid)
-						this.selectedStation.push(sname)
+						this.selectedStation.push({
+							name: sname,
+							guid: v.StationGuid
+						})
 					} else {
 						let No = this.selectedStationGuids.indexOf(v.StationGuid)
 						this.selectedStationGuids.splice(No, 1)
@@ -225,9 +235,7 @@
 			},
 			// 复选
 			selectItems() {
-				console.log('点击了 导航栏右侧按钮')
 				if (this.navBtnRight === '选择') {
-					console.log('选择')
 					this.showSelect = true
 					this.showContent = true
 					this.stopJump = true
@@ -266,7 +274,6 @@
 			},
 			// 提交按钮 跳转到treedata页面
 			navigateToTree() {
-				console.log('打开抽屉');
 				this.render = true
 				this.$refs.myDrawer.open()
 
@@ -291,7 +298,47 @@
 			},
 			showHelp() {
 				console.log('帮助')
+			},
+			// 子组件 返回的多次请求事件 state 表示是否是最后一次执行 若是 执行完刷新页面
+			async requestMult(param) {
+				let para = {
+					StationGuid: param.StationGuid,
+					EmployeeGuid: param.EmployeeGuid
+				}
+				let state = param.stop
+				var [err, res] = await SetStationLoginByStationGuid(para)
+				if (err) {
+					this.errList.push(err)
+				} else {
+					if (!res.data.success) {
+						this.errList.push(res.data.msg)
+					}
+				}
+				//state 表示是否是最后一次执行 若是 执行完刷新页面
+				if (state) {
+					this.clear()
+					uni.showLoading({
+						title: '请稍后'
+					})
+					this.getData()
+					
+				}
+			},
+			clear(){
+				this.data = [],
+				this.showSubmitBtn = false,
+				this.showSelect = false, // 是否显示多选框
+				this.showContent = true, // 是否展开下拉扩展框
+				this.stopJump = false, // 当触发多选时,改为true 禁止 跳转页面
+				this.delay = {},
+				this.timerOver = true, // 定时器是否结束的标志
+				this.selectedStationGuids = [], //选择的StationGuids
+				this.selectedStation = [],
+				this.navBtnRight = '选择',
+				this.render = false, // 控制抽屉的开启和关闭
+				this.errList = [] // 站点复选时 提交 存放错误次数等信息
 			}
+			
 		},
 		mounted() {
 			uni.showLoading({

@@ -1,20 +1,18 @@
 <script>
-	import Vue from 'vue'
 	import * as dd from "dingtalk-jsapi"
+	
 	export default {
 		onLaunch: function() {
 			let env = dd.env.platform
 			if (env != 'notInDingTalk') {
 				dd.biz.navigation.hideBar({
-					hidden:true
+					hidden: true
 				})
 			}
 		},
 		onShow: function() {
-			console.log('App Show');
 		},
 		onHide: function() {
-			console.log('App Hide');
 		}
 	}
 </script>
@@ -23,15 +21,15 @@
 	/* 头条小程序需要把 iconfont 样式放到组件外 */
 	/* @import "components/m-icon/m-icon.css"; */
 	@import './static/common.css';
-    @import './style.scss';
-    
+	@import './style.scss';
+
 	/*每个页面公共css */
 	page {
 		min-height: 100%;
 		display: flex;
 		font-size: 14px;
 		font-family: 'iconfont';
-		font-style: normal; 
+		font-style: normal;
 		background-color: #e3e3e3;
 	}
 

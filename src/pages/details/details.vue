@@ -9,8 +9,8 @@
 			</view>
 		</uni-nav-bar>
 		<view class="head mx">
-			<view>当前站点:{{sid}}</view>
-			<view>当前站点登录员工:{{emp}}</view>
+			<view>当前站点:{{station.name}}</view>
+			<view>当前站点登录员工:{{station.emp == 'null-null' ? '' : station.emp}}</view>
 		</view>
 		<uni-collapse>
 			<uni-collapse-item title="站内衣架" :open="true" class="collapseitem mx">
@@ -43,18 +43,17 @@
 			</uni-collapse-item>
 		</uni-collapse>
 		<view id="junpToTop" @click="junpToTop" v-show="showTop"></view>
-		<drawer v-show="render" ref="myDrawer" class="drawer"></drawer>
+		<drawer v-show="render" ref="myDrawer" class="drawer" @onRequest="login"></drawer>
 	</view>
 </template>
 
 <script>
-	import LyTree from '@/components/ly-tree/ly-tree.vue'
-	import { uniCollapse, uniCollapseItem, uniSwipeAction, uniSwipeActionItem, uniLoadMore } from '@dcloudio/uni-ui'
-	import { GetStationAssign, doneRack, QueryInStationRackInfByStationGuid } from '@/api/api.js'
-	import * as dd from "dingtalk-jsapi"
+	import { mapMutations, mapState } from 'vuex'
 	import drawer from '@/components/my-drawer.vue'
-	import { mapMutations } from 'vuex'
+	import LyTree from '@/components/ly-tree/ly-tree.vue'
 	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
+	import { uniCollapse, uniCollapseItem, uniSwipeAction, uniSwipeActionItem, uniLoadMore } from '@dcloudio/uni-ui'
+	import { GetStationAssign, doneRack, QueryInStationRackInfByStationGuid, SetStationLoginByStationGuid } from '@/api/api.js'
 
 	var that = this
 	export default {
@@ -69,9 +68,6 @@
 		},
 		data() {
 			return {
-				guid: '', //当前站点的guid
-				sid: '',
-				emp: '',
 				RackData: [], // 站内衣架
 				none: true, // 没有数据的时候显示 暂无数据
 				data: [], // 树状数据
@@ -89,8 +85,41 @@
 				render: false //渲染子组件
 			}
 		},
+		computed: {
+			...mapState(['station'])
+		},
 		methods: {
-			...mapMutations(['setStationData']),
+			...mapMutations(['setStationData','setStationEmp']),
+			async login(param) {
+				console.log(param)
+				let para = {
+					StationGuid: param.StationGuid,
+					EmployeeGuid: param.EmployeeGuid
+				}
+				var [err, res] = await SetStationLoginByStationGuid(para)
+				if (err) {
+					uni.showModal({
+						content: err,
+						showCancel: false
+					})
+				} else {
+					if (res.data.success) {
+						uni.showModal({
+							content: res.data.msg,
+							showCancel: false
+						})
+						// 更新当前页面  只需要更新 登录员工
+						this.setStationEmp(param.emp)
+						
+
+					} else {
+						uni.showModal({
+							content: res.data.msg,
+							showCancel: false
+						})
+					}
+				}
+			},
 			bindClick(e, v) {
 				uni.showModal({
 					content: '设置该衣架为已完成状态!',
@@ -135,19 +164,20 @@
 					title: '请稍后'
 				})
 				let para = {
-					StationGuid: this.guid
+					StationGuid: this.station.guid
 				}
+				console.log('站点方案请求',para);
 				var [err, res] = await GetStationAssign(para)
 
 				if (err) {
 					uni.showModal({
-						content: err,
+						content: '站点方案请求' + err,
 						showCancel: false
 					})
 				} else {
 					if (!res.data.success) {
 						uni.showModal({
-							content: res.data.msg,
+							content: '站点方案请求' + res.data.msg,
 							showCancel: false
 						})
 					} else {
@@ -175,12 +205,13 @@
 					title: '请稍后'
 				})
 				let param = {
-					StationGuid: this.guid
+					StationGuid: this.station.guid
 				}
+				console.log('衣架信息请求',param);
 				var [err, res] = await QueryInStationRackInfByStationGuid(param)
 				if (err) {
 					uni.showModal({
-						content: err,
+						content: '衣架信息请求' + err,
 						showCancel: false
 					})
 				} else {
@@ -190,14 +221,17 @@
 						uni.hideLoading()
 					} else {
 						uni.showModal({
-							content: res.data.msg,
+							content: '衣架信息请求' + res.data.msg,
 							showCancel: false
 						})
 					}
 				}
 			},
 			goback() {
-				uni.navigateBack({})
+				// uni.navigateBack({})
+				uni.redirectTo({
+					url:'../ProInfo/ProInfo'
+				})
 			},
 			showHelp() {
 				console.log('帮助')
@@ -214,9 +248,6 @@
 			this.getAssignResult()
 		},
 		onLoad(options) {
-			this.guid = options.guid // station guid
-			this.emp = options.emp == 'null-null' ? '无' : options.emp
-			this.sid = options.sid
 			this.setStationData({
 				name: options.sid,
 				emp: options.emp,
