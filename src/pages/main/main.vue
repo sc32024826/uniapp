@@ -209,7 +209,7 @@
 					color: white;
 					font-size: 200rpx;
 					display: block;
-					margin-top: 350rpx;
+					margin-top: 390rpx;
 					transform: scale(1, 1.2)
 				}
 
