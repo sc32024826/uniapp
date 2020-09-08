@@ -40,9 +40,8 @@ const store = new Vuex.Store({
 			state.station = data
 		},
 		setStationEmp(state, data) {
-			state.station.emp = data
+			state.station.emp = data 
 		}
-
 	}
 })
 

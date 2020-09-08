@@ -17,15 +17,16 @@
 				<button type="primary" @click="login" :disabled="btnLoginDisable">职工登录</button>
 				<button type="primary" @click="logout" :disabled="btnLogoutDisable">职工登出</button>
 			</view>
-
+			<view class="footer">
+				<button type="primary" @tap="StationAssignSet">站点方案分配</button>
+			</view>
 		</uni-drawer>
-
 	</view>
 </template>
 
 <script>
 	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
-	import { QueryEmployee, SetStationLoginByStationGuid } from '@/api/api.js'
+	import { QueryEmployee } from '@/api/api.js'
 	import { mapState, mapMutations } from 'vuex'
 
 	export default {
@@ -65,6 +66,16 @@
 		},
 		methods: {
 			...mapMutations(['setStationData', 'setStationEmp']),
+			//跳转到站点方案分配页面
+			StationAssignSet(){
+				console.log(this.station);
+				console.log(this.stationList);
+				return
+				this.close()
+				uni.navigateTo({
+					url:'/pages/TreeData/index'
+				})
+			},
 			// 员工登录
 			login() {
 				this.btnLoginDisable = true
@@ -245,5 +256,11 @@
 		height: 80rpx;
 		margin-top: 20rpx;
 		padding-top: 20rpx;
+	}
+	.footer{
+		margin-left: 30rpx ;
+		width: calc(100% - 60rpx);
+		position: fixed;
+		bottom: 100rpx;
 	}
 </style>

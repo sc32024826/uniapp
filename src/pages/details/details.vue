@@ -89,7 +89,8 @@
 			...mapState(['station'])
 		},
 		methods: {
-			...mapMutations(['setStationData','setStationEmp']),
+			...mapMutations(['setStationData', 'setStationEmp']),
+			// 子组件回调 登录
 			async login(param) {
 				console.log(param)
 				let para = {
@@ -110,7 +111,7 @@
 						})
 						// 更新当前页面  只需要更新 登录员工
 						this.setStationEmp(param.emp)
-						
+
 
 					} else {
 						uni.showModal({
@@ -166,7 +167,7 @@
 				let para = {
 					StationGuid: this.station.guid
 				}
-				console.log('站点方案请求',para);
+				console.log('站点方案请求', para);
 				var [err, res] = await GetStationAssign(para)
 
 				if (err) {
@@ -207,7 +208,7 @@
 				let param = {
 					StationGuid: this.station.guid
 				}
-				console.log('衣架信息请求',param);
+				console.log('衣架信息请求', param);
 				var [err, res] = await QueryInStationRackInfByStationGuid(param)
 				if (err) {
 					uni.showModal({
@@ -215,9 +216,13 @@
 						showCancel: false
 					})
 				} else {
-					if (res.data.success == true) {
-						this.RackData = res.data.response
-						this.none = false
+					if (res.data.success) {
+						console.log(res.data);
+						if (res.data.response.length > 0) {
+							this.RackData = res.data.response
+							this.none = false
+						}
+						
 						uni.hideLoading()
 					} else {
 						uni.showModal({
@@ -230,7 +235,7 @@
 			goback() {
 				// uni.navigateBack({})
 				uni.redirectTo({
-					url:'../ProInfo/ProInfo'
+					url: '../ProInfo/ProInfo'
 				})
 			},
 			showHelp() {
@@ -248,11 +253,23 @@
 			this.getAssignResult()
 		},
 		onLoad(options) {
-			this.setStationData({
-				name: options.sid,
-				emp: options.emp,
-				guid: options.guid
+			uni.startPullDownRefresh();
+		},
+		onPullDownRefresh() {
+			console.log(this.station);
+			this.RackData = []// 站内衣架
+			this.data = [] // 树状数据
+			uni.showLoading({
+				title: '请稍后'
 			})
+			// 衣架信息
+			this.getRackStatus()
+			// 分配方案
+			this.getAssignResult()
+			
+			setTimeout(function() {
+				uni.stopPullDownRefresh();
+			}, 1000);
 		}
 	}
 </script>

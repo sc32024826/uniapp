@@ -64,7 +64,8 @@
 		{
 			"path": "pages/details/details",
 			"style": {
-				"navigationBarTitleText": "站点信息"
+				"navigationBarTitleText": "站点信息",
+				"enablePullDownRefresh": true
 			}
 		}, {
 			"path": "pages/beforeOffline/beforeOffline",

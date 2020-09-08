@@ -85,7 +85,7 @@
 			}
 		},
 		methods: {
-			...mapMutations(['setStationMsg', 'setStationGuids']),
+			...mapMutations(['setStationMsg', 'setStationGuids', 'setStationData']),
 			//控制按钮颜色
 			getButtontype(Status) {
 				if (!this.loading) {
@@ -127,8 +127,13 @@
 				}
 				// 职工信息
 				let emp = v.EmpID + '-' + v.Name
+				this.setStationData({
+					name: sname,
+					emp: emp,
+					guid: v.StationGuid
+				})
 				uni.navigateTo({
-					url: '/pages/details/details?guid=' + v.StationGuid + '&sid=' + sname + '&emp=' + emp
+					url: '/pages/details/details'
 				})
 			},
 			close() {
@@ -321,24 +326,24 @@
 						title: '请稍后'
 					})
 					this.getData()
-					
+
 				}
 			},
-			clear(){
+			clear() {
 				this.data = [],
-				this.showSubmitBtn = false,
-				this.showSelect = false, // 是否显示多选框
-				this.showContent = true, // 是否展开下拉扩展框
-				this.stopJump = false, // 当触发多选时,改为true 禁止 跳转页面
-				this.delay = {},
-				this.timerOver = true, // 定时器是否结束的标志
-				this.selectedStationGuids = [], //选择的StationGuids
-				this.selectedStation = [],
-				this.navBtnRight = '选择',
-				this.render = false, // 控制抽屉的开启和关闭
-				this.errList = [] // 站点复选时 提交 存放错误次数等信息
+					this.showSubmitBtn = false,
+					this.showSelect = false, // 是否显示多选框
+					this.showContent = true, // 是否展开下拉扩展框
+					this.stopJump = false, // 当触发多选时,改为true 禁止 跳转页面
+					this.delay = {},
+					this.timerOver = true, // 定时器是否结束的标志
+					this.selectedStationGuids = [], //选择的StationGuids
+					this.selectedStation = [],
+					this.navBtnRight = '选择',
+					this.render = false, // 控制抽屉的开启和关闭
+					this.errList = [] // 站点复选时 提交 存放错误次数等信息
 			}
-			
+
 		},
 		mounted() {
 			uni.showLoading({
