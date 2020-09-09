@@ -25,9 +25,9 @@
 </template>
 
 <script>
-	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
 	import { QueryEmployee } from '@/api/api.js'
 	import { mapState, mapMutations } from 'vuex'
+	import uniDrawer from "@/components/uni-drawer/uni-drawer.vue"
 
 	export default {
 		components: {
@@ -68,9 +68,6 @@
 			...mapMutations(['setStationData', 'setStationEmp']),
 			//跳转到站点方案分配页面
 			StationAssignSet(){
-				console.log(this.station);
-				console.log(this.stationList);
-				return
 				this.close()
 				uni.navigateTo({
 					url:'/pages/TreeData/index'
