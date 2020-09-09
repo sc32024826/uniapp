@@ -51,8 +51,8 @@ export default {
 	},
 	mounted () {
 		console.log(this.userSelectStations)
-        this.selectStationGuids = this.userSelectStations.map(item => item.guid)
-        console.log(  this.selectStationGuids)
+		this.selectStationGuids = this.userSelectStations.map(item => item.guid)
+		console.log(this.selectStationGuids)
 	},
 	methods: {
 		goback () {
@@ -74,7 +74,7 @@ export default {
 		 */
 		async getData (obj) {
 			let param = obj
-
+			console.log(param)
 			var [err, res] = await QueryRouteGuidsByMODCS(param)
 			if (err) {
 				console.error(err)
@@ -162,9 +162,10 @@ export default {
 
 			} else {
 				if (node.level === 2) {
+					let canshu = node.data.relation.split(',')
 					let param = {
-						StyleCode: node.parentId,
-						MONO: node.data.name
+						StyleCode: canshu[0],
+						MONO: canshu[1]
 					}
 					//调用接口 获得 子项
 					let res = await this.getData(param)
@@ -175,9 +176,11 @@ export default {
 						let last = names[names.length - 1]
 						e.name = last
 					})
+					console.log(res)
 					resolve(res)
 				}
 				if (node.level === 1) {
+					console.log('1级')
 					let param = {
 						StyleCode: node.data.name
 					}
@@ -209,12 +212,14 @@ export default {
 									})
 								}
 							})
-							// console.log(temp)
 						}
 					})
+					console.log(temp)
+
 					resolve(temp)
 				}
 				if (node.level === 3) {
+					console.log('3级')
 					let para = node.data.relation.split(',')
 					let param = {
 						StyleCode: para[0],
@@ -231,6 +236,7 @@ export default {
 						e.name = last
 						e.leaf = true
 					})
+					console.log(res)
 					resolve(res)
 				}
 				if (node.level === 4) return resolve([])
