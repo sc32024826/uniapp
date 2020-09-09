@@ -80,8 +80,8 @@
 				selectedStationGuids: [], //选择的StationGuids
 				selectedStation: [],
 				navBtnRight: '选择',
-				render: false, // 控制抽屉的开启和关闭
-				errList: [] // 站点复选时 提交 存放错误次数等信息
+				render: false // 控制抽屉的开启和关闭
+				// errList: [] // 站点复选时 提交 存放错误次数等信息
 			}
 		},
 		methods: {
@@ -281,7 +281,7 @@
 			navigateToTree() {
 				this.render = true
 				this.$refs.myDrawer.open()
-
+				console.log(this.selectedStation)
 				return
 				let length = this.selectedStationGuids.length
 				if (length == 0) {
@@ -292,7 +292,7 @@
 					return
 				} else {
 					// vuex 存储选中的站点信息
-					this.setStationGuids(this.selectedStationGuids)
+					this.setStationGuids()
 					uni.redirectTo({
 						url: '/pages/TreeData/index'
 					})
@@ -311,14 +311,15 @@
 					EmployeeGuid: param.EmployeeGuid
 				}
 				let state = param.stop
-				var [err, res] = await SetStationLoginByStationGuid(para)
-				if (err) {
-					this.errList.push(err)
-				} else {
-					if (!res.data.success) {
-						this.errList.push(res.data.msg)
-					}
-				}
+                // var [err, res] = 
+                await SetStationLoginByStationGuid(para)
+				// if (err) {
+				// 	this.errList.push(err)
+				// } else {
+				// 	if (!res.data.success) {
+				// 		this.errList.push(res.data.msg)
+				// 	}
+				// }
 				//state 表示是否是最后一次执行 若是 执行完刷新页面
 				if (state) {
 					this.clear()
