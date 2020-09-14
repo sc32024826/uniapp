@@ -490,7 +490,5 @@ uni-collapse::-webkit-scrollbar {
 	background: red;
 }
 
-.marginR {
-	margin-right: 30rpx;
-}
+
 </style>

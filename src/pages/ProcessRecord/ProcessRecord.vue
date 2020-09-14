@@ -1,10 +1,17 @@
 <template>
 	<view id="main">
+		<!-- #ifdef MP-WEIXIN -->
+		<view class="status_bar">
+			<view class="top_view"></view>
+		</view>
+		<!-- #endif -->
+		<!-- #ifdef H5 -->
 		<uni-nav-bar fixed status-bar>
 			<view class="center">记录查询</view>
 			<view slot="left" @click="goback" class="icon-back">返回</view>
 			<view slot="right"><text @tap="showHelp" class="marginR"><text>&#xe677;</text></text></view>
 		</uni-nav-bar>
+		<!-- #endif -->
 		<view class="column top" v-if="haveScaned">
 			<view class="column margin">
 				<view class="row between">
@@ -45,8 +52,7 @@
 			<view class="data">
 				<uni-collapse>
 					<block v-for="(item,key) in tableData" :key="key">
-						<uni-collapse-item :open="isOpen(item.RackCode)" :title="title(key,item.RackCode)" 
-											:class="[item.RackCode==RackCode?'item':'']">
+						<uni-collapse-item :open="isOpen(item.RackCode)" :title="title(key,item.RackCode)" :class="[item.RackCode==RackCode?'item':'']">
 							<view v-for="(v,k) in item.ProcessRecords" :key="k">
 								<view :class="[v.RecordType == '进站' ? 'light row white' : 'row']">
 									<view class="cell column station">{{v.StationID}}</view>
@@ -94,6 +100,7 @@
 		components: { uniCollapse, uniCollapseItem, uniNavBar },
 		data() {
 			return {
+				H5: true,
 				tableData: [],
 				Color: '', //颜色
 				StyleID: '', //款号
@@ -120,6 +127,9 @@
 			} else {
 				this.scanCode()
 			}
+			//#ifndef H5
+			this.H5 = false
+			//#endif
 		},
 		methods: {
 			scanCode() {

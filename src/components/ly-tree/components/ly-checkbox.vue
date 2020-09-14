@@ -42,7 +42,7 @@
 	}
 </script>
 
-<style>
+<style lang="scss" scoped>
 	/* lyRadio/lyCheckbox-start */
 	.ly-checkbox,
 	.ly-radio {
@@ -108,11 +108,11 @@
 		border-color: #409EFF
 	}
 	
-	.ly-checkbox__input.is-disabled+text.ly-checkbox__label,
-	.ly-radio__input.is-disabled+text.ly-radio__label {
-		color: #C0C4CC;
-		cursor: not-allowed
-	}
+	// .ly-checkbox__input.is-disabled+text.ly-checkbox__label,
+	// .ly-radio__input.is-disabled+text.ly-radio__label {
+	// 	color: #C0C4CC;
+	// 	cursor: not-allowed
+	// }
 	
 	.ly-checkbox__input.is-checked .ly-checkbox__inner::after,
 	.ly-radio__input.is-checked .ly-radio__inner::after {

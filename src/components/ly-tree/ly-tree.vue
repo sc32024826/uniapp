@@ -507,7 +507,7 @@
 	};
 </script>
 
-<style>
+<style scoped>
 	.ly-width{
 		width: 100%;
 	}

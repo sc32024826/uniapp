@@ -1,125 +1,94 @@
 <template>
 	<view class="container">
-		<uni-nav-bar fixed status-bar>
-			<view class="center">工作台</view>
+		<uni-nav-bar fixed status-bar v-if="H5">
+			<view class="full-width">{{title}}</view>
 			<view slot="left" @click="close" class="icon-back">关闭</view>
 			<view slot="right" @tap="showhelp"><text>&#xe677;</text></view>
 		</uni-nav-bar>
-		<swiper :autoplay="true" :indicatorDots="true" indicatorActiveColor="white" circular>
-			<swiper-item>
-				<view class="logo"></view>
-			</swiper-item>
-			<swiper-item>
-				<image src="@/static/banner/1.jpg" class="wd"></image>
-			</swiper-item>
-			<swiper-item>
-				<image src="@/static/banner/2.jpg" class="wd"></image>
-			</swiper-item>
-			<swiper-item>
-				<image src="@/static/banner/3.jpg" class="wd"></image>
-			</swiper-item>
-			<swiper-item>
-				<image src="@/static/banner/4.jpg" class="wd"></image>
-			</swiper-item>
-		</swiper>
-		<view class="row warp main">
-			<block v-for="(item,i) in optionList">
-				<view class="box primary" @click="jump(item.url)">
-					<view class="icon" v-html="item.icon"></view>
-					<view>{{item.title}}</view>
-				</view>
-			</block>
+		<!-- #ifdef MP-WEIXIN -->
+		<view class="status_bar">
+			<view class="top_view"></view>
 		</view>
-		<view class="help" v-if="helpView">
-			<swiper class="swiper" :indicatorDots="true" indicatorActiveColor="white">
-				<swiper-item>
-					<text class="icon-box"></text>
-					<view class="msg">
-						<li>
-							扫描衣架二维码获得衣架信息
-						</li>
-						<li>
-							手动输入衣架号获得衣架信息
-						</li>
-						<li>
-							设置衣架为已经完成
-						</li>
-						<li>
-							查询衣架的历史记录
-						</li>
-						<li>
-							查询衣架上的衣服信息
-						</li>
-					</view>
-				</swiper-item>
-				<swiper-item>
-					<text class="icon-box margin-left"></text>
-					<view class="msg">
-						<li>
-							扫描员工卡片获得员工卡号
-						</li>
-					</view>
-				</swiper-item>
-				<swiper-item>
-					<text class="icon-box margin-left-2"></text>
-					<view class="msg">
-						<li>
-							扫描员工卡片获得员工卡号
-						</li>
-					</view>
-				</swiper-item>
-				<swiper-item>
-					<text class="icon-box margin-left-3"></text>
-					<view class="msg">
-						<li>
-							扫描员工卡片获得员工卡号
-						</li>
-					</view>
-				</swiper-item>
-			</swiper>
-			<view @click="understand" class="hideHelp py primary">我知道了</view>
-		</view>
+		<!-- #endif -->
+		<scroll-view class="scroll-y">
+			<sc-banner :images="banners"></sc-banner>
+			<sc-menu :options="options"></sc-menu>
+		</scroll-view>
 	</view>
 </template>
 
 <script>
 	import { mapState } from 'vuex'
-	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 	import * as dd from "dingtalk-jsapi"
 
 	export default {
-		components: {
-			uniNavBar
-		},
 		data() {
 			return {
-				optionList: [{
-						url: '/pages/ProcessRecord/ProcessRecord',
-						icon: '&#xe60a;',
-						title: '加工记录'
+				banners: [{
+						id: 1,
+						image: '../../static/img/1.jpg', // 显示的轮播图片地址
+						url: '' // 需要点击触发跳转的页面
 					},
 					{
-						url: '/pages/nfc/nfc',
-						icon: '&#xe600;',
-						title: 'NFC'
+						id: 2,
+						image: '../../static/img/2.jpg',
+						url: '',
 					},
 					{
-						url: '/pages/ProInfo/ProInfo',
-						icon: '&#xe691;',
-						title: '生产情况'
+						id: 3,
+						image: '../../static/img/3.jpg',
+						url: '',
 					},
 					{
-						url: '/pages/beforeOffline/beforeOffline',
-						icon: '&#xe705;',
-						title: '生产线'
+						id: 4,
+						image: '../../static/img/4.jpg',
+						url: '',
 					}
 				],
-				helpView: false //是否显示帮助信息
+				options: [{
+						id: 1,
+						name: '加工记录',
+						icon: '&#xe60a;',
+						url: '/pages/ProcessRecord/ProcessRecord'
+					},
+					{
+						id: 2,
+						name: 'NFC',
+						icon: '&#xe600;',
+						url: '/pages/nfc/nfc'
+					}, {
+						id: 3,
+						name: '生产车间',
+						icon: '&#xe691;',
+						url: '/pages/ProInfo/ProInfo'
+					}, {
+						id: 4,
+						name: '生产线',
+						icon: '&#xe705;',
+						url: '/pages/workLine/index'
+					}, {
+						id: 5,
+						name: '扫码',
+						icon: '&#xe6e5;',
+						url: '/pages/scancode/scancode'
+					}
+				],
+				helpView: false, //是否显示帮助信息
+				H5: true,
+				title: ''
 			}
 		},
 		methods: {
 			// 跳转页面
-			jump(url) {
+			jump(item) {
+				// #ifdef H5
+				let url = item.url
+				// #endif
+				// #ifdef MP-WEIXIN
+				let url = item.wx_url
+				// #endif
+				console.log(url)
+				return
 				uni.navigateTo({
 					url: url
 				})
@@ -141,107 +110,22 @@
 		},
 		computed: {
 			...mapState(['hasLogin', 'userName'])
+		},
+		mounted() {
+			//#ifndef H5
+			this.H5 = false
+			//#endif
+			this.title = this.$Route.meta.title
 		}
 	}
 </script>
 
 <style lang="less" scoped>
-	
-	.icon {
-		font-size: 150rpx;
-	}
-
-	.wrap {
-		justify-content: start;
-		flex-wrap: wrap;
-	}
-	.wd{
-		margin: 10rpx;
-		width: calc(100vw - 20rpx);
-	}
-
 	.container {
 		width: 100%;
 		white-space: nowrap;
 		overflow: hidden;
 		position: fixed;
-
-		.logo {
-			height: 250rpx;
-			background-image: url("@/static/img/Title.jpg");
-			background-size: cover;
-			background-repeat: no-repeat;
-			background-position: center;
-			margin: 10rpx 10rpx 0 10rpx;
-
-		}
-
-		.main {
-			margin: 10rpx;
-			flex-wrap: wrap;
-			justify-content: space-between;
-			.box {
-				align-items: center;
-				height: 200rpx;
-				width: calc((100vw - 50rpx)/4);
-				display: flex;
-				flex-direction: row;
-				flex-wrap: wrap;
-				justify-content: center;
-				margin-bottom: 10rpx;
-				color: #323232;
-				padding-bottom: 10rpx;
-			}
-		}
-
-		.help {
-			width: 100%;
-			height: 100%;
-			position: fixed;
-			top: 0;
-			background-color: rgba(165, 165, 165, 0.8);
-			z-index: 2;
-
-			.swiper {
-				height: 80vh;
-
-				.icon-box {
-					color: white;
-					font-size: 200rpx;
-					display: block;
-					margin-top: 390rpx;
-					transform: scale(1, 1.2)
-				}
-
-				.margin-left {
-					margin-left: 24vw;
-				}
-
-				.margin-left-2 {
-					margin-left: 49vw;
-				}
-
-				.margin-left-3 {
-					margin-left: 74vw;
-				}
-
-				.msg {
-					margin-top: 50rpx;
-					text-indent: 2em;
-				}
-
-
-			}
-		}
-
-		.hideHelp {
-			border-radius: 10rpx;
-			border: solid 1rpx #e3e3e3;
-			width: 40vw;
-			margin: 0 auto;
-			text-align: center;
-			height: 50rpx;
-		}
-
+		text-align: center;
 	}
 </style>

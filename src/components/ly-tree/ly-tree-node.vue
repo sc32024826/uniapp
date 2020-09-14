@@ -242,7 +242,7 @@
 	};
 </script>
 
-<style>
+<style scoped lang="scss">
 	.ly-tree-node {
 		white-space: nowrap;
 		outline: 0
@@ -269,10 +269,12 @@
 		height: 40rpx;
 	}
 
-	.ly-tree-node__checkbox>image {
-		width: 40rpx;
-		height: 40rpx;
-	}
+	// .ly-tree-node__checkbox {
+	// 	image {
+	// 		width: 40rpx;
+	// 		height: 40rpx;
+	// 	}
+	// }
 
 	.ly-tree-node__expand-icon {
 		color: #C0C4CC;
@@ -340,11 +342,11 @@
 		font-family: 'ly-iconfont';
 		/* project id 2013340 */
 		src: url('//at.alicdn.com/t/font_2013340_7ha54cnln5w.eot');
-	src: url('//at.alicdn.com/t/font_2013340_7ha54cnln5w.eot?#iefix') format('embedded-opentype'),
-		url('//at.alicdn.com/t/font_2013340_7ha54cnln5w.woff2') format('woff2'),
-		url('//at.alicdn.com/t/font_2013340_7ha54cnln5w.woff') format('woff'),
-		url('//at.alicdn.com/t/font_2013340_7ha54cnln5w.ttf') format('truetype'),
-		url('//at.alicdn.com/t/font_2013340_7ha54cnln5w.svg#iconfont') format('svg');
+		src: url('//at.alicdn.com/t/font_2013340_7ha54cnln5w.eot?#iefix') format('embedded-opentype'),
+			url('//at.alicdn.com/t/font_2013340_7ha54cnln5w.woff2') format('woff2'),
+			url('//at.alicdn.com/t/font_2013340_7ha54cnln5w.woff') format('woff'),
+			url('//at.alicdn.com/t/font_2013340_7ha54cnln5w.ttf') format('truetype'),
+			url('//at.alicdn.com/t/font_2013340_7ha54cnln5w.svg#iconfont') format('svg');
 	}
 
 	.ly-iconfont {
@@ -377,7 +379,7 @@
 			transform: rotateZ(360deg)
 		}
 	}
-	
+
 
 	/* animate-end */
 </style>

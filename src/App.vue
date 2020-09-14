@@ -1,19 +1,20 @@
 <script>
 	import * as dd from "dingtalk-jsapi"
-	
+
 	export default {
 		onLaunch: function() {
+			//#ifdef H5
 			let env = dd.env.platform
 			if (env != 'notInDingTalk') {
 				dd.biz.navigation.hideBar({
 					hidden: true
 				})
 			}
+			//#endif
+
 		},
-		onShow: function() {
-		},
-		onHide: function() {
-		}
+		onShow: function() {},
+		onHide: function() {}
 	}
 </script>
 
@@ -75,7 +76,6 @@
 		flex: 1;
 		flex-direction: column;
 		background-color: #efeff4;
-		padding: 10px;
 	}
 
 	.input-group {
@@ -201,5 +201,18 @@
 			transform: rotate(360deg);
 			-webkit-transform: rotate(360deg);
 		}
+	}
+	.status_bar {  
+	    height: var(--status-bar-height);  
+	    width: 100%;  
+	    background-color: #F8F8F8;  
+	}  
+	.top_view {  
+	    height: var(--status-bar-height);  
+	    width: 100%;  
+	    position: fixed;  
+	    background-color: #F8F8F8;  
+	    top: 0;  
+	    z-index: 999;  
 	}
 </style>

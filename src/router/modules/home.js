@@ -4,7 +4,7 @@ const home = [{
 		aliasPath: '/', //对于h5端你必须在首页加上aliasPath并设置为/
 		name: 'index',
 		meta: {
-			title: 'ShanYing'
+			title: 'ShanYing登录中...'
 		},
 	},
 	{
@@ -64,8 +64,15 @@ const home = [{
 		}
 	},
 	{
-		path: '/pages/beforeOffline/beforeOffline',
-		name: 'beforeOffline',
+		path: '/pages/workLine/workLine',
+		name: 'workLineH5',
+		meta: {
+			title: '生产线'
+		}
+	},
+	{
+		path: '/pages/workLine/index',
+		name: 'workLine',
 		meta: {
 			title: '生产线'
 		}

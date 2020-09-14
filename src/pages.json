@@ -67,19 +67,32 @@
 				"navigationBarTitleText": "站点信息",
 				"enablePullDownRefresh": true
 			}
-		}, {
-			"path": "pages/beforeOffline/beforeOffline",
+		}, 
+		{
+			"path": "pages/workLine/workLine",
 			"style": {
 				"navigationBarTitleText": "生产线",
 				"enablePullDownRefresh": true
 			}
-		}, {
+		}, 
+		{
 			"path": "pages/TreeData/index",
 			"style": {
 				"navigationBarTitleText": "站点方案分配"
 			}
+		},
+		{
+			"path": "pages/workLine/index",
+			"style": {
+				"navigationBarTitleText": "生产线",
+				"enablePullDownRefresh": true
+			}
 		}
-	],
+	    ,{
+            "path" : "pages/scancode/scancode",
+            "style" : {}
+        }
+    ],
 	"tabBar": {
 		"color": "#7a7e83",
 		"selectedColor": "#0faeff",
