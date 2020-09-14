@@ -59,7 +59,7 @@
 
 <style scoped lang="less">
 	.content {
-		padding-top: 44px;
+		// padding-top: 44px;
 		width: 100%;
 		justify-content: center;
 		align-items: center;
@@ -104,11 +104,13 @@
 		}
 
 		.footer {
+			position: fixed;
 			width: 100%;
 			height: 50rpx;
 			border-top: solid 1rpx #c7c7c7;
 			color: #c7c7c7;
 			text-align: center;
+			bottom: 0rpx;
 		}
 	}
 </style>

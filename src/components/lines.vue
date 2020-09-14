@@ -1,5 +1,5 @@
 <template>
-	<view class="Container">
+	<view class="container">
 		<view class="name my">生产线数据</view>
 		<view class="row primary white title">
 			<view>生产线</view>
@@ -54,10 +54,8 @@
 
 <style lang="scss" scoped>
 	.container {
-		margin: 10rpx;
 		width: 100%;
 		.name{
-			// margin: 10rpx;
 			padding: 10rpx;
 			background-color: white;
 			font-size: 1.2em;
@@ -67,6 +65,7 @@
 			justify-content: space-around;
 			padding: 10rpx;
 			text-align: center;
+			margin-bottom: 2rpx;
 			view{
 				width: calc((100vw - 80rpx)/4);
 			}

@@ -1,5 +1,6 @@
 <template>
 	<view class="container">
+		<!-- #ifdef H5 -->
 		<uni-nav-bar fixed status-bar>
 			<view class="center">今日生产情况</view>
 			<view slot="left" @click="goback" class="icon-back">返回</view>
@@ -8,6 +9,7 @@
 				<text @tap="selectItems">{{navBtnRight}}</text>
 			</view>
 		</uni-nav-bar>
+		<!-- #endif -->
 		<uni-collapse class="mx wd">
 			<view class="lineInfo column" v-for="(item,i) in data" :key="i">
 				<view class="row DateBar my">

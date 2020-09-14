@@ -69,6 +69,7 @@
 			background-color: #a7a7a7;
 			z-index: 2;
 			margin: 0 5rpx;
+			border-radius: 10rpx;
 		}
 	}
 

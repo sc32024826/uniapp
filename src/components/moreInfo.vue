@@ -1,5 +1,5 @@
 <template>
-	<view class="Container">
+	<view class="container">
 		<view class="name my">详细数据</view>
 		<view class="title primary white row">
 			<view class="grow-1">工序</view>
@@ -88,12 +88,12 @@
 </script>
 
 <style lang="scss" scoped>
-	.Container {
-		width: calc(100vw - 20rpx);
+	.container {
+		width: 100vw;
 	}
 
-	$wd-4:calc((100vw -40rpx)/4);
-	$wd-5:calc((100vw -40rpx)/5);
+	$wd-4:calc(100vw / 4);
+	$wd-5:calc(100vw / 5);
 
 	.name {
 		padding: 10rpx;

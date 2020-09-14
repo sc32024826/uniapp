@@ -24,5 +24,8 @@
 </script>
 
 <style lang="scss">
-
+	.content{
+		width: 100%;
+		height: 50vh;
+	}
 </style>

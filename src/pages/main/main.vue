@@ -1,14 +1,11 @@
 <template>
 	<view class="container">
-		<uni-nav-bar fixed status-bar v-if="H5">
+		<!-- #ifdef H5 -->
+		<uni-nav-bar fixed status-bar>
 			<view class="full-width">{{title}}</view>
 			<view slot="left" @click="close" class="icon-back">关闭</view>
 			<view slot="right" @tap="showhelp"><text>&#xe677;</text></view>
 		</uni-nav-bar>
-		<!-- #ifdef MP-WEIXIN -->
-		<view class="status_bar">
-			<view class="top_view"></view>
-		</view>
 		<!-- #endif -->
 		<scroll-view class="scroll-y">
 			<sc-banner :images="banners"></sc-banner>
@@ -74,7 +71,6 @@
 					}
 				],
 				helpView: false, //是否显示帮助信息
-				H5: true,
 				title: ''
 			}
 		},
@@ -112,9 +108,6 @@
 			...mapState(['hasLogin', 'userName'])
 		},
 		mounted() {
-			//#ifndef H5
-			this.H5 = false
-			//#endif
 			this.title = this.$Route.meta.title
 		}
 	}

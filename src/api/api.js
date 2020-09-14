@@ -10,9 +10,6 @@ export const QueryProcessingHistoryByRackCode = param => {
 		url: "/services/api/MESInterfaces/QueryProcessingHistoryByRackCode",
 		data: {
 			"Rackcode": param
-		},
-		header: {
-			"Content-Type": "application/json; charset=utf-8"
 		}
 	})
 }
@@ -36,10 +33,7 @@ export const doneRack = param => {
 	return uni.request({
 		url: '/sunrise/api/MESInterfaces/SetRackToFinished',
 		data: JSON.stringify(param),
-		method: 'PUT',
-		header: {
-			"Content-Type": "application/json; charset=utf-8"
-		}
+		method: 'PUT'
 	})
 }
 /**

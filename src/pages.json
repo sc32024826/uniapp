@@ -118,7 +118,7 @@
 		]
 	},
 	"globalStyle": {
-		"navigationStyle": "custom",
+		"navigationStyle": "default",
 		"backgroundColor": "#fbf9fe",
 		"usingComponents": {
 			"ly-tree-node": "/components/ly-tree/ly-tree-node"

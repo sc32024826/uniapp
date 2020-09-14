@@ -1,10 +1,5 @@
 <template>
 	<view id="main">
-		<!-- #ifdef MP-WEIXIN -->
-		<view class="status_bar">
-			<view class="top_view"></view>
-		</view>
-		<!-- #endif -->
 		<!-- #ifdef H5 -->
 		<uni-nav-bar fixed status-bar>
 			<view class="center">记录查询</view>
@@ -15,7 +10,7 @@
 		<view class="column top" v-if="haveScaned">
 			<view class="column margin">
 				<view class="row between">
-					<view @click="finishRack(RackCode)">衣架号:{{RackCode}}<text>&#xe679;</text>
+					<view @tap="finishRack(RackCode)">衣架号:{{RackCode}}<text>&#xe679;</text>
 					</view>
 					<view v-if="Status == 3" class="red debug">已完成</view>
 					<view v-if="Status == 4" class="red debug">已完成4</view>
@@ -25,7 +20,7 @@
 					<view>生产单:{{Mo}}</view>
 				</view>
 				<view v-if="Mo">款色码:{{StyleID}} - {{Color}} - {{SizeName}}</view>
-				<view v-if="Mo" @click="showList">数量:{{Qty}}<text>&#xe679;</text>
+				<view v-if="Mo" @tap="showList">数量:{{Qty}}<text>&#xe679;</text>
 				</view>
 				<view class="row" v-if="Mo">
 					<view class="currentSeq">当前工序:{{SeqCode}}-{{SeqName}}</view>
@@ -34,8 +29,8 @@
 			</view>
 		</view>
 		<view class="row button-area">
-			<button type="primary" @click="nextScan"><text class="iconfont">&#xe6e5;</text>扫码</button>
-			<button type="primary" @click="inputHand"><text class="iconfont">&#xe601;</text>手输</button>
+			<button type="primary" @tap="nextScan"><text class="iconfont">&#xe6e5;</text>扫码</button>
+			<button type="primary" @tap="inputHand"><text class="iconfont">&#xe601;</text>手输</button>
 		</view>
 		<view class="table">
 			<view class="row primary white bd">

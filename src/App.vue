@@ -202,13 +202,14 @@
 			-webkit-transform: rotate(360deg);
 		}
 	}
+	$topm : calc(var(--status-bar-height) + 35px);
 	.status_bar {  
-	    height: var(--status-bar-height);  
+	    height: $topm;  
 	    width: 100%;  
 	    background-color: #F8F8F8;  
 	}  
 	.top_view {  
-	    height: var(--status-bar-height);  
+	    height: $topm;  
 	    width: 100%;  
 	    position: fixed;  
 	    background-color: #F8F8F8;  
