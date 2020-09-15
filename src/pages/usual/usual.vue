@@ -1,10 +1,10 @@
 <template>
 	<view class="container">
-		<uni-nav-bar fixed status-bar v-if="H5">
+		<!-- <uni-nav-bar fixed status-bar>
 			<view class="full-width">{{title}}</view>
 			<view slot="left" @click="close" class="icon-back">关闭</view>
 			<view slot="right"><text @tap="showHelp">&#xe677;</text></view>
-		</uni-nav-bar>
+		</uni-nav-bar> -->
 	</view>
 </template>
 
@@ -12,7 +12,6 @@
 	export default {
 		data() {
 			return {
-				H5: true,
 				title: ''
 			}
 		},
@@ -31,9 +30,6 @@
 		},
 		mounted() {
 			this.title = this.$Route.meta.title
-			// #ifndef H5
-			this.H5 = false
-			// #endif
 		}
 	}
 </script>

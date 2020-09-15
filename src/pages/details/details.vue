@@ -267,6 +267,7 @@ export default {
 	},
 	onPullDownRefresh () {
 		console.log(this.CurrentStation);
+		this.CurrentStation = this.userSelectStations[0]
 		this.RackData = []// 站内衣架
 		this.data = [] // 树状数据
 		// 衣架信息

@@ -1,14 +1,14 @@
 <template>
 	<view class="container">
 		<!-- #ifdef H5 -->
-		<uni-nav-bar fixed status-bar>
+		<!-- <uni-nav-bar fixed status-bar>
 			<view class="center">今日生产情况</view>
 			<view slot="left" @tap="goback" class="icon-back">返回</view>
 			<view slot="right" class="marginR">
 				<text @tap="showHelp" class="marginR">&#xe677;</text>
 				<text @tap="selectItems">{{navBtnRight}}</text>
 			</view>
-		</uni-nav-bar>
+		</uni-nav-bar> -->
 		<!-- #endif -->
 		<uni-collapse>
 			<view class="lineInfo column" v-for="(item,i) in data" :key="i">
@@ -117,8 +117,8 @@
 			},
 			// 长按 出现复选框
 			longpressfn() {
-				this.showSelect = true
-				this.stopJump = true
+				console.log('长按');
+				this.selectItems()
 			},
 			async clickBox(v) {
 				// 生产线号-站号
@@ -305,21 +305,6 @@
 				this.render = true
 				this.$refs.myDrawer.open()
 				this.setStationData(this.selectedStation)
-				// return
-				// let length = this.selectedStationGuids.length
-				// if (length == 0) {
-				// 	uni.showModal({
-				// 		content: '您没有选择任何站点!',
-				// 		showCancel: false
-				// 	})
-				// 	return
-				// } else {
-				// 	// vuex 存储选中的站点信息
-				// 	this.setStationGuids()
-				// 	uni.redirectTo({
-				// 		url: '/pages/TreeData/index'
-				// 	})
-				// }
 			},
 			goback() {
 				uni.switchTab({

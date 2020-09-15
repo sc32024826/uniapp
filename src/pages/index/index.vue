@@ -1,9 +1,9 @@
 <template>
 	<div class="Container">
-		<uni-nav-bar fixed status-bar v-if="H5">
+<!-- 		<uni-nav-bar fixed status-bar>
 			<view class="full-width">{{title}}</view>
 			<view slot="left" @tap="closeApp" class="icon-back">关闭</view>
-		</uni-nav-bar>
+		</uni-nav-bar> -->
 		<view class="column primary hfull center white">
 			<view v-if="show">当前平台不支持本应用</view>
 		</view>
@@ -18,8 +18,7 @@
 		data() {
 			return {
 				show: false,
-				title: '',
-				H5: true // 是否是H5 平台
+				title: ''
 			}
 		},
 		methods: {
@@ -103,7 +102,6 @@
 		mounted() {
 			// #ifdef H5
 			console.log('当前h5平台')
-			this.H5 = true
 			this.refresh()
 			// #endif
 

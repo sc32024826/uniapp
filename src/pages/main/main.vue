@@ -1,12 +1,10 @@
 <template>
 	<view class="container">
-		<!-- #ifdef H5 -->
-		<uni-nav-bar fixed status-bar>
+<!-- 		<uni-nav-bar fixed status-bar>
 			<view class="full-width">{{title}}</view>
 			<view slot="left" @click="close" class="icon-back">关闭</view>
 			<view slot="right" @tap="showhelp"><text>&#xe677;</text></view>
-		</uni-nav-bar>
-		<!-- #endif -->
+		</uni-nav-bar> -->
 		<scroll-view class="scroll-y">
 			<sc-banner :images="banners"></sc-banner>
 			<sc-menu :options="options"></sc-menu>

@@ -133,6 +133,7 @@
 			// 勾选列表行
 			checkboxChange(e) {
 				var choose = e.target.value || []
+				console.log(this.tableData);
 				this.tableData.map((v, k) => {
 					if (choose.indexOf(k.toString()) > -1) {
 						v.checked = true
@@ -405,6 +406,7 @@
 				var custom = 0
 				this.tableData.map(item => {
 					if (item.checked) {
+						console.log(item.offline)
 						if (item.offline) {
 							custom += item.offline
 						} else {

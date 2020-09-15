@@ -8,52 +8,67 @@
 </template>
 
 <script>
-	import { GetLineStatus, QueryQtyWithSeq } from '@/api/api.js'
+	import {
+		GetLineStatus,
+		QueryQtyWithSeq
+	} from '@/api/api.js'
 	import WorkLine from '@/components/lines.vue'
 	import MoreInfo from '@/components/moreInfo.vue'
 	export default {
 		components: {
-			WorkLine,MoreInfo
+			WorkLine,
+			MoreInfo
 		},
 		data() {
 			return {
 				lines: [],
-				details:[]
+				details: [],
+				hideLoading: 0
 			}
 		},
 		mounted() {
 			// this.getLineData()
 			// this.showLineInfo()
 		},
+		watch: {
+			hideLoading(newValue, oldValue) {
+				console.log(newValue);
+				if (newValue == 2) {
+					uni.hideLoading()
+					this.hideLoading = 0
+				}
+			}
+		},
 		methods: {
 			// 生产线数据
 			async getLineData() {
 				console.log('请求数据');
 				uni.showLoading({
-					title:'请求数据'
+					title: '请求数据'
 				})
 				let para = ''
 				const [err, res] = await GetLineStatus(para)
 				if (err) {
-					uni.hideLoading()
+					this.hideLoading += 1
 					console.log(err);
 					uni.showModal({
 						content: err,
 						showCancel: false
 					})
 				} else {
-					uni.hideLoading()
 					console.log(res);
 					this.lines = res.data
+					this.hideLoading += 1
 				}
 			},
 			// 第二部分的数据
 			async showLineInfo() {
 				uni.showLoading({
-					title:'请求数据'
+					title: '请求数据'
 				})
 				let [err, res] = await QueryQtyWithSeq()
 				if (err) {
+					this.hideLoading += 1
 					console.log(err);
 					uni.hideLoading()
 					uni.showModal({
@@ -64,7 +79,7 @@
 					if (res.data.success) {
 						this.details = res.data.response
 						console.log(this.details);
-						uni.hideLoading()
+						this.hideLoading += 1
 					}
 				}
 			}
@@ -75,13 +90,13 @@
 		onPullDownRefresh() {
 			this.lines = []
 			this.details = []
-			
+
 			this.getLineData()
 			this.showLineInfo()
-			
-			setTimeout(()=>{
+
+			setTimeout(() => {
 				uni.stopPullDownRefresh()
-			},1000)
+			}, 1000)
 		}
 	}
 </script>

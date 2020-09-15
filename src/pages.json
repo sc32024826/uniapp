@@ -30,13 +30,6 @@
 			}
 		},
 		{
-			"path": "pages/work/work",
-			"style": {
-				"navigationBarTitleText": "任务分配",
-				"enablePullDownRefresh": true
-			}
-		},
-		{
 			"path": "pages/ProcessRecord/ProcessRecord",
 			"style": {
 				"navigationBarTitleText": "加工记录"
