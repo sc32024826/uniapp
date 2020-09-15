@@ -1,19 +1,19 @@
 <template>
 	<view class="container">
-		<uni-nav-bar fixed status-bar>
+<!-- 		<uni-nav-bar fixed status-bar>
 			<view class="center">站点详情</view>
 			<view slot="left" @click="goback" class="icon-back">返回</view>
 			<view slot="right" class="marginR">
 				<text @tap="showHelp" class="marginR">&#xe677;</text>
 				<text @tap="openDrawer">更多</text>
 			</view>
-		</uni-nav-bar>
-		<view class="head mx">
-			<view>当前站点:{{CurrentStation.name}}</view>
+		</uni-nav-bar> -->
+		<view class="head">
+			<view>当前站点:{{CurrentStation.name || ''}}</view>
 			<view>当前站点登录员工:{{CurrentStation.emp == 'null-null' ? '' : CurrentStation.emp}}</view>
 		</view>
 		<uni-collapse>
-			<uni-collapse-item title="站内衣架" :open="true" class="collapseitem mx">
+			<uni-collapse-item title="站内衣架" :open="true" class="collapseitem">
 				<view v-if="none" class="infomsg">暂无数据</view>
 				<view class="scroll1">
 					<uni-swipe-action>
@@ -37,11 +37,14 @@
 				</view>
 
 			</uni-collapse-item>
-			<uni-collapse-item title="已分配的方案" :open="true" class="collapseitem mx">
+			<uni-collapse-item title="已分配的方案" :open="true" class="collapseitem">
 				<ly-tree :tree-data="data" node-key="ID" :props="defaultProps" />
 			</uni-collapse-item>
 		</uni-collapse>
-		<view id="junpToTop" @click="junpToTop" v-show="showTop"></view>
+		<view class="more" @tap="openDrawer">
+			
+		</view>
+		<view class="junpToTop" @click="junpToTop" v-show="showTop"></view>
 		<drawer v-show="render" ref="myDrawer" class="drawer" @onRequest="login"></drawer>
 	</view>
 </template>
@@ -254,9 +257,9 @@ export default {
 	mounted () {
         this.CurrentStation = this.userSelectStations[0]
 		// 衣架信息
-		this.getRackStatus()
+		// this.getRackStatus()
 		// 分配方案
-		this.getAssignResult()
+		// this.getAssignResult()
 
 	},
 	onLoad (options) {
@@ -266,9 +269,6 @@ export default {
 		console.log(this.CurrentStation);
 		this.RackData = []// 站内衣架
 		this.data = [] // 树状数据
-		uni.showLoading({
-			title: '请稍后'
-		})
 		// 衣架信息
 		this.getRackStatus()
 		// 分配方案
@@ -367,14 +367,13 @@ export default {
 		max-height: 80vh;
 	}
 
-	#junpToTop {
-		width: 80rpx;
+	.junpToTop {
+		width: 70rpx;
 		height: 80rpx;
 		position: fixed;
 		right: 60rpx;
 		bottom: 60rpx;
 		z-index: 4;
-		background-color: white;
 		background-image: url(../../static/img/top.png);
 		background-position: center;
 		background-repeat: no-repeat;
@@ -388,16 +387,20 @@ export default {
 	.drawer {
 		z-index: 10;
 	}
-
-	/* 起到固定的作用 ,从而解决原页面触摸穿透的问题*/
-	// .prevent {
-	// 	width: 100%;
-	// 	height: 100%;
-	// 	position: fixed;
-	// 	top: 0;
-	// 	left: 0;
-	// 	overflow: hidden;
-	// }
+	.more{
+		height: 80rpx;
+		position: fixed;
+		bottom: 50rpx;
+		right: 0;
+		width: 80rpx;
+		background-image: url(../../static/img/left-arrow.png); 
+		background-repeat: no-repeat;
+		background-size: 80rpx;
+		font-size: 50rpx;
+		border-radius: 20rpx 0 0 20rpx ;
+		background-color: #ffff00;
+		z-index: 10;
+	}
 }
 
 .marginR {

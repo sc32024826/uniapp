@@ -1,13 +1,16 @@
+
+let baseUrl = ''
+
 export const GetLoginfoByCode = param => {
 	return uni.request({
-		url: "/dingtalk/api/Login/GetLoginfoByCode",
+		url: baseUrl + "/dingtalk/api/Login/GetLoginfoByCode",
 		data: param,
 		method: 'GET'
 	})
 }
 export const QueryProcessingHistoryByRackCode = param => {
 	return uni.request({
-		url: "/services/api/MESInterfaces/QueryProcessingHistoryByRackCode",
+		url: baseUrl + "https://test-api.servers.mchains.cn/api/MESInterfaces/QueryProcessingHistoryByRackCode",
 		data: {
 			"Rackcode": param
 		}
@@ -18,7 +21,7 @@ export const QueryProcessingHistoryByRackCode = param => {
  */
 export const GetQtyOnlineMODCS = param => {
 	return uni.request({
-		url: '/sunrise/api/MESInterfaces/GetQtyOnlineMODCS',
+		url: 'https://test-sunrise.servers.mchains.cn/api/MESInterfaces/GetQtyOnlineMODCS',
 		data: {
 			"SeqCode": param
 		}
@@ -31,7 +34,7 @@ export const GetQtyOnlineMODCS = param => {
 export const doneRack = param => {
 
 	return uni.request({
-		url: '/sunrise/api/MESInterfaces/SetRackToFinished',
+		url: 'https://test-sunrise.servers.mchains.cn/api/MESInterfaces/SetRackToFinished',
 		data: JSON.stringify(param),
 		method: 'PUT'
 	})
@@ -41,14 +44,14 @@ export const doneRack = param => {
  */
 export const getSeqNameList = () => {
 	return uni.request({
-		url: '/sunrise/api/BaseInfo/GetBaseSeqCode'
+		url: 'https://test-sunrise.servers.mchains.cn/api/BaseInfo/GetBaseSeqCode'
 	})
 }
 
 //根据在加工产品唯一键列表下线指定衣服数量的在线衣架
 export const SetRackOfflineByZdOnlineGuid = param => {
 	return uni.request({
-		url: '/sunrise/api/MESInterfaces/SetRackOfflineByZdOnlineGuid',
+		url: 'https://test-sunrise.servers.mchains.cn/api/MESInterfaces/SetRackOfflineByZdOnlineGuid',
 		method: 'POST',
 		data: param
 	})
@@ -58,7 +61,7 @@ export const SetRackOfflineByZdOnlineGuid = param => {
  */
 export const GetStationStatus = param => {
 	return uni.request({
-		url: '/sunrise/api/MESInterfaces/GetStationStatus',
+		url: 'https://test-sunrise.servers.mchains.cn/api/MESInterfaces/GetStationStatus',
 		data: param
 	})
 }
@@ -67,7 +70,7 @@ export const GetStationStatus = param => {
  */
 export const GetLineStatus = param => {
 	return uni.request({
-		url: '/sunrise/api/MESInterfaces/GetLineStatus',
+		url: baseUrl + 'https://test-sunrise.servers.mchains.cn/api/MESInterfaces/GetLineStatus',
 		data: param
 	})
 }
@@ -76,7 +79,7 @@ export const GetLineStatus = param => {
  */
 export const QueryInStationRackInfByStationGuid = param => {
 	return uni.request({
-		url: '/sunrise/api/MESInterfaces/QueryInStationRackInfByStationGuid',
+		url: 'https://test-sunrise.servers.mchains.cn/api/MESInterfaces/QueryInStationRackInfByStationGuid',
 		data: param
 	})
 }
@@ -85,7 +88,7 @@ export const QueryInStationRackInfByStationGuid = param => {
  */
 export const SetLinePause = param => {
 	return uni.request({
-		url: '/sunrise/api/MESInterfaces/SetLinePause',
+		url: 'https://test-sunrise.servers.mchains.cn/api/MESInterfaces/SetLinePause',
 		data: param,
 		method: 'PUT'
 	})
@@ -95,7 +98,7 @@ export const SetLinePause = param => {
  */
 export const GetStationAssign = param => {
 	return uni.request({
-		url: '/sunrise/api/MESInterfaces/GetStationAssignInfoResultsByStation',
+		url: 'https://test-sunrise.servers.mchains.cn/api/MESInterfaces/GetStationAssignInfoResultsByStation',
 		data: param
 	})
 }
@@ -104,7 +107,7 @@ export const GetStationAssign = param => {
  */
 export const QueryQtyWithSeq = () => {
 	return uni.request({
-		url: '/sunrise/api/MESInterfaces/QueryQtyWithSeq'
+		url: 'https://test-sunrise.servers.mchains.cn/api/MESInterfaces/QueryQtyWithSeq'
 	})
 }
 
@@ -113,7 +116,7 @@ export const QueryQtyWithSeq = () => {
  */
 export const QueryRouteGuidsByMODCS = param => {
 	return uni.request({
-		url: '/sunrise/api/MESInterfaces/QueryRouteGuidsByMODCS',
+		url: 'https://test-sunrise.servers.mchains.cn/api/MESInterfaces/QueryRouteGuidsByMODCS',
 		data: param
 	})
 }
@@ -123,7 +126,7 @@ export const QueryRouteGuidsByMODCS = param => {
  */
 export const SetStAssignByRouteGuids = param => {
 	return uni.request({
-		url: '/sunrise/api/MESInterfaces/SetStAssignByRouteGuids',
+		url: 'https://test-sunrise.servers.mchains.cn/api/MESInterfaces/SetStAssignByRouteGuids',
 		data: param,
 		method: 'PUT'
 	})
@@ -133,7 +136,7 @@ export const SetStAssignByRouteGuids = param => {
  */
 export const QueryEmployee = () => {
 	return uni.request({
-		url: '/sunrise/api/BaseInfo/QueryEmployee'
+		url: 'https://test-sunrise.servers.mchains.cn/api/BaseInfo/QueryEmployee'
 	})
 }
 /**
@@ -141,7 +144,7 @@ export const QueryEmployee = () => {
  */
 export const SetStationLoginByStationGuid = param => {
 	return uni.request({
-		url: '/sunrise/api/MESInterfaces/SetStationLoginByStationGuid',
+		url: 'https://test-sunrise.servers.mchains.cn/api/MESInterfaces/SetStationLoginByStationGuid',
 		data: param,
 		method: 'PUT'
 	})

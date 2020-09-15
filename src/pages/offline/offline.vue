@@ -1,12 +1,12 @@
 <template>
-	<view id="container">
-		<uni-nav-bar fixed status-bar>
+	<view class="container">
+		<!-- <uni-nav-bar fixed status-bar>
 			<view class="center">衣架下线</view>
-			<view slot="left" @click="goback" class="icon-back">返回</view>
+			<view slot="left" @tap="goback" class="icon-back">返回</view>
 			<view slot="right"><text @tap="showHelp" class="marginR">&#xe677;</text></view>
-		</uni-nav-bar>
-		<view id="head">
-			<view id="toolbar" class="row center py">
+		</uni-nav-bar> -->
+		<view class="head">
+			<view class="toolbar row center py">
 				<view class="dropdown">
 					<picker @change="bindPickerChange" :value="index" :range="array">
 						<view>选择工序: {{array[index]}}</view>
@@ -21,7 +21,7 @@
 					</label>
 				</checkbox-group>
 			</view>
-			<view id="title" class="row vertical-center primary">
+			<view class="row jc-a vertical-center primary title">
 				<checkbox-group @change="selectAll">
 					<checkbox value="1" ref="selectAll" :checked="allselect"></checkbox>
 				</checkbox-group>
@@ -30,32 +30,34 @@
 				<view class="white" style="width: 100rpx;">下线数</view>
 			</view>
 		</view>
-		<view id="list" class="uni-list">
-			<checkbox-group @change="checkboxChange">
-				<view v-if="!show">暂无数据</view>
-				<view class="stripe" v-for="(item,i) in tableData" :key="i">
-					<view class="row test vertical-center ">
-						<checkbox :value="item.id" :checked="item.checked" />
-						<view class="row mo" @click="showFullInfo(item)">
-							<view class="st">{{item.StyleNo}}</view>
-							<view v-if="DoColor" class="co">{{item.ColorName}}</view>
-							<view v-if="DoSize" class="si">{{item.SizeName}}</view>
+		<scroll-view>
+			<view class="scroll">
+				<checkbox-group @change="checkboxChange">
+					<view v-if="!show">暂无数据</view>
+					<view class="stripe" v-for="(item,i) in tableData" :key="i">
+						<view class="row jc-a test vertical-center ">
+							<checkbox :value="item.id" :checked="item.checked" />
+							<view class="row jc-a mo" @tap="showFullInfo(item)">
+								<view class="st">{{item.StyleNo}}</view>
+								<view v-if="DoColor" class="co">{{item.ColorName}}</view>
+								<view v-if="DoSize" class="si">{{item.SizeName}}</view>
+							</view>
+							<view class="count">{{item.Qty}}</view>
+							<input placeholder="0" type="number" adjust-position :disabled="!item.checked" @input="verity($event,item.Qty)"
+							 @blur="setUserQty($event,item.id)"></input>
 						</view>
-						<view class="count">{{item.Qty}}</view>
-						<input placeholder="0" type="number" adjust-position :disabled="!item.checked" @input="verity($event,item.Qty)"
-						 @blur="setUserQty($event,item.id)"></input>
 					</view>
-				</view>
-			</checkbox-group>
-		</view>
-		<view class="row bottom">
-			<view id="sum" class="row">
+				</checkbox-group>
+			</view>
+		</scroll-view>
+		<view class="row jc-a bottom">
+			<view class="row jc-a subimt-area">
 				<text>总计:</text>
 				<view class="sum">{{totalOnline}}</view>
 				<text>待提交:</text>
 				<view class="sum">{{totalCustom}}</view>
 			</view>
-			<button type="primary" size="mini" @click="offlineByUser">下线衣服</button>
+			<button type="primary" size="mini" @tap="offlineByUser">下线衣服</button>
 		</view>
 		<uniPopup type="top" ref="popup">
 			<uni-popup-message type="error" message="数量错误" :duration="2000"></uni-popup-message>
@@ -64,11 +66,26 @@
 </template>
 
 <script>
-	import { GetQtyOnlineMODCS, getSeqNameList, SetRackOfflineByZdOnlineGuid } from '@/api/api.js'
-	import { SelectAll, SelectBySize, SelectByColor, SelectByColorSize } from './classify.js'
-	import { mapState, mapMutations } from 'vuex'
+	import {
+		GetQtyOnlineMODCS,
+		getSeqNameList,
+		SetRackOfflineByZdOnlineGuid
+	} from '@/api/api.js'
+	import {
+		SelectAll,
+		SelectBySize,
+		SelectByColor,
+		SelectByColorSize
+	} from './classify.js'
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex'
 	import format from '../../utils/data/format.js'
-	import { uniPopup, uniPopupMessage } from '@dcloudio/uni-ui'
+	import {
+		uniPopup,
+		uniPopupMessage
+	} from '@dcloudio/uni-ui'
 	import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 
 	export default {
@@ -111,7 +128,7 @@
 				let param = e.detail.value
 				param.indexOf('size') > -1 ? this.DoSize = true : this.DoSize = false
 				param.indexOf('color') > -1 ? this.DoColor = true : this.DoColor = false,
-				this.getDate()
+					this.getDate()
 			},
 			// 勾选列表行
 			checkboxChange(e) {
@@ -308,7 +325,12 @@
 			},
 			// 点击 行 显示 生产单信息
 			showFullInfo(item) {
-				let { MO, StyleNo, ColorName, SizeName } = item
+				let {
+					MO,
+					StyleNo,
+					ColorName,
+					SizeName
+				} = item
 				var res = ''
 				if (MO) {
 					res = '生产单: ' + MO + '\n'
@@ -404,24 +426,24 @@
 	$head-height:9vh;
 	$bottom-height:7vh;
 
-	#container {
+	.container {
 		width: 100%;
 		height: 100vh;
 		text-align: center;
 		white-space: nowrap;
 		text-overflow: ellipsis;
 
-		#head {
+		.head {
 			width: 100%;
 			z-index: 2;
 			height: $head-height;
 			min-height: 74px;
 
-			#toolbar {
+			.toolbar {
 				margin: 5rpx;
 			}
 
-			#title {
+			.title {
 				height: 80rpx;
 			}
 
@@ -436,9 +458,9 @@
 			}
 		}
 
-		#list {
-			margin-top: 20rpx;
-			height: calc(93vh - 138px);
+		.scroll {
+			padding-top: 10rpx;
+			height: calc(73vh);
 			overflow: scroll;
 
 			.stripe:nth-child(even) {
@@ -483,12 +505,14 @@
 		.bottom {
 			width: 100%;
 			z-index: 2;
-			height: $bottom-height;
+			// height: $bottom-height;
 			justify-content: space-between;
 			align-items: center;
 			margin-bottom: 5rpx;
+			position: fixed;
+			bottom: 0;
 
-			#sum {
+			.subimt-area {
 				height: $bottom-height;
 				align-items: center;
 				width: 70vw;
@@ -503,10 +527,6 @@
 				}
 			}
 		}
-	}
-
-	.row {
-		justify-content: space-around;
 	}
 
 	//

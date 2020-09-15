@@ -35,14 +35,14 @@
 				let para = ''
 				const [err, res] = await GetLineStatus(para)
 				if (err) {
-					// uni.hideLoading()
+					uni.hideLoading()
 					console.log(err);
 					uni.showModal({
 						content: err,
 						showCancel: false
 					})
 				} else {
-					// uni.hideLoading()
+					uni.hideLoading()
 					console.log(res);
 					this.lines = res.data
 				}
@@ -55,7 +55,7 @@
 				let [err, res] = await QueryQtyWithSeq()
 				if (err) {
 					console.log(err);
-					// uni.hideLoading()
+					uni.hideLoading()
 					uni.showModal({
 						content: err,
 						showCancel: false
@@ -64,7 +64,7 @@
 					if (res.data.success) {
 						this.details = res.data.response
 						console.log(this.details);
-						// uni.hideLoading()
+						uni.hideLoading()
 					}
 				}
 			}
