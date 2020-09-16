@@ -1,49 +1,36 @@
 <template>
 	<view class="container">
-<!-- 		<uni-nav-bar fixed status-bar>
-			<view class="center">站点详情</view>
-			<view slot="left" @click="goback" class="icon-back">返回</view>
-			<view slot="right" class="marginR">
-				<text @tap="showHelp" class="marginR">&#xe677;</text>
-				<text @tap="openDrawer">更多</text>
-			</view>
-		</uni-nav-bar> -->
 		<view class="head">
-			<view>当前站点:{{CurrentStation.name || ''}}</view>
-			<view>当前站点登录员工:{{CurrentStation.emp == 'null-null' ? '' : CurrentStation.emp}}</view>
+			<view>当前站点:{{ CurrentStation.name || '' }}</view>
+			<view>当前站点登录员工:{{ CurrentStation.emp == 'null-null' ? '' : CurrentStation.emp }}</view>
 		</view>
 		<uni-collapse>
 			<uni-collapse-item title="站内衣架" :open="true" class="collapseitem">
 				<view v-if="none" class="infomsg">暂无数据</view>
 				<view class="scroll1">
 					<uni-swipe-action>
-						<view v-for="(v,i) in RackData" :key="i" class="RackiTems" :style="v.Processed ? 'background-color: #ffaa00;' :''" @click="JumpRecode(v.RackCode)">
-							<uni-swipe-action-item :right-options="options" @click="bindClick($event,v)" @change="swipeChange()">
+						<view v-for="(v, i) in RackData" :key="i" class="RackiTems" :style="{ 'background-color: #ffaa00;': v.Processed }" @click="JumpRecode(v.RackCode)">
+							<uni-swipe-action-item :right-options="options" @click="bindClick($event, v)" @change="swipeChange()">
 								<view class="column full-width">
 									<view class="row line between">
-										<view>款: {{v.StyleNo}}</view>
-										<view style="flex-shrink: 1;">色: {{v.ColorName}}</view>
-										<view style="flex-shrink: 1;">码: {{v.SizeName}}</view>
+										<view>款: {{ v.StyleNo }}</view>
+										<view style="flex-shrink: 1;">色: {{ v.ColorName }}</view>
+										<view style="flex-shrink: 1;">码: {{ v.SizeName }}</view>
 									</view>
 									<view class="row line between">
-										<view>单: {{v.MoNo}}</view>
-										<view>号: {{v.RackCode}}</view>
-										<view>{{v.Qty}}件</view>
+										<view>单: {{ v.MoNo }}</view>
+										<view>号: {{ v.RackCode }}</view>
+										<view>{{ v.Qty }}件</view>
 									</view>
 								</view>
 							</uni-swipe-action-item>
 						</view>
 					</uni-swipe-action>
 				</view>
-
 			</uni-collapse-item>
-			<uni-collapse-item title="已分配的方案" :open="true" class="collapseitem">
-				<ly-tree :tree-data="data" node-key="ID" :props="defaultProps" />
-			</uni-collapse-item>
+			<uni-collapse-item title="已分配的方案" :open="true" class="collapseitem"><ly-tree :tree-data="data" node-key="ID" :props="defaultProps" /></uni-collapse-item>
 		</uni-collapse>
-		<view class="more" @tap="openDrawer">
-			
-		</view>
+		<view class="more" @tap="openDrawer"></view>
 		<view class="junpToTop" @click="junpToTop" v-show="showTop"></view>
 		<drawer v-show="render" ref="myDrawer" class="drawer" @onRequest="login"></drawer>
 	</view>
@@ -53,7 +40,7 @@
 import { mapMutations, mapState } from 'vuex'
 import drawer from '@/components/my-drawer.vue'
 import LyTree from '@/components/ly-tree/ly-tree.vue'
-import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
+import uniNavBar from '@/components/uni-nav-bar/uni-nav-bar.vue'
 import { uniCollapse, uniCollapseItem, uniSwipeAction, uniSwipeActionItem, uniLoadMore } from '@dcloudio/uni-ui'
 import { GetStationAssign, doneRack, QueryInStationRackInfByStationGuid, SetStationLoginByStationGuid } from '@/api/api.js'
 
@@ -68,29 +55,31 @@ export default {
 		drawer,
 		uniNavBar
 	},
-	data () {
+	data() {
 		return {
 			RackData: [], // 站内衣架
 			none: true, // 没有数据的时候显示 暂无数据
-            data: [], // 树状数据
-            // 左滑 按钮
-			options: [{
-				'text': '结束衣架',
-				'style': {
-					"backgroundColor": "#dd524d"
+			data: [], // 树状数据
+			// 左滑 按钮
+			options: [
+				{
+					text: '结束衣架',
+					style: {
+						backgroundColor: '#dd524d'
+					}
 				}
-            }],
-            // 是否显示回到顶部的按钮
-            showTop: false, 
-            // 树状结构 默认参数
+			],
+			// 是否显示回到顶部的按钮
+			showTop: false,
+			// 树状结构 默认参数
 			defaultProps: {
 				children: 'Child',
 				label: 'name'
-            },
-            // 是否渲染子组件
-            render: false,
-            // 当前站点信息
-            CurrentStation: {}
+			},
+			// 是否渲染子组件
+			render: false,
+			// 当前站点信息
+			CurrentStation: {}
 		}
 	},
 	computed: {
@@ -99,7 +88,7 @@ export default {
 	methods: {
 		...mapMutations(['setStationData', 'setStationEmp']),
 		// 子组件回调 登录
-		async login (param) {
+		async login(param) {
 			console.log(param)
 			let para = {
 				StationGuid: param.StationGuid,
@@ -119,8 +108,6 @@ export default {
 					})
 					// 更新当前页面  只需要更新 登录员工
 					this.setStationEmp(param.emp)
-
-
 				} else {
 					uni.showModal({
 						content: res.data.msg,
@@ -129,17 +116,17 @@ export default {
 				}
 			}
 		},
-		bindClick (e, v) {
+		bindClick(e, v) {
 			uni.showModal({
 				content: '设置该衣架为已完成状态!',
-				success: (res) => {
+				success: res => {
 					if (res.confirm) {
 						this.setRackFinished(v.RackCode)
 					}
 				}
 			})
 		},
-		async setRackFinished (Code) {
+		async setRackFinished(Code) {
 			uni.showLoading({
 				title: '请稍后'
 			})
@@ -155,27 +142,26 @@ export default {
 				uni.showModal({
 					content: res.data.msg,
 					showCancel: false,
-					success: (res) => {
+					success: res => {
 						if (res.confirm) {
 							this.getRackStatus()
 						}
 					}
 				})
 			}
-
 		},
-		swipeChange (e) {
+		swipeChange(e) {
 			// console.log('左滑操作')
 		},
 		// 获得该站点分配方案
-		async getAssignResult () {
+		async getAssignResult() {
 			uni.showLoading({
 				title: '请稍后'
 			})
 			let para = {
 				StationGuid: this.CurrentStation.guid
 			}
-			console.log('站点方案请求', para);
+			console.log('站点方案请求', para)
 			var [err, res] = await GetStationAssign(para)
 
 			if (err) {
@@ -195,7 +181,7 @@ export default {
 				}
 			}
 		},
-		junpToTop () {
+		junpToTop() {
 			uni.pageScrollTo({
 				scrollTop: 0,
 				complete: () => {
@@ -203,20 +189,20 @@ export default {
 				}
 			})
 		},
-		JumpRecode (code) {
+		JumpRecode(code) {
 			uni.navigateTo({
 				url: '../ProcessRecord/ProcessRecord?code=' + code
 			})
 		},
 		// 获取站内衣架信息,
-		async getRackStatus () {
+		async getRackStatus() {
 			uni.showLoading({
 				title: '请稍后'
 			})
 			let param = {
 				StationGuid: this.CurrentStation.guid
 			}
-			console.log('衣架信息请求', param);
+			console.log('衣架信息请求', param)
 			var [err, res] = await QueryInStationRackInfByStationGuid(param)
 			if (err) {
 				uni.showModal({
@@ -225,7 +211,7 @@ export default {
 				})
 			} else {
 				if (res.data.success) {
-					console.log(res.data);
+					console.log(res.data)
 					if (res.data.response.length > 0) {
 						this.RackData = res.data.response
 						this.none = false
@@ -240,44 +226,43 @@ export default {
 				}
 			}
 		},
-		goback () {
+		goback() {
 			// uni.navigateBack({})
 			uni.redirectTo({
 				url: '../ProInfo/ProInfo'
 			})
 		},
-		showHelp () {
+		showHelp() {
 			console.log('帮助')
 		},
-		openDrawer () {
+		openDrawer() {
 			this.render = true
 			this.$refs.myDrawer.open()
 		}
 	},
-	mounted () {
-        this.CurrentStation = this.userSelectStations[0]
+	mounted() {
+		this.CurrentStation = this.userSelectStations[0]
 		// 衣架信息
 		// this.getRackStatus()
 		// 分配方案
 		// this.getAssignResult()
-
 	},
-	onLoad (options) {
-		uni.startPullDownRefresh();
+	onLoad(options) {
+		uni.startPullDownRefresh()
 	},
-	onPullDownRefresh () {
-		console.log(this.CurrentStation);
+	onPullDownRefresh() {
+		console.log(this.CurrentStation)
 		this.CurrentStation = this.userSelectStations[0]
-		this.RackData = []// 站内衣架
+		this.RackData = [] // 站内衣架
 		this.data = [] // 树状数据
 		// 衣架信息
 		this.getRackStatus()
 		// 分配方案
 		this.getAssignResult()
 
-		setTimeout(function () {
-			uni.stopPullDownRefresh();
-		}, 1000);
+		setTimeout(function() {
+			uni.stopPullDownRefresh()
+		}, 1000)
 	}
 }
 </script>
@@ -388,17 +373,17 @@ export default {
 	.drawer {
 		z-index: 10;
 	}
-	.more{
+	.more {
 		height: 80rpx;
 		position: fixed;
 		bottom: 50rpx;
 		right: 0;
 		width: 80rpx;
-		background-image: url(../../static/img/left-arrow.png); 
+		background-image: url(../../static/img/left-arrow.png);
 		background-repeat: no-repeat;
 		background-size: 80rpx;
 		font-size: 50rpx;
-		border-radius: 20rpx 0 0 20rpx ;
+		border-radius: 20rpx 0 0 20rpx;
 		background-color: #ffff00;
 		z-index: 10;
 	}

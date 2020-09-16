@@ -21,10 +21,11 @@
 .icon-back:before {
 	content: "\e62b";
 }
-.icon-box :before{
+
+.icon-box :before {
 	content: "\e6c6";
 }
-.icon-select {
+
+.icon-select :before {
 	content: "\e763";
 }
-

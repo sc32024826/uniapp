@@ -18,115 +18,114 @@
 				</view>
 			</view>
 		</view>
-		<block v-for="(v,i) in details" :key="i">
+		<block v-for="(v, i) in details" :key="i">
 			<view class="row items" @tap="naviTo(v)">
-				<view>{{v.SeqName}}</view>
-				<view>{{v.OnlineCount}}</view>
-				<view>{{v.OnlineQty}}</view>
-				<view>{{v.InStationCount}}</view>
-				<view>{{v.InStationQty}}</view>
+				<view>{{ v.SeqName }}</view>
+				<view>{{ v.OnlineCount }}</view>
+				<view>{{ v.OnlineQty }}</view>
+				<view>{{ v.InStationCount }}</view>
+				<view>{{ v.InStationQty }}</view>
 			</view>
 		</block>
 		<view class="primary white items row">
 			<view>合计</view>
-			<view>{{OnlineCount}}</view>
-			<view>{{OnlineQty}}</view>
-			<view>{{InStationCount}}</view>
-			<view>{{InStationQty}}</view>
+			<view>{{ OnlineCount }}</view>
+			<view>{{ OnlineQty }}</view>
+			<view>{{ InStationCount }}</view>
+			<view>{{ InStationQty }}</view>
 		</view>
-
 	</view>
 </template>
 
 <script>
-	export default {
-		props: {
-			details: {
-				type: Array,
-				required: true
-			}
+export default {
+	props: {
+		details: {
+			type: Array,
+			required: true
+		}
+	},
+	computed: {
+		InStationCount() {
+			let qty = 0
+			this.details.map(m => {
+				qty += m.InStationCount
+			})
+			return qty
 		},
-		computed: {
-			InStationCount() {
-				let qty = 0
-				this.details.map(m => {
-					qty += m.InStationCount
-				})
-				return qty
-			},
-			InStationQty() {
-				let qty = 0
-				this.details.map(m => {
-					qty += m.InStationQty
-				})
-				return qty
-			},
-			OnlineCount() {
-				let qty = 0
-				this.details.map(m => {
-					qty += m.OnlineCount
-				})
-				return qty
-			},
-			OnlineQty() {
-				let qty = 0
-				this.details.map(m => {
-					qty += m.OnlineQty
-				})
-				return qty
-			}
+		InStationQty() {
+			let qty = 0
+			this.details.map(m => {
+				qty += m.InStationQty
+			})
+			return qty
 		},
-		methods: {
-			// 页面跳转
-			naviTo(obj) {
-				uni.navigateTo({
-					url: '/pages/offline/offline?SeqCode=' + obj.SeqCode + '&SeqName=' + obj.SeqName
-				})
-			}
+		OnlineCount() {
+			let qty = 0
+			this.details.map(m => {
+				qty += m.OnlineCount
+			})
+			return qty
+		},
+		OnlineQty() {
+			let qty = 0
+			this.details.map(m => {
+				qty += m.OnlineQty
+			})
+			return qty
+		}
+	},
+	methods: {
+		// 页面跳转
+		naviTo(obj) {
+			uni.navigateTo({
+				url: '/pages/offline/offline?SeqCode=' + obj.SeqCode + '&SeqName=' + obj.SeqName
+			})
 		}
 	}
+}
 </script>
 
 <style lang="scss" scoped>
-	.container {
-		width: 100vw;
-	}
+.container {
+	width: 100vw;
+}
 
-	$wd-4:calc(100vw / 4);
-	$wd-5:calc(100vw / 5);
+$wd-4: calc(100vw / 4);
+$wd-5: calc(100vw / 5);
 
-	.name {
-		padding: 10rpx;
-		background-color: white;
-		font-size: 1.2em;
-		font-weight: 700;
-	}
+.name {
+	padding: 10rpx;
+	background-color: white;
+	font-size: 1.2em;
+	font-weight: 700;
+}
 
-	.title {
-		align-items: center;
-		justify-content: space-around;
-	}
+.title {
+	align-items: center;
+	justify-content: space-around;
+}
 
-	.grow-1 {
-		text-align: center;
+.grow-1 {
+	text-align: center;
+	width: $wd-5;
+}
+
+.grow-2 {
+	text-align: center;
+}
+
+.items {
+	text-align: center;
+	padding: 20rpx 0;
+	margin: 2rpx 0;
+
+	view {
 		width: $wd-5;
 	}
+}
 
-	.grow-2 {
-		text-align: center;
-	}
-
-	.items {
-		text-align: center;
-		padding: 20rpx 0;
-		margin: 2rpx 0;
-
-		view {
-			width: $wd-5;
-		}
-	}
-
-	.space {
-		justify-content: space-around;
-	}
+.space {
+	justify-content: space-around;
+}
 </style>

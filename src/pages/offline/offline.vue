@@ -19,13 +19,7 @@
 				</checkbox-group>
 			</view>
 			<view class="row jc-a vertical-center primary title">
-				<view class="select-all" @tap="sellectAllToggle">
-					<!-- #ifdef H5 -->
-					<text v-show="allselect">&#xe763;</text>
-					<!-- #endif -->
-					<!-- #ifdef MP-WEIXIN -->
-					<i v-html="&#xe763;" v-show="allselect"></i>
-					<!-- #endif -->
+				<view :class="{ 'select-all': true, 'active': allselect }" @tap="sellectAllToggle">
 				</view>
 				<view class="white " style="width: 400rpx;">款号-颜色-尺码</view>
 				<view class="white" style="width: 80rpx;">线上</view>
@@ -108,6 +102,7 @@ export default {
 					item.checked = false
 				})
 			}
+			this.totalCustom = this.GetCustom()
 		},
 		// 区分尺码 区分颜色
 		requestType(e) {
@@ -416,7 +411,11 @@ $bottom-height: 7vh;
 	font-size: 2em;
 	color: #217aff;
 }
-
+.active{
+	background-image: url(../../static/img/checked.png);
+	background-repeat: no-repeat;
+	background-size: 50rpx;
+}
 .container {
 	width: 100%;
 	height: 100vh;
