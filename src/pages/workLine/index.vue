@@ -26,13 +26,8 @@
 				hideLoading: 0
 			}
 		},
-		mounted() {
-			// this.getLineData()
-			// this.showLineInfo()
-		},
 		watch: {
 			hideLoading(newValue, oldValue) {
-				console.log(newValue);
 				if (newValue == 2) {
 					uni.hideLoading()
 					this.hideLoading = 0
