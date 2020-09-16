@@ -1,12 +1,5 @@
 <template>
 	<view id="main">
-		<!-- #ifdef H5 -->
-		<uni-nav-bar fixed status-bar>
-			<view class="center">记录查询</view>
-			<view slot="left" @click="goback" class="icon-back">返回</view>
-			<view slot="right"><text @tap="showHelp" class="marginR"><text>&#xe677;</text></text></view>
-		</uni-nav-bar>
-		<!-- #endif -->
 		<view class="column top" v-if="haveScaned">
 			<view class="column margin">
 				<view class="row between">
@@ -95,7 +88,6 @@
 		components: { uniCollapse, uniCollapseItem, uniNavBar },
 		data() {
 			return {
-				H5: true,
 				tableData: [],
 				Color: '', //颜色
 				StyleID: '', //款号
@@ -122,9 +114,6 @@
 			} else {
 				this.scanCode()
 			}
-			//#ifndef H5
-			this.H5 = false
-			//#endif
 		},
 		methods: {
 			scanCode() {

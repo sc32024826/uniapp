@@ -10,7 +10,7 @@
 	export default {
 		data() {
 			return {
-				canSacn: true// 是否可以扫码  防止一次性扫码很多次
+				// canSacn: true// 是否可以扫码  防止一次性扫码很多次
 			}
 		},
 		methods: {
@@ -19,8 +19,6 @@
 				innerAudioContext.play()
 				this.$emit('returnCode', e.detail.result)
 			}
-		},
-		mounted() {
 		}
 	}
 </script>
