@@ -15,7 +15,6 @@ const ENV = process.env.NODE_ENV
 console.log('当前环境', ENV)
 //全局路由前置守卫
 router.beforeEach((to, from, next) => {
-	console.log('路由前置守卫')
 	//#ifndef MP-WEIXIN
 	if (to.meta.title) { document.title = to.meta.title }
 	//#endif

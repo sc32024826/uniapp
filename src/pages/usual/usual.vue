@@ -1,5 +1,6 @@
 <template>
 	<view class="container">
+		<sc-nav></sc-nav>
 		<!-- <uni-nav-bar fixed status-bar>
 			<view class="full-width">{{title}}</view>
 			<view slot="left" @click="close" class="icon-back">关闭</view>

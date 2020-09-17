@@ -1,8 +1,17 @@
 <template>
 	<view class="container">
+		<sc-nav left title="站点详情" @goBack="goback">
+			<view @tap="openDrawer">更多</view>
+		</sc-nav>
 		<view class="head">
-			<view>当前站点:{{ CurrentStation.name || '' }}</view>
-			<view>当前站点登录员工:{{ CurrentStation.emp == 'null-null' ? '' : CurrentStation.emp }}</view>
+			<view class="row jc-b">
+				<view>当前站点:</view>
+				<view class="value">{{ CurrentStation.name || '' }}</view>
+			</view>
+			<view class="row jc-b">
+				<view>当前站点登录员工:</view>
+				<view class="value">{{ CurrentStation.emp == 'null-null' ? '' : CurrentStation.emp }}</view>
+			</view>
 		</view>
 		<uni-collapse>
 			<uni-collapse-item title="站内衣架" :open="true" class="collapseitem">
@@ -28,9 +37,16 @@
 					</uni-swipe-action>
 				</view>
 			</uni-collapse-item>
-			<uni-collapse-item title="已分配的方案" :open="true" class="collapseitem"><ly-tree :tree-data="data" node-key="ID" :props="defaultProps" /></uni-collapse-item>
+			<!-- 已经分配方案 -->
+			<view class="plan">
+				<view class="plan-title">已分配的方案</view>
+				<scroll-view  class="scroll" scroll-y>
+					<ly-tree :tree-data="data" node-key="ID" :props="defaultProps" />
+				</scroll-view>
+			</view>
+			<!-- <uni-collapse-item title="已分配的方案" :open="true" class="collapseitem"> -->
+			<!-- </uni-collapse-item> -->
 		</uni-collapse>
-		<view class="more" @tap="openDrawer"></view>
 		<view class="junpToTop" @click="junpToTop" v-show="showTop"></view>
 		<drawer v-show="render" ref="myDrawer" class="drawer" @onRequest="login"></drawer>
 	</view>
@@ -39,21 +55,12 @@
 <script>
 import { mapMutations, mapState } from 'vuex'
 import drawer from '@/components/my-drawer.vue'
-import LyTree from '@/components/ly-tree/ly-tree.vue'
-import uniNavBar from '@/components/uni-nav-bar/uni-nav-bar.vue'
-import { uniCollapse, uniCollapseItem, uniSwipeAction, uniSwipeActionItem, uniLoadMore } from '@dcloudio/uni-ui'
 import { GetStationAssign, doneRack, QueryInStationRackInfByStationGuid, SetStationLoginByStationGuid } from '@/api/api.js'
 
 var that = this
 export default {
 	components: {
-		uniCollapse,
-		uniCollapseItem,
-		uniSwipeAction,
-		uniSwipeActionItem,
-		LyTree,
-		drawer,
-		uniNavBar
+		drawer
 	},
 	data() {
 		return {
@@ -227,7 +234,6 @@ export default {
 			}
 		},
 		goback() {
-			// uni.navigateBack({})
 			uni.redirectTo({
 				url: '../ProInfo/ProInfo'
 			})
@@ -243,12 +249,13 @@ export default {
 	mounted() {
 		this.CurrentStation = this.userSelectStations[0]
 		// 衣架信息
-		// this.getRackStatus()
+		this.getRackStatus()
 		// 分配方案
-		// this.getAssignResult()
+		this.getAssignResult()
 	},
 	onLoad(options) {
-		uni.startPullDownRefresh()
+		// console.log('加载数据');
+		// uni.startPullDownRefresh()
 	},
 	onPullDownRefresh() {
 		console.log(this.CurrentStation)
@@ -270,10 +277,13 @@ export default {
 <style lang="less" scoped>
 .container {
 	width: 100%;
+	height: 100vh;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	z-index: 1;
+	display: flex;
+	flex-direction: column;
 
 	.head {
 		background-color: #0079ff;
@@ -281,6 +291,10 @@ export default {
 		padding-left: 30rpx;
 		padding-top: 20rpx;
 		padding-bottom: 20rpx;
+		.value{
+			min-width: 200rpx;
+			margin-right: 20rpx;
+		}
 	}
 
 	.infomsg {
@@ -352,6 +366,26 @@ export default {
 		-webkit-overflow-scrolling: touch;
 		max-height: 80vh;
 	}
+	.plan{
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		.plan-title{
+			box-sizing: border-box;
+			height: 96rpx;
+			padding: 22rpx;
+			background-color: #f1f1f1;
+		}
+		.scroll{
+			height: 1000rpx;
+			// overflow-y: scroll;
+			// -webkit-overflow-scrolling: touch;
+			// display: flex;
+			// flex: 1;
+			// overflow: hidden;
+			// -webkit-overflow-scrolling: touch;
+		}
+	}
 
 	.junpToTop {
 		width: 70rpx;
@@ -371,20 +405,6 @@ export default {
 	}
 
 	.drawer {
-		z-index: 10;
-	}
-	.more {
-		height: 80rpx;
-		position: fixed;
-		bottom: 50rpx;
-		right: 0;
-		width: 80rpx;
-		background-image: url(../../static/img/left-arrow.png);
-		background-repeat: no-repeat;
-		background-size: 80rpx;
-		font-size: 50rpx;
-		border-radius: 20rpx 0 0 20rpx;
-		background-color: #ffff00;
 		z-index: 10;
 	}
 }

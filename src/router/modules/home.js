@@ -83,6 +83,13 @@ const home = [{
 		meta: {
 			title: '站点方案分配'
 		}
+	},
+	{
+		path: '/pages/order/order',
+		name: 'order',
+		meta: {
+			title: '生产单'
+		}
 	}
 ]
 export default home

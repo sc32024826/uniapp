@@ -1,5 +1,6 @@
 <template>
 	<view class="container">
+		<sc-nav left @goBack="goback" title="生产车间"></sc-nav>
 		<uni-collapse>
 			<view class="lineInfo column" v-for="(item, i) in data" :key="i">
 				<view class="row DateBar my">
@@ -49,17 +50,16 @@
 import { mapMutations } from 'vuex'
 import groupBy from './classify.js'
 import drawer from '@/components/my-drawer.vue'
-import { uniCollapse, uniCollapseItem } from '@dcloudio/uni-ui'
-import uniNavBar from '@/components/uni-nav-bar/uni-nav-bar.vue'
-import uniDrawer from '@/components/uni-drawer/uni-drawer.vue'
 import { GetStationStatus, GetLineStatus, QueryInStationRackInfByStationGuid, SetLinePause, SetStationLoginByStationGuid } from '@/api/api.js'
+import uniCollapse from '@/components/uni-collapse/uni-collapse.vue'
+import uniCollapseItem from '@/components/uni-collapse-item/uni-collapse-item.vue'
 
 export default {
-	components: {
+	components:{
 		uniCollapse,
-		uniCollapseItem,
-		uniDrawer,
-		uniNavBar,
+		uniCollapseItem
+	},
+	components: {
 		drawer
 	},
 	data() {
@@ -196,14 +196,14 @@ export default {
 			let para = ''
 			var [err, res] = await GetStationStatus(para)
 			if (err) {
+				console.log('err');
 				uni.showModal({
 					content: err,
 					showCancel: false
 				})
 			} else {
-				if (res.data.success == true) {
+				if (res.data.success) {
 					let data = res.data.response
-
 					data.map(e => {
 						e = Object.assign(e, {
 							checked: false
@@ -239,6 +239,7 @@ export default {
 					})
 				})
 				this.data = stationData
+				console.log(stationData);
 				uni.hideLoading()
 			}
 		},
@@ -326,19 +327,18 @@ export default {
 			this.navBtnRight = '选择'
 			this.render = false // 控制抽屉的开启和关闭
 			this.errList = [] // 站点复选时 提交 存放错误次数等信息
+		},
+		goback() {
+			uni.switchTab({
+				url: '/pages/main/main'
+			})
 		}
 	},
 	mounted() {
-		// uni.showLoading({
-		// 	title: '请稍后'
-		// })
-		// this.getData()
-	},
-	onLoad() {
-		uni.startPullDownRefresh()
+		this.getData()
 	},
 	onPullDownRefresh() {
-		console.log('refresh')
+		console.log('加载数据');
 		this.data = []
 		this.getData()
 		setTimeout(function() {
@@ -351,8 +351,8 @@ export default {
 <style lang="less" scopde>
 .container {
 	width: 100%;
+	height: 100vh;
 	text-align: center;
-	text-align: left;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -375,6 +375,7 @@ export default {
 		}
 
 		.collapseitem {
+			text-align: left;
 			.item {
 				justify-content: space-between;
 				padding-bottom: 5rpx;

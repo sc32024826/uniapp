@@ -87,6 +87,10 @@
 				"navigationBarTitleText": "连续扫码"
 			}
         }
+        ,{
+            "path" : "pages/order/order",
+            "style" : {}
+        }
     ],
 	"tabBar": {
 		"color": "#7a7e83",
@@ -113,7 +117,7 @@
 		]
 	},
 	"globalStyle": {
-		"navigationStyle": "default",
+		"navigationStyle": "custom",
 		"backgroundColor": "#fbf9fe",
 		"usingComponents": {
 			"ly-tree-node": "/components/ly-tree/ly-tree-node"

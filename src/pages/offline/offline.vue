@@ -1,5 +1,6 @@
 <template>
 	<view class="container">
+		<sc-nav left @goBack="goback" title="衣架下线"></sc-nav>
 		<view class="head">
 			<view class="toolbar row center py">
 				<view class="dropdown">
@@ -360,6 +361,9 @@ export default {
 				uni.hideLoading()
 				return obj
 			}
+		},
+		goback(){
+			uni.navigateBack({})
 		}
 	},
 	async onLoad(option) {
