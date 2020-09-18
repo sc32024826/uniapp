@@ -1,8 +1,6 @@
 <template>
 	<view class="container">
-		<sc-nav left title="站点详情" @goBack="goback">
-			<view @tap="openDrawer">更多</view>
-		</sc-nav>
+		<sc-nav left title="站点详情" @goBack="goback"><view @tap="openDrawer">更多</view></sc-nav>
 		<view class="head">
 			<view class="row jc-b">
 				<view>当前站点:</view>
@@ -18,7 +16,7 @@
 				<view v-if="none" class="infomsg">暂无数据</view>
 				<view class="scroll1">
 					<uni-swipe-action>
-						<view v-for="(v, i) in RackData" :key="i" class="RackiTems" :style="{ 'background-color: #ffaa00;': v.Processed }" @click="JumpRecode(v.RackCode)">
+						<view v-for="(v, i) in RackData" :key="i" class="{RackiTems:true, warn:v.Processed }" @click="JumpRecode(v.RackCode)">
 							<uni-swipe-action-item :right-options="options" @click="bindClick($event, v)" @change="swipeChange()">
 								<view class="column full-width">
 									<view class="row line between">
@@ -40,9 +38,7 @@
 			<!-- 已经分配方案 -->
 			<view class="plan">
 				<view class="plan-title">已分配的方案</view>
-				<scroll-view  class="scroll" scroll-y>
-					<ly-tree :tree-data="data" node-key="ID" :props="defaultProps" />
-				</scroll-view>
+				<scroll-view class="scroll" scroll-y><ly-tree :tree-data="data" node-key="ID" :props="defaultProps" /></scroll-view>
 			</view>
 			<!-- <uni-collapse-item title="已分配的方案" :open="true" class="collapseitem"> -->
 			<!-- </uni-collapse-item> -->
@@ -291,7 +287,7 @@ export default {
 		padding-left: 30rpx;
 		padding-top: 20rpx;
 		padding-bottom: 20rpx;
-		.value{
+		.value {
 			min-width: 200rpx;
 			margin-right: 20rpx;
 		}
@@ -316,7 +312,9 @@ export default {
 			text-overflow: ellipsis;
 		}
 	}
-
+	.warn {
+		background-color: #ffaa00 !important;
+	}
 	.RackiTems:nth-child(even) {
 		background-color: #666666;
 		color: white;
@@ -366,17 +364,17 @@ export default {
 		-webkit-overflow-scrolling: touch;
 		max-height: 80vh;
 	}
-	.plan{
+	.plan {
 		display: flex;
 		flex: 1;
 		flex-direction: column;
-		.plan-title{
+		.plan-title {
 			box-sizing: border-box;
 			height: 96rpx;
 			padding: 22rpx;
 			background-color: #f1f1f1;
 		}
-		.scroll{
+		.scroll {
 			height: 1000rpx;
 			// overflow-y: scroll;
 			// -webkit-overflow-scrolling: touch;

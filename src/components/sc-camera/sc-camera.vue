@@ -1,12 +1,18 @@
 <template>
 	<view class="content">
+		<!-- #ifdef MP-WEIXIN -->
 		<camera device-position="back" flash="off" mode="scanCode" @scancode="getCode" class="camera"></camera>
+		<!-- #endif -->
+		<!-- #ifdef H5 -->
+		<text> H5 不支持扫码</text>
+		<button type="primary" @tap="play">测试声音</button>
+		<!-- #endif -->
 	</view>
 </template>
 
 <script>
 	const innerAudioContext = uni.createInnerAudioContext()
-	innerAudioContext.src = 'http://s.aigei.com/pvaud_mp3/aud/mp3/1d/1d164fae59db4230a86c32ebb94a3ce6.mp3?download/%E5%BE%AE%E4%BF%A1%E4%BA%8C%E7%BB%B4%E7%A0%81%E6%89%AB%E6%8F%8F%E9%9F%B3%E6%95%88_%E7%88%B1%E7%BB%99%E7%BD%91_aigei_com.mp3&e=1599842340&token=P7S2Xpzfz11vAkASLTkfHN7Fw-oOZBecqeJaxypL:hxfDDEjNgoZ03axbaB51Km-lrDs='
+	innerAudioContext.src = '/static/sound/scanCode.mp3'
 	export default {
 		data() {
 			return {
@@ -18,12 +24,23 @@
 			getCode(e) {
 				innerAudioContext.play()
 				this.$emit('returnCode', e.detail.result)
+			},
+			play(){
+				innerAudioContext.play()
 			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	.content{
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
 	.camera {
 		height: 40vh;
 	}

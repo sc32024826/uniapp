@@ -90,6 +90,14 @@ const home = [{
 		meta: {
 			title: '生产单'
 		}
+	},
+	{
+		path:'/pages/scancode/scancode',
+		name:'ScanCodes',
+		meta:{
+			title:'连续扫码'
+		}
+		
 	}
 ]
 export default home
