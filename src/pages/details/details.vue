@@ -149,7 +149,7 @@ export default {
 			let para = {
 				StationGuid: this.CurrentStation.guid
 			}
-			console.log('站点方案请求', para)
+			// console.log('站点方案请求', para)
 			this.$api.GetStationAssign(para).then(res=>{
 				if (!res.data.success) {
 					uni.showModal({
@@ -185,10 +185,10 @@ export default {
 			let param = {
 				StationGuid: this.CurrentStation.guid
 			}
-			console.log('衣架信息请求', param)
+			// console.log('衣架信息请求', param)
 			this.$api.QueryInStationRackInfByStationGuid(param).then(res=>{
 				if (res.data.success) {
-					console.log(res.data)
+					// console.log(res.data)
 					if (res.data.response.length > 0) {
 						this.RackData = res.data.response
 						this.none = false
@@ -224,7 +224,7 @@ export default {
 		this.getAssignResult()
 	},
 	onPullDownRefresh() {
-		console.log(this.CurrentStation)
+		// console.log(this.CurrentStation)
 		this.CurrentStation = this.userSelectStations[0]
 		this.RackData = [] // 站内衣架
 		this.data = [] // 树状数据

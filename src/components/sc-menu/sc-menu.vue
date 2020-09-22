@@ -30,7 +30,7 @@
 		methods: {
 			// 页面跳转
 			naviTo(url) {
-				console.log(url)
+				// console.log(url)
 				// 测试中发现 使用navigateTo 时 轮播组件仍然在自动播放 因此改为 redirectTo
 				uni.redirectTo({
 					url: url

@@ -61,7 +61,7 @@ export default {
 		this.$api.QueryEmployee().then(res => {
 			if (res.data.success) {
 				this.employee = res.data.response
-				console.log(this.employee);
+				// console.log(this.employee);
 			}
 		})
 		this.currentEmp = this.station.emp == 'null-null' ? '' : this.station.emp

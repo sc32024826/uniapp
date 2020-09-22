@@ -81,33 +81,17 @@ export default {
 		 */
 		async getData(obj) {
 			let param = obj
-			console.log(param)
-			var [err, res] = await QueryRouteGuidsByMODCS(param)
-			if (err) {
-				console.error(err)
-				uni.showModal({
-					content: err,
-					showCancel: false
+			let result = await this.$api.QueryRouteGuidsByMODCS(param)
+			var tempArray = []
+			result.data.response.map((e, index) => {
+				let element = Object.assign(e, {
+					id: index_id,
+					children: []
 				})
-			} else {
-				var tempArray = []
-				if (res.data.success == true) {
-					res.data.response.map((e, index) => {
-						let element = Object.assign(e, {
-							id: index_id,
-							children: []
-						})
-						index_id++
-						tempArray.push(element)
-					})
-					return tempArray
-				} else {
-					uni.showModal({
-						content: res.data.msg,
-						showCancel: false
-					})
-				}
-			}
+				index_id++
+				tempArray.push(element)
+			})
+			return tempArray
 		},
 		// 提交
 		submit() {
@@ -127,37 +111,22 @@ export default {
 			}, 1000)
 		},
 		// 后台请求 是否允许进衣
-		async getCanEnter(a, b) {
+		getCanEnter(a, b) {
 			let param = {
 				stationGuids: b,
 				routeGuids: a,
 				opCode: 0 // 0:   1:  -1:
 			}
 			console.log(param)
-			var [err, res] = await SetStAssignByRouteGuids(param)
-
-			if (err) {
-				uni.showModal({
-					content: err,
-					showCancel: false
-				})
-			} else {
-				console.log(res)
-				if (res.data.success) {
-					uni.showLoading({})
-					setTimeout(() => {
-						uni.hideLoading()
-						uni.redirectTo({
-							url: '/pages/ProInfo/ProInfo'
-						})
-					}, 500)
-				} else {
-					uni.showModal({
-						content: res.data.msg,
-						showCancel: false
+			this.$api.SetStAssignByRouteGuids(param).then(res => {
+				uni.showLoading({})
+				setTimeout(() => {
+					uni.hideLoading()
+					uni.redirectTo({
+						url: '/pages/ProInfo/ProInfo'
 					})
-				}
-			}
+				}, 500)
+			})
 		},
 		// 因为这个函数是在Vue实例以外的地方调用，如果函数内部需要用到this，需要改成_self
 		async loadNode(node, resolve) {

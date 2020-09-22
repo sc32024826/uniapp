@@ -15,7 +15,7 @@ export default function $http(options) {
 			data: data,
 			method: method,
 			success(res) {
-				console.log(res);
+				// console.log(res);
 				if (res.data.success) {
 					resolve(res)
 				}else{

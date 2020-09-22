@@ -88,7 +88,7 @@
 
 <script>
 import * as dd from 'dingtalk-jsapi'
-import { ISO8601 } from './dateFormat.js'
+import ISO8601 from './dateFormat.js'
 export default {
 	data() {
 		return {
@@ -185,7 +185,7 @@ export default {
 				let target = res.data.response
 				if (target != null) {
 					this.haveScaned = true
-					console.log(target)
+					// console.log(target)
 					this.Qty = target.Qty
 					this.Mo = target.Mo
 					this.Color = target.Color
@@ -203,8 +203,8 @@ export default {
 							item.StationID = item.LineID + '-' + item.StationID
 							// 类型处理
 							item.RecordType = item.RecordType == 3 ? '出站' : '进站'
-							let temp = 
-							item.Timestamp = new Date(ISO8601(item.Timestamp)).format('yyyy-MM-dd HH:mm:ss')
+							let temp = ISO8601(item.Timestamp)
+							item.Timestamp = new Date(temp).format('yyyy-MM-dd HH:mm:ss')
 						})
 					})
 					this.tableData = target.RackProcessingHistory

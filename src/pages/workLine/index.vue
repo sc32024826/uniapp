@@ -34,12 +34,12 @@ export default {
 	methods: {
 		// 生产线数据
 		getLineData() {
-			console.log('请求数据')
+			// console.log('请求数据')
 			uni.showLoading({
 				title: '请求数据'
 			})
 			this.$api.GetLineStatus().then(res=>{
-				console.log(res)
+				// console.log(res)
 				this.lines = res.data.response
 				this.hideLoading += 1
 			})
@@ -52,7 +52,7 @@ export default {
 			this.$api.QueryQtyWithSeq().then(res=>{
 				if (res.data.success) {
 					this.details = res.data.response
-					console.log(res)
+					// console.log(res)
 					this.hideLoading += 1
 				}
 			})

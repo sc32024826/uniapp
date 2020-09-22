@@ -189,7 +189,7 @@ export default {
 					return groupBy(data, 'LineID')
 				}
 			})
-			console.log(lineData)
+			// console.log(lineData)
 			this.$api.GetLineStatus().then(res => {
 				stationData = res.data.response
 				stationData.map(m => {
