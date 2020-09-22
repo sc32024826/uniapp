@@ -216,6 +216,7 @@ export default {
 		}
 	}
 	uni-drawer{
+		
 		.drawer-content {
 			background-color: #c2c2c2;
 			box-sizing: border-box;

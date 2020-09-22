@@ -278,7 +278,6 @@ export default {
 			}
 		},
 		async offline(list) {
-			var [err, res] = await SetRackOfflineByZdOnlineGuid(list)
 			this.$api.SetRackOfflineByZdOnlineGuid(list).then(res=>{
 				console.log(res)
 				var record = {

@@ -327,6 +327,7 @@ export default {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	overflow-y: scroll;
 
 	.lineInfo {
 		.infomation view {
