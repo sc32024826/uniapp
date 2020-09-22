@@ -88,6 +88,9 @@ export default {
 	},
 	methods: {
 		...mapMutations(['setStationData', 'setStationEmp']),
+		clear(){
+			console.log(1);
+		},
 		// 子组件回调 登录
 		async login(param) {
 			console.log(param)
@@ -344,6 +347,7 @@ export default {
 		}
 		.scroll {
 			height: 800rpx;
+			overflow: hidden;
 		}
 	}
 
