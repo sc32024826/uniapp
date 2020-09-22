@@ -1,7 +1,12 @@
 <template>
 	<view class="container">
+		<!-- #ifdef H5 -->
+		<sc-nav left leftBtnText="关闭" @goBack="close"></sc-nav>
+		<!-- #endif -->
+		<!-- #ifdef MP-WEIXIN -->
 		<sc-nav></sc-nav>
-		<scroll-view class="scroll-y">
+		<!-- #endif -->
+		<scroll-view scroll-y>
 			<sc-banner :images="banners"></sc-banner>
 			<sc-menu :options="options"></sc-menu>
 		</scroll-view>
@@ -97,13 +102,16 @@ export default {
 		showhelp() {
 			this.helpView = !this.helpView
 		},
+		// 关闭页面
 		close() {
+			// #ifdef H5
 			let env = dd.env.platform
 			if (env != 'notInDingTalk') {
 				dd.biz.navigation.close()
 			} else {
 				console.log('关闭页面')
 			}
+			// #endif
 		},
 		understand() {
 			this.helpView = false

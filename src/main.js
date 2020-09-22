@@ -4,9 +4,11 @@ import App from './App'
 import store from './store'
 import router from './router'
 import { RouterMount } from 'uni-simple-router'
+import api from 'api/index.js'
+import '@/utils/data/format.js'
 
 Vue.config.productionTip = false
-
+Vue.prototype.$api = api
 Vue.prototype.$store = store
 
 App.mpType = 'app'

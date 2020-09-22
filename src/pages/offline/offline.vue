@@ -60,18 +60,14 @@
 </template>
 
 <script>
-import { GetQtyOnlineMODCS, getSeqNameList, SetRackOfflineByZdOnlineGuid } from '@/api/api.js'
 import { SelectAll, SelectBySize, SelectByColor, SelectByColorSize } from './classify.js'
 import { mapState, mapMutations } from 'vuex'
-import format from '../../utils/data/format.js'
 import { uniPopup, uniPopupMessage } from '@dcloudio/uni-ui'
-import uniNavBar from '@/components/uni-nav-bar/uni-nav-bar.vue'
 
 export default {
 	components: {
 		uniPopup,
-		uniPopupMessage,
-		uniNavBar
+		uniPopupMessage
 	},
 	data() {
 		return {
@@ -119,10 +115,8 @@ export default {
 			var choose = e.target.value || []
 			this.tableData.map((v, k) => {
 				if (choose.indexOf(k.toString()) > -1) {
-					// this.$set(this.tableData[k], 'checked', true)
 					v.checked = true
 				} else {
-					// this.$set(this.tableData[k], 'checked', false)
 					v.checked = false
 				}
 			})
@@ -226,15 +220,10 @@ export default {
 			uni.showLoading({
 				title: '正在请求数据!'
 			})
-			var [err, res] = await GetQtyOnlineMODCS(SeqCode)
 			var result = []
-			if (err) {
-				uni.showModal({
-					content: err
-				})
-			} else {
+			this.$api.GetQtyOnlineMODCS(SeqCode).then(res=>{
 				let data = res.data.response
-
+				
 				if (this.DoColor) {
 					if (this.DoSize) {
 						result = SelectByColorSize(data)
@@ -247,10 +236,9 @@ export default {
 					result = SelectAll(data)
 				}
 				this.setTempData(data)
-			}
-			// console.log('更新数据源')
-			this.tableData = result
-			uni.hideLoading()
+				this.tableData = result
+				uni.hideLoading()
+			})
 		},
 		// 每次勾选操作之后 都需要判断一次 是否是都选择了,若是 则勾选 全选 若否 不勾选全选
 		isAllSelect() {
@@ -272,7 +260,7 @@ export default {
 		offlineConfirm(list) {
 			var v = JSON.parse(window.localStorage.getItem('offlineHistory'))
 			if (v) {
-				let time = format('yyyy-MM-dd hh:mm:ss', new Date(v.time))
+				let time = new Date(v.time).format('yyyy-MM-dd hh:mm:ss')
 				if (v.totalCustom == this.totalCustom) {
 					uni.showModal({
 						content: '您在 ' + time + '执行过一次相同数量的下线操作,请核对本次操作!',
@@ -291,11 +279,7 @@ export default {
 		},
 		async offline(list) {
 			var [err, res] = await SetRackOfflineByZdOnlineGuid(list)
-			if (err) {
-				uni.showModal({
-					content: err
-				})
-			} else {
+			this.$api.SetRackOfflineByZdOnlineGuid(list).then(res=>{
 				console.log(res)
 				var record = {
 					totalCustom: this.totalCustom,
@@ -312,7 +296,7 @@ export default {
 					content: res.data.msg,
 					showCancel: false
 				})
-			}
+			})
 		},
 		// 更新手动下线数量
 		setUserQty(e, id) {
@@ -346,37 +330,30 @@ export default {
 			})
 		},
 		// 更新 工序列表
-		async seq() {
+		async seq(option) {
 			uni.showLoading({
 				title: '正在请求工序列表!'
 			})
-			var [err, res] = await getSeqNameList()
-			if (err) {
-				uni.showModal({
-					content: err.toString(),
-					showCancel: false
-				})
-			} else {
+			this.$api.getSeqNameList().then(res=>{
 				let obj = res.data.response
+				this.SeqList = obj
+				let currentSeq = option.SeqName
+				obj.map((v, k) => {
+					if (v.label == currentSeq) {
+						this.index = k
+					}
+					this.array.push(v.label)
+				})
+				this.getDataSource()
 				uni.hideLoading()
-				return obj
-			}
+			})
 		},
 		goback(){
 			uni.navigateBack({})
 		}
 	},
 	async onLoad(option) {
-		let obj = await this.seq()
-		this.SeqList = obj
-		let currentSeq = option.SeqName
-		obj.map((v, k) => {
-			if (v.label == currentSeq) {
-				this.index = k
-			}
-			this.array.push(v.label)
-		})
-		this.getDataSource()
+		this.seq(option)
 	},
 	computed: {
 		show() {

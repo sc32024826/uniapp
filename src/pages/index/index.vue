@@ -1,10 +1,6 @@
 <template>
 	<div class="Container">
 		<sc-nav :help="false"></sc-nav>
-		<!-- 		<uni-nav-bar fixed status-bar>
-			<view class="full-width">{{title}}</view>
-			<view slot="left" @tap="closeApp" class="icon-back">关闭</view>
-		</uni-nav-bar> -->
 		<view class="column primary hfull center white jc-c">
 			<view v-if="show">当前平台:{{ platform }} 不支持本应用</view>
 		</view>
@@ -12,7 +8,6 @@
 </template>
 <script>
 import * as dd from 'dingtalk-jsapi'
-import { GetLoginfoByCode } from '@/api/api.js'
 import { mapMutations } from 'vuex'
 
 export default {
@@ -25,15 +20,7 @@ export default {
 	},
 	methods: {
 		async _requestAwait(data) {
-			const [err, res] = await GetLoginfoByCode(data)
-			uni.hideLoading()
-			if (err) {
-				console.error(err)
-				uni.showModal({
-					content: 'dingtalk Servers:' + err.errMsg,
-					showCancel: false
-				})
-			} else {
+			this.$api.GetLoginfoByCode(data).then(res => {
 				if (res.data.success == true) {
 					let user = res.data.response.Userid
 					// // 成功之后 需要再vuex中 存储 用户名
@@ -42,14 +29,19 @@ export default {
 					uni.switchTab({
 						url: '../main/main'
 					})
-				} else {
-					// console.log(res);
-					uni.showModal({
-						content: 'dingtalk Servers - 钉钉内部应用免登 api :\n' + res.data.msg,
-						showCancel: false
-					})
 				}
-			}
+			})
+			// const [err, res] = await GetLoginfoByCode(data)
+			// uni.hideLoading()
+			// if (err) {
+			// 	console.error(err)
+			// 	uni.showModal({
+			// 		content: 'dingtalk Servers:' + err.errMsg,
+			// 		showCancel: false
+			// 	})
+			// } else {
+
+			// }
 		},
 		...mapMutations(['login']),
 		refresh() {

@@ -9,7 +9,6 @@
 </template>
 
 <script>
-import { GetLineStatus, QueryQtyWithSeq } from '@/api/api.js'
 import WorkLine from '@/components/lines.vue'
 import MoreInfo from '@/components/moreInfo.vue'
 export default {
@@ -34,47 +33,29 @@ export default {
 	},
 	methods: {
 		// 生产线数据
-		async getLineData() {
+		getLineData() {
 			console.log('请求数据')
 			uni.showLoading({
 				title: '请求数据'
 			})
-			let para = ''
-			const [err, res] = await GetLineStatus(para)
-			if (err) {
-				this.hideLoading += 1
-				console.log(err)
-				uni.showModal({
-					content: err,
-					showCancel: false
-				})
-			} else {
+			this.$api.GetLineStatus().then(res=>{
 				console.log(res)
-				this.lines = res.data
+				this.lines = res.data.response
 				this.hideLoading += 1
-			}
+			})
 		},
 		// 第二部分的数据
-		async showLineInfo() {
+		showLineInfo() {
 			uni.showLoading({
 				title: '请求数据'
 			})
-			let [err, res] = await QueryQtyWithSeq()
-			if (err) {
-				this.hideLoading += 1
-				console.log(err)
-				uni.hideLoading()
-				uni.showModal({
-					content: err,
-					showCancel: false
-				})
-			} else {
+			this.$api.QueryQtyWithSeq().then(res=>{
 				if (res.data.success) {
 					this.details = res.data.response
-					console.log(this.details)
+					console.log(res)
 					this.hideLoading += 1
 				}
-			}
+			})
 		},
 		goback() {
 			uni.switchTab({

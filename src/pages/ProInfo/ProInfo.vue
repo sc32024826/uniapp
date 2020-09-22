@@ -20,7 +20,7 @@
 						<view class="row wrap item">
 							<view class="box" v-for="(v, k) in item.list" :key="k" v-if="item.list">
 								<checkbox class="checkbox" v-if="showSelect" :checked="v.checked" @tap="clickBox(v)"></checkbox>
-								<view @tap="clickBox(v)" class="ht" @longpress="longpressfn">
+								<view @tap="clickBox(v)" class="ht" @longpress="selectItems">
 									<view class="row special">
 										<view :class="v.Enable * v.EnableIn == false ? 'base stop' : 'base light'"></view>
 										<view class="wd-50">{{ v.LineID }}-{{ v.StationID }}</view>
@@ -40,7 +40,7 @@
 		</uni-collapse>
 		<view class="footer row" v-if="showSubmitBtn">
 			<button type="primary" @tap="navigateToTree" class="wd-2">确认选择</button>
-			<button type="default" @tap="cancelSel" class="wd-2">取消</button>
+			<button type="default" @tap="selectItems" class="wd-2">取消</button>
 		</view>
 		<drawer v-show="render" ref="myDrawer" class="drawer" :station-list="selectedStation" @onRequestMult="requestMult"></drawer>
 	</view>
@@ -50,15 +50,8 @@
 import { mapMutations } from 'vuex'
 import groupBy from './classify.js'
 import drawer from '@/components/my-drawer.vue'
-import { GetStationStatus, GetLineStatus, QueryInStationRackInfByStationGuid, SetLinePause, SetStationLoginByStationGuid } from '@/api/api.js'
-import uniCollapse from '@/components/uni-collapse/uni-collapse.vue'
-import uniCollapseItem from '@/components/uni-collapse-item/uni-collapse-item.vue'
 
 export default {
-	components:{
-		uniCollapse,
-		uniCollapseItem
-	},
 	components: {
 		drawer
 	},
@@ -95,14 +88,7 @@ export default {
 				return false
 			}
 		},
-		// 长按 出现复选框
-		longpressfn() {
-			this.selectItems()
-		},
-		cancelSel() {
-			this.selectItems()
-		},
-		async clickBox(v) {
+		clickBox(v) {
 			// 生产线号-站号
 			let sname = v.LineID + '-' + v.StationID
 			// 职工信息
@@ -175,7 +161,7 @@ export default {
 			})
 		},
 		//操作确认
-		async OptionConfirm(item, param) {
+		OptionConfirm(item, param) {
 			console.log(new Date())
 			item.bt = {
 				text: '等待',
@@ -184,24 +170,15 @@ export default {
 				type: 'default'
 			}
 			this.delayGetData()
-			await SetLinePause(param)
+			this.$api.SetLinePause(param)
 		},
 		// 获得数据
 		async getData() {
 			uni.showLoading({
 				title: '请稍后'
 			})
-			var lineData = []
 			var stationData = []
-			let para = ''
-			var [err, res] = await GetStationStatus(para)
-			if (err) {
-				console.log('err');
-				uni.showModal({
-					content: err,
-					showCancel: false
-				})
-			} else {
+			var lineData = await this.$api.GetStationStatus().then(res => {
 				if (res.data.success) {
 					let data = res.data.response
 					data.map(e => {
@@ -209,18 +186,12 @@ export default {
 							checked: false
 						})
 					})
-					lineData = groupBy(data, 'LineID')
+					return groupBy(data, 'LineID')
 				}
-			}
-			let param = ''
-			var [error, result] = await GetLineStatus(param)
-			if (error) {
-				uni.showModal({
-					content: error,
-					showCancel: false
-				})
-			} else {
-				stationData = result.data
+			})
+			console.log(lineData)
+			this.$api.GetLineStatus().then(res => {
+				stationData = res.data.response
 				stationData.map(m => {
 					lineData.forEach(e => {
 						if (m.LineID == e.name) {
@@ -239,9 +210,8 @@ export default {
 					})
 				})
 				this.data = stationData
-				console.log(stationData);
 				uni.hideLoading()
-			}
+			})
 		},
 		// 复选
 		selectItems() {
@@ -297,13 +267,14 @@ export default {
 			this.setStationData(this.selectedStation)
 		},
 		// 子组件 返回的多次请求事件 state 表示是否是最后一次执行 若是 执行完刷新页面
-		async requestMult(param) {
+		requestMult(param) {
 			let para = {
 				StationGuid: param.StationGuid,
 				EmployeeGuid: param.EmployeeGuid
 			}
 			let state = param.stop
-			await SetStationLoginByStationGuid(para)
+			// await SetStationLoginByStationGuid(para)
+			this.$api.SetStationLoginByStationGuid(para)
 
 			//state 表示是否是最后一次执行 若是 执行完刷新页面
 			if (state) {
@@ -338,7 +309,7 @@ export default {
 		this.getData()
 	},
 	onPullDownRefresh() {
-		console.log('加载数据');
+		console.log('加载数据')
 		this.data = []
 		this.getData()
 		setTimeout(function() {
@@ -442,7 +413,6 @@ uni-collapse::-webkit-scrollbar {
 .base {
 	width: 50rpx;
 	height: 50rpx;
-	// border: solid 1rpx green;
 	margin-top: 10rpx;
 }
 

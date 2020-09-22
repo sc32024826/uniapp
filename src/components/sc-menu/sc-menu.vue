@@ -44,7 +44,9 @@
 	$wd-4: calc((100vw - 48rpx)/4);
 	.container {
 		width: 100vw;
+		box-sizing: border-box;
 		.options {
+			box-sizing: border-box;
 			background-color: #47c8ff;
 			width: $wd-4;
 			justify-content: space-around;

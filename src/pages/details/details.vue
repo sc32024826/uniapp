@@ -16,7 +16,7 @@
 				<view v-if="none" class="infomsg">暂无数据</view>
 				<view class="scroll1">
 					<uni-swipe-action>
-						<view v-for="(v, i) in RackData" :key="i" class="{RackiTems:true, warn:v.Processed }" @click="JumpRecode(v.RackCode)">
+						<view v-for="(v, i) in RackData" :key="i" :class="{RackiTems:true, warn:v.Processed }" @click="JumpRecode(v.RackCode)">
 							<uni-swipe-action-item :right-options="options" @click="bindClick($event, v)" @change="swipeChange()">
 								<view class="column full-width">
 									<view class="row line between">
@@ -35,14 +35,13 @@
 					</uni-swipe-action>
 				</view>
 			</uni-collapse-item>
-			<!-- 已经分配方案 -->
-			<view class="plan">
-				<view class="plan-title">已分配的方案</view>
-				<scroll-view class="scroll" scroll-y><ly-tree :tree-data="data" node-key="ID" :props="defaultProps" /></scroll-view>
-			</view>
-			<!-- <uni-collapse-item title="已分配的方案" :open="true" class="collapseitem"> -->
-			<!-- </uni-collapse-item> -->
+			
 		</uni-collapse>
+		<!-- 已经分配方案 -->
+		<view class="plan">
+			<view class="plan-title">已分配的方案</view>
+			<scroll-view class="scroll" scroll-y><ly-tree :tree-data="data" node-key="ID" :props="defaultProps" /></scroll-view>
+		</view>
 		<view class="junpToTop" @click="junpToTop" v-show="showTop"></view>
 		<drawer v-show="render" ref="myDrawer" class="drawer" @onRequest="login"></drawer>
 	</view>
@@ -51,7 +50,6 @@
 <script>
 import { mapMutations, mapState } from 'vuex'
 import drawer from '@/components/my-drawer.vue'
-import { GetStationAssign, doneRack, QueryInStationRackInfByStationGuid, SetStationLoginByStationGuid } from '@/api/api.js'
 
 var that = this
 export default {
@@ -97,13 +95,7 @@ export default {
 				StationGuid: param.StationGuid,
 				EmployeeGuid: param.EmployeeGuid
 			}
-			var [err, res] = await SetStationLoginByStationGuid(para)
-			if (err) {
-				uni.showModal({
-					content: err,
-					showCancel: false
-				})
-			} else {
+			this.$api.SetStationLoginByStationGuid(para).then(res=>{
 				if (res.data.success) {
 					uni.showModal({
 						content: res.data.msg,
@@ -117,7 +109,7 @@ export default {
 						showCancel: false
 					})
 				}
-			}
+			})
 		},
 		bindClick(e, v) {
 			uni.showModal({
@@ -133,15 +125,8 @@ export default {
 			uni.showLoading({
 				title: '请稍后'
 			})
-			var [err, res] = await doneRack(Code)
-			uni.hideLoading()
-			if (err) {
-				uni.showModal({
-					content: err,
-					showCancel: false
-				})
-			} else {
-				console.log(res)
+			this.$api.doneRack(Code).then(res=>{
+				uni.hideLoading()
 				uni.showModal({
 					content: res.data.msg,
 					showCancel: false,
@@ -151,13 +136,13 @@ export default {
 						}
 					}
 				})
-			}
+			})
 		},
 		swipeChange(e) {
 			// console.log('左滑操作')
 		},
 		// 获得该站点分配方案
-		async getAssignResult() {
+		getAssignResult() {
 			uni.showLoading({
 				title: '请稍后'
 			})
@@ -165,14 +150,7 @@ export default {
 				StationGuid: this.CurrentStation.guid
 			}
 			console.log('站点方案请求', para)
-			var [err, res] = await GetStationAssign(para)
-
-			if (err) {
-				uni.showModal({
-					content: '站点方案请求' + err,
-					showCancel: false
-				})
-			} else {
+			this.$api.GetStationAssign(para).then(res=>{
 				if (!res.data.success) {
 					uni.showModal({
 						content: '站点方案请求' + res.data.msg,
@@ -182,8 +160,9 @@ export default {
 					this.data = res.data.response
 					uni.hideLoading()
 				}
-			}
+			})
 		},
+		// 返回顶部
 		junpToTop() {
 			uni.pageScrollTo({
 				scrollTop: 0,
@@ -192,13 +171,14 @@ export default {
 				}
 			})
 		},
+		// 跳转到记录查询页面
 		JumpRecode(code) {
 			uni.navigateTo({
 				url: '../ProcessRecord/ProcessRecord?code=' + code
 			})
 		},
 		// 获取站内衣架信息,
-		async getRackStatus() {
+		getRackStatus() {
 			uni.showLoading({
 				title: '请稍后'
 			})
@@ -206,20 +186,14 @@ export default {
 				StationGuid: this.CurrentStation.guid
 			}
 			console.log('衣架信息请求', param)
-			var [err, res] = await QueryInStationRackInfByStationGuid(param)
-			if (err) {
-				uni.showModal({
-					content: '衣架信息请求' + err,
-					showCancel: false
-				})
-			} else {
+			this.$api.QueryInStationRackInfByStationGuid(param).then(res=>{
 				if (res.data.success) {
 					console.log(res.data)
 					if (res.data.response.length > 0) {
 						this.RackData = res.data.response
 						this.none = false
 					}
-
+				
 					uni.hideLoading()
 				} else {
 					uni.showModal({
@@ -227,7 +201,7 @@ export default {
 						showCancel: false
 					})
 				}
-			}
+			})
 		},
 		goback() {
 			uni.redirectTo({
@@ -248,10 +222,6 @@ export default {
 		this.getRackStatus()
 		// 分配方案
 		this.getAssignResult()
-	},
-	onLoad(options) {
-		// console.log('加载数据');
-		// uni.startPullDownRefresh()
 	},
 	onPullDownRefresh() {
 		console.log(this.CurrentStation)
@@ -310,6 +280,8 @@ export default {
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
+			min-width: 230rpx;
+			
 		}
 	}
 	.warn {
@@ -359,15 +331,11 @@ export default {
 		color: white;
 	}
 
-	.scroll1 {
-		overflow-y: scroll;
-		-webkit-overflow-scrolling: touch;
-		max-height: 80vh;
-	}
 	.plan {
 		display: flex;
 		flex: 1;
 		flex-direction: column;
+		height: 500rpx;
 		.plan-title {
 			box-sizing: border-box;
 			height: 96rpx;
@@ -375,13 +343,7 @@ export default {
 			background-color: #f1f1f1;
 		}
 		.scroll {
-			height: 1000rpx;
-			// overflow-y: scroll;
-			// -webkit-overflow-scrolling: touch;
-			// display: flex;
-			// flex: 1;
-			// overflow: hidden;
-			// -webkit-overflow-scrolling: touch;
+			height: 800rpx;
 		}
 	}
 

@@ -31,7 +31,8 @@
 		font-size: 14px;
 		font-family: 'iconfont';
 		font-style: normal;
-		background-color: #e3e3e3;
+		padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS < 11.2 */
+		padding-bottom: env(safe-area-inset-bottom); /* 兼容 iOS >= 11.2 */
 	}
 
 	/* #ifdef MP-BAIDU */
@@ -75,7 +76,6 @@
 		display: flex;
 		flex: 1;
 		flex-direction: column;
-		background-color: #efeff4;
 	}
 
 	.input-group {

@@ -9,10 +9,22 @@
 			<view class="primary white px py">
 				当前选择的站点:
 				<view class="row wrap">
-					<li v-for="(item,index) in userSelectStations" :key="index" class="mx">{{item.name}}</li>
+					<li v-for="(item, index) in userSelectStations" :key="index" class="mx">{{ item.name }}</li>
 				</view>
 			</view>
-			<ly-tree class="ly-tree mt" v-if="isReady" :props="props" node-key="id" :load="loadNode" lazy show-checkbox @check="handleCheck" @node-click="handleNodeClick" :expandOnCheckNode="false" :checkStrictly="true" />
+			<ly-tree
+				class="ly-tree mt"
+				v-if="isReady"
+				:props="props"
+				node-key="id"
+				:load="loadNode"
+				lazy
+				show-checkbox
+				@check="handleCheck"
+				@node-click="handleNodeClick"
+				:expandOnCheckNode="false"
+				:checkStrictly="true"
+			/>
 		</view>
 
 		<button type="primary" class="bottom" @click="submit" :disabled="btnDisable">提交</button>
@@ -21,17 +33,14 @@
 
 <script>
 import LyTree from '@/components/ly-tree/ly-tree.vue'
-import { QueryRouteGuidsByMODCS, SetStAssignByRouteGuids } from '@/api/api.js'
 import { mapState, mapMutations } from 'vuex'
-import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
-var _self;
+var _self
 var index_id = 1
 export default {
 	components: {
-		LyTree,
-		uniNavBar
+		LyTree
 	},
-	data () {
+	data() {
 		return {
 			//为了确保页面加载完成后才去调用load方法，this指向正确
 			isReady: false,
@@ -45,23 +54,21 @@ export default {
 			selectStationGuids: []
 		}
 	},
-	onLoad () {
-		_self = this;
-		this.isReady = true;
+	onLoad() {
+		_self = this
+		this.isReady = true
 	},
-	mounted () {
+	mounted() {
 		console.log(this.userSelectStations)
 		this.selectStationGuids = this.userSelectStations.map(item => item.guid)
 		console.log(this.selectStationGuids)
 	},
 	methods: {
-		goback () {
+		goback() {
 			uni.navigateBack({})
 		},
-		showHelp () {
-
-		},
-		handleNodeClick (obj) {
+		showHelp() {},
+		handleNodeClick(obj) {
 			let msg = {
 				id: obj.data.id,
 				name: obj.data.name
@@ -69,10 +76,10 @@ export default {
 			console.log(JSON.stringify(msg))
 		},
 		/**
-		 * @param {Object} pre 表示级别的参数  父级 空   子级 1 
+		 * @param {Object} pre 表示级别的参数  父级 空   子级 1
 		 * @param {Object} obj 接口参数
 		 */
-		async getData (obj) {
+		async getData(obj) {
 			let param = obj
 			console.log(param)
 			var [err, res] = await QueryRouteGuidsByMODCS(param)
@@ -85,7 +92,6 @@ export default {
 			} else {
 				var tempArray = []
 				if (res.data.success == true) {
-
 					res.data.response.map((e, index) => {
 						let element = Object.assign(e, {
 							id: index_id,
@@ -104,7 +110,7 @@ export default {
 			}
 		},
 		// 提交
-		submit () {
+		submit() {
 			let choose = Array.from(this.selectRackGuids)
 			if (choose.length == 0) {
 				uni.showModal({
@@ -121,7 +127,7 @@ export default {
 			}, 1000)
 		},
 		// 后台请求 是否允许进衣
-		async getCanEnter (a, b) {
+		async getCanEnter(a, b) {
 			let param = {
 				stationGuids: b,
 				routeGuids: a,
@@ -154,12 +160,11 @@ export default {
 			}
 		},
 		// 因为这个函数是在Vue实例以外的地方调用，如果函数内部需要用到this，需要改成_self
-		async loadNode (node, resolve) {
+		async loadNode(node, resolve) {
 			// _self.xxx; 这里用_self而不是this
 			if (node.level === 0) {
 				let data = await this.getData({})
-				resolve(data);
-
+				resolve(data)
 			} else {
 				if (node.level === 2) {
 					let canshu = node.data.relation.split(',')
@@ -184,7 +189,7 @@ export default {
 					let param = {
 						StyleCode: node.data.name
 					}
-					//调用接口 获得 子项 
+					//调用接口 获得 子项
 					let res = await this.getData(param)
 					var MO = ''
 					var temp = []
@@ -196,10 +201,12 @@ export default {
 						e.name = names.shift().toString()
 						// 若 names 数组还有剩余 说明这个item 还有颜色 和尺码
 						if (names.length > 0) {
-							e.children = [{
-								name: names.toString, // 颜色
-								Guids: e.Guids
-							}]
+							e.children = [
+								{
+									name: names.toString, // 颜色
+									Guids: e.Guids
+								}
+							]
 						}
 						if (MO != e.name) {
 							temp.push(e)
@@ -240,10 +247,9 @@ export default {
 					resolve(res)
 				}
 				if (node.level === 4) return resolve([])
-
 			}
 		},
-		handleCheck (obj) {
+		handleCheck(obj) {
 			let checkedGuids = new Set()
 			console.log(JSON.stringify(obj.checkedNodes))
 

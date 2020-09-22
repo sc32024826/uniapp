@@ -6,7 +6,7 @@
 				<view class="navi-left">
 					<view v-if="left" @tap="naviback">
 						<text class="iconfont icon-back"></text>
-						<text>返回</text>
+						<text>{{ leftBtnText }}</text>
 					</view>
 				</view>
 				<view class="navi-title">{{ title }}</view>
@@ -33,9 +33,13 @@ export default {
 			type: Boolean,
 			default: false
 		},
-		help:{
+		help: {
 			type: Boolean,
 			default: true
+		},
+		leftBtnText: {
+			type: String,
+			default: '返回'
 		}
 	},
 	data() {
@@ -47,7 +51,9 @@ export default {
 	},
 	created() {
 		const stateBar = uni.getSystemInfoSync()
+		// console.log(stateBar)
 		this.statusBarHeight = stateBar.statusBarHeight
+		this.windowWidth = stateBar.windowWidth
 
 		// #ifdef MP-WEIXIN
 		const capsule = uni.getMenuButtonBoundingClientRect()
@@ -70,16 +76,16 @@ export default {
 
 <style lang="scss">
 .Container {
-	background-color: #ff5500;
 	width: 100%;
 	box-sizing: border-box;
-	z-index: 99;
 	.fixed {
+		background-color: #ff5500;
 		position: fixed;
 		left: 0;
 		top: 0;
 		width: 100%;
 		box-sizing: border-box;
+		z-index: 99;
 		.nav {
 			padding: 10rpx;
 			width: 100%;

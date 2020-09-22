@@ -64,13 +64,6 @@ const home = [{
 		}
 	},
 	{
-		path: '/pages/workLine/workLine',
-		name: 'workLineH5',
-		meta: {
-			title: '生产线'
-		}
-	},
-	{
 		path: '/pages/workLine/index',
 		name: 'workLine',
 		meta: {

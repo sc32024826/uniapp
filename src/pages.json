@@ -60,14 +60,7 @@
 				"navigationBarTitleText": "站点信息",
 				"enablePullDownRefresh": true
 			}
-		}, 
-		{
-			"path": "pages/workLine/workLine",
-			"style": {
-				"navigationBarTitleText": "生产线",
-				"enablePullDownRefresh": true
-			}
-		}, 
+		},
 		{
 			"path": "pages/TreeData/index",
 			"style": {
@@ -118,7 +111,8 @@
 	},
 	"globalStyle": {
 		"navigationStyle": "custom",
-		"backgroundColor": "#fbf9fe",
+		"backgroundColor": "#fff",
+		"backgroundTextStyle":"light",
 		"usingComponents": {
 			"ly-tree-node": "/components/ly-tree/ly-tree-node"
 		}

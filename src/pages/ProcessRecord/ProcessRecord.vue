@@ -88,11 +88,8 @@
 
 <script>
 import * as dd from 'dingtalk-jsapi'
-import { dateFormat, ISO8601 } from './dateFormat.js'
-import { QueryProcessingHistoryByRackCode, doneRack } from '@/api/api.js'
-import { uniCollapse, uniCollapseItem } from '@dcloudio/uni-ui'
+import { ISO8601 } from './dateFormat.js'
 export default {
-	components: { uniCollapse, uniCollapseItem },
 	data() {
 		return {
 			tableData: [],
@@ -116,7 +113,6 @@ export default {
 	onLoad(options) {
 		if (options.code) {
 			this._requestAwait(options.code)
-			this.haveScaned = true
 		} else {
 			this.scanCode()
 		}
@@ -185,15 +181,7 @@ export default {
 			this.scanCode()
 		},
 		async _requestAwait(Rackcode) {
-			const [err, res] = await QueryProcessingHistoryByRackCode(Rackcode)
-			if (err) {
-				console.log(err)
-				uni.showModal({
-					content: err.errMsg,
-					showCancel: false
-				})
-			} else {
-				console.log(res)
+			this.$api.QueryProcessingHistoryByRackCode(Rackcode).then(res => {
 				let target = res.data.response
 				if (target != null) {
 					this.haveScaned = true
@@ -215,21 +203,14 @@ export default {
 							item.StationID = item.LineID + '-' + item.StationID
 							// 类型处理
 							item.RecordType = item.RecordType == 3 ? '出站' : '进站'
-							let temp = new Date(ISO8601(item.Timestamp))
-							item.Timestamp = dateFormat('YYYY-mm-dd HH:MM:SS', temp)
+							let temp = 
+							item.Timestamp = new Date(ISO8601(item.Timestamp)).format('yyyy-MM-dd HH:mm:ss')
 						})
 					})
 					this.tableData = target.RackProcessingHistory
 					this.BarCodes = target.BarCodes
-				} else {
-					console.log('无绑定记录');
-					uni.hideLoading()
-					uni.showModal({
-						content: res.data.msg,
-						showCancel: false
-					})
 				}
-			}
+			})
 		},
 		// 显示条码列表
 		showList() {
@@ -267,23 +248,17 @@ export default {
 				})
 			}
 		},
-		async confirmFinish(RackCode) {
-			const [err, res] = await doneRack(RackCode)
-			if (err) {
-				uni.showModal({
-					content: err
-				})
-			} else {
+		confirmFinish(RackCode) {
+			this.$api.doneRack(RackCode).then(res => {
 				this.refreshStatus(RackCode)
-			}
+			})
 		},
 		// 刷新获取status
 		async refreshStatus(RackCode) {
-			const [err, res] = await QueryProcessingHistoryByRackCode(RackCode)
-			if (!err) {
+			this.$api.QueryProcessingHistoryByRackCode(RackCode).then(res => {
 				let target = res.data.response
 				this.Status = target.Status
-			}
+			})
 		},
 		inputHand() {
 			this.inputByHand = true
@@ -299,7 +274,7 @@ export default {
 		},
 		goback() {
 			uni.switchTab({
-				url:'/pages/main/main'
+				url: '/pages/main/main'
 			})
 		},
 		showHelp() {

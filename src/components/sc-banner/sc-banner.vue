@@ -31,12 +31,8 @@
 		methods: {
 			// 轮播图 切换 触发事件
 			swiperChange(e) {
-				// console.log(e.detail.current)
 				this.current = e.detail.current
 			}
-		},
-		mounted() {
-			// console.log(this.images)
 		}
 	}
 </script>
