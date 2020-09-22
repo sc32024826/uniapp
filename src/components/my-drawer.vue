@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<uni-drawer ref="dra" mode="right">
+		<uni-drawer ref="dra" mode="right" :style="{ 'margin-top': statusBarHeight + navBarHeight + 'px' }">
 			<view class="label">当前站点:</view>
 			<view class="uni-input" v-if="showSingle">{{ station.name }}</view>
 			<view class="" v-if="showList">
@@ -35,6 +35,16 @@ export default {
 			type: Array
 		}
 	},
+	created() {
+		const stateBar = uni.getSystemInfoSync()
+		this.statusBarHeight = stateBar.statusBarHeight
+		this.windowWidth = stateBar.windowWidth
+		// #ifdef MP-WEIXIN
+		const capsule = uni.getMenuButtonBoundingClientRect()
+		this.navBarHeight = capsule.bottom - this.statusBarHeight + capsule.top - this.statusBarHeight
+		this.windowWidth = capsule.left
+		// #endif
+	},
 	data() {
 		return {
 			employee: [{ label: '无职工', value: '' }],
@@ -43,7 +53,10 @@ export default {
 			btnLogoutDisable: false,
 			currentEmp: '无职工',
 			showSingle: true,
-			showList: false
+			showList: false,
+			statusBarHeight: 20,
+			windowWidth: 375,
+			navBarHeight: 44
 		}
 	},
 	computed: {

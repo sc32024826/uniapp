@@ -1,7 +1,6 @@
 <template>
 	<view class="Container">
 		<sc-nav left title="生产单" @goBack="goback"><view @tap="select">筛选</view></sc-nav>
-		<sc-select :visiable="showSearch" class="search"></sc-select>
 		<view class="list">
 			<scroll-view class="scroll" scroll-y @scrolltolower="loadMore" :style="{ height: scrollHeight + 'px' }">
 				<block v-for="(item, index) in sourceData" :key="index">
@@ -46,6 +45,24 @@
 				<view style="justify-self: flex-end;">共{{ allData.length }}条记录</view>
 			</view>
 		</view>
+		<uni-drawer ref="drawer" :style="{ top: statusBarHeight + navBarHeight + 'px'  }">
+			<view>
+				<view class="drawer-content">
+					<view><input placeholder="请输入款号" v-model="style" type="text" /></view>
+					<view><input placeholder="请输入客户名称" v-model="custom" type="text" /></view>
+					<view><input placeholder="请输入状态ID" v-model="status" type="number" /></view>
+					<view>
+						<view>版单标记</view>
+						<picker-view :value="value" :indicator-style="indicatorStyle">
+							<picker-view-column>
+								<view v-for="(item, index) in [true, false]" :key="index">{{ item }}</view>
+							</picker-view-column>
+						</picker-view>
+					</view>
+				</view>
+				<view class="bottom-fixed row jc-c"><button type="primary" @tap="reSearch">搜索</button></view>
+			</view>
+		</uni-drawer>
 	</view>
 </template>
 
@@ -59,7 +76,15 @@ export default {
 			pageSize: 20,
 			more: 'more',
 			scrollHeight: 674,
-			showSearch: false
+			showSearch: false,
+			value: [0],
+			style: '',
+			custom: '',
+			status: null,
+			statusBarHeight: 20,
+			windowWidth: 375,
+			navBarHeight: 44,
+			indicatorStyle: `height: ${Math.round(uni.getSystemInfoSync().screenWidth / (750 / 100))}px;`
 		}
 	},
 	computed: {
@@ -115,16 +140,23 @@ export default {
 				StatusID: ''
 			}
 			// 打开抽提
-			this.showSearch = true
+			this.$refs.drawer.open()
 		}
 	},
 	mounted() {
 		this.setData({})
 	},
 	created() {
-		const info = uni.getSystemInfoSync()
+		const stateBar = uni.getSystemInfoSync()
 		// 状态栏高度 + 导航栏高度 + 分页栏高度
-		this.scrollHeight = info.screenHeight - info.statusBarHeight - 44 - 50
+		this.scrollHeight = stateBar.screenHeight - stateBar.statusBarHeight - 44 - 50
+		this.statusBarHeight = stateBar.statusBarHeight
+		this.windowWidth = stateBar.windowWidth
+		// #ifdef MP-WEIXIN
+		const capsule = uni.getMenuButtonBoundingClientRect()
+		this.navBarHeight = capsule.bottom - this.statusBarHeight + capsule.top - this.statusBarHeight
+		this.windowWidth = capsule.left
+		// #endif
 	}
 }
 </script>
@@ -133,9 +165,6 @@ export default {
 .Container {
 	width: 100%;
 	box-sizing: border-box;
-	.search{
-		z-index: 11;
-	}
 	.list {
 		width: 100%;
 		background-color: white;
@@ -183,6 +212,31 @@ export default {
 						text-align: right;
 					}
 				}
+			}
+		}
+	}
+	uni-drawer{
+		.drawer-content {
+			background-color: #c2c2c2;
+			box-sizing: border-box;
+			padding: 20rpx;
+			view {
+				padding: 20rpx;
+				input {
+					background-color: #ffffff;
+					text-align: center;
+				}
+			}
+		}
+		.bottom-fixed {
+			box-sizing: border-box;
+			padding: 0 20rpx;
+			width: 100%;
+			position: fixed;
+			bottom: 30rpx;
+			button {
+				width: 100%;
+				margin: 10rpx;
 			}
 		}
 	}
