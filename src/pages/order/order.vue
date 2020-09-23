@@ -44,22 +44,21 @@
 			<view>当前第{{ page + 1 }}页</view>
 			<view style="justify-self: flex-end;">共{{ allData.length }}条记录</view>
 		</view>
-		<uni-drawer ref="drawer" :style="{ top: statusBarHeight + navBarHeight + 'px', bottom: bottomSafeArea + 'px' }">
-			<view>
+		<uni-drawer ref="drawer" :style="{ top: statusBarHeight + navBarHeight + 'px', bottom: bottomSafeArea + 'px' }" >
+			<view class="drawer">
 				<view class="drawer-content">
 					<view><input placeholder="请输入款号" v-model="style" type="text" /></view>
 					<view><input placeholder="请输入客户名称" v-model="custom" type="text" /></view>
 					<view><input placeholder="请输入状态ID" v-model="status" type="number" /></view>
-					<view>
-						<view>版单标记</view>
-						<picker-view :value="value" :indicator-style="indicatorStyle">
-							<picker-view-column>
-								<view v-for="(item, index) in [true, false]" :key="index">{{ item }}</view>
-							</picker-view-column>
-						</picker-view>
+					<view class="switch row jc-b a-i">
+						<view>版单标记:</view>
+						<evan-switch v-model="checked" :size="30" class="evan-switch"></evan-switch>
 					</view>
 				</view>
-				<view class="bottom-fixed row jc-c"><button type="primary" @tap="reSearch">搜索</button></view>
+				<view class="bottom-fixed cloumn jc-c">
+					<button type="primary" @tap="reSearch({ style, custom, status, checked })">搜索</button>
+					<button type="default" @tap="reset">清空</button>
+				</view>
 			</view>
 		</uni-drawer>
 	</view>
@@ -77,13 +76,13 @@ export default {
 			scrollHeight: 674,
 			showSearch: false,
 			value: [0],
-			style: '',
-			custom: '',
-			status: null,
+			style: '', //输入内容 款号
+			custom: '', // 输入内容客户
+			status: null, // 状态id
+			checked: false,
 			statusBarHeight: 20,
 			windowWidth: 375,
 			navBarHeight: 44,
-			indicatorStyle: `height: ${Math.round(uni.getSystemInfoSync().screenWidth / (750 / 100))}px;`,
 			bodyH: 768, //主体高度,
 			bottomSafeArea: 44 // 底部安全区域高度
 		}
@@ -125,11 +124,15 @@ export default {
 		},
 		// 获得数据
 		setData(para) {
+			uni.showLoading({
+				title:'请稍后'
+			})
 			this.$api.QueryMO(para).then(res => {
 				if (res.data.success === true) {
 					console.log('查询成功')
 					this.allData = res.data.response
 					this.sourceData = this.allData.slice(0, this.pageSize)
+					uni.hideLoading()
 				} else {
 					uni.showModal({
 						content: res.data.msg,
@@ -140,14 +143,25 @@ export default {
 		},
 		// 筛选
 		select() {
-			let para = {
-				StyleNo: '',
-				CustomerName: '',
-				IsSample: false,
-				StatusID: ''
-			}
 			// 打开抽提
 			this.$refs.drawer.open()
+		},
+		reSearch(e) {
+			const { style, custom, status, checked } = e
+			let para = {
+				StyleNo: style,
+				CustomerName: custom,
+				IsSample: checked,
+				StatusID: status
+			}
+			this.$refs.drawer.close()
+			this.setData(para)
+		},
+		reset(){
+			this.style = ''
+			this.custom = ''
+			this.status = ''
+			this.checked = false
 		}
 	},
 	mounted() {
@@ -225,29 +239,39 @@ export default {
 		width: 100%;
 		z-index: 10;
 	}
-	uni-drawer {
-		.drawer-content {
-			background-color: #c2c2c2;
-			box-sizing: border-box;
+	.drawer{
+		display: flex;
+		flex-direction: column;
+	}
+	.drawer-content {
+		flex: 1;
+		background-color: #c2c2c2;
+		height: auto;
+		box-sizing: border-box;
+		padding: 20rpx;
+		view {
 			padding: 20rpx;
-			view {
-				padding: 20rpx;
-				input {
-					background-color: #ffffff;
-					text-align: center;
-				}
+			input {
+				background-color: #ffffff;
+				text-align: center;
 			}
 		}
-		.bottom-fixed {
-			box-sizing: border-box;
-			padding: 0 20rpx;
-			width: 100%;
-			position: fixed;
-			bottom: 30rpx;
-			button {
-				width: 100%;
-				margin: 10rpx;
+		.switch {
+			padding: 0;
+			.evan-switch {
+				padding: 0;
 			}
+		}
+	}
+	.bottom-fixed {
+		box-sizing: border-box;
+		padding: 0 20rpx;
+		width: 100%;
+		position: fixed;
+		bottom: 30rpx;
+		button {
+			width: 100%;
+			margin-bottom: 10rpx;
 		}
 	}
 }
