@@ -1,51 +1,50 @@
 <template>
-	<view class="Container">
+	<view class="Container column fixed" @touchmove.stop>
 		<sc-nav left title="生产单" @goBack="goback"><view @tap="select">筛选</view></sc-nav>
-		<view class="list">
-			<scroll-view class="scroll" scroll-y @scrolltolower="loadMore" :style="{ height: scrollHeight + 'px' }">
-				<block v-for="(item, index) in sourceData" :key="index">
-					<view class="items white">
-						<view class="row my line">
-							<view class="line-head">生产单:</view>
-							<view class="t-a-c">{{ item.MONo }}</view>
-						</view>
-						<view class="row jc-b my line">
-							<view class="line-head">款号:</view>
-							<view class="t-a-c">{{ item.StyleNo }}</view>
-						</view>
-						<view class="row jc-b my line">
-							<view class="line-head">客户:</view>
-							<view class="t-a-c">{{ item.CustomerName }}</view>
-						</view>
-						<view class="row jc-b my line">
-							<view class="line-head">针种:</view>
-							<view class="t-a-c">{{ item.PinType }}</view>
-						</view>
-						<view class="row jc-b my line">
-							<view class="line-head">交期:</view>
-							<view class="t-a-c">{{ new Date(item.DeliveryTime).format('yyyy-MM-dd') }}</view>
-						</view>
-						<view class="row jc-b my line">
-							<view class="line-head">完工工序:</view>
-							<view class="t-a-c">{{ item.EndProcess || '' }}</view>
-						</view>
-						<view class="row jc-b my line">
-							<view class="line-head">数量:</view>
-							<view class="t-a-c">{{ item.Qty }}</view>
-						</view>
-						<view class="row jc-b my line">
-							<view class="line-head">备注:</view>
-							<view class="t-a-c">{{ item.Remark || '' }}</view>
-						</view>
+		<scroll-view class="scroll-view" scroll-y :style="{ height: bodyH + 'px' }" @scrolltolower="loadMore">
+			<block v-for="(item, index) in sourceData" :key="index">
+				<view class="items white">
+					<view class="row my line">
+						<view class="line-head">生产单:</view>
+						<view class="t-a-c">{{ item.MONo }}</view>
 					</view>
-				</block>
-			</scroll-view>
-			<view class="info fixed row jc-b a-i white">
-				<view>当前第{{ page + 1 }}页</view>
-				<view style="justify-self: flex-end;">共{{ allData.length }}条记录</view>
-			</view>
+					<view class="row jc-b my line">
+						<view class="line-head">款号:</view>
+						<view class="t-a-c">{{ item.StyleNo }}</view>
+					</view>
+					<view class="row jc-b my line">
+						<view class="line-head">客户:</view>
+						<view class="t-a-c">{{ item.CustomerName }}</view>
+					</view>
+					<view class="row jc-b my line">
+						<view class="line-head">针种:</view>
+						<view class="t-a-c">{{ item.PinType }}</view>
+					</view>
+					<view class="row jc-b my line">
+						<view class="line-head">交期:</view>
+						<view class="t-a-c">{{ new Date(item.DeliveryTime).format('yyyy-MM-dd') }}</view>
+					</view>
+					<view class="row jc-b my line">
+						<view class="line-head">完工工序:</view>
+						<view class="t-a-c">{{ item.EndProcess || '' }}</view>
+					</view>
+					<view class="row jc-b my line">
+						<view class="line-head">数量:</view>
+						<view class="t-a-c">{{ item.Qty }}</view>
+					</view>
+					<view class="row jc-b my line">
+						<view class="line-head">备注:</view>
+						<view class="t-a-c">{{ item.Remark || '' }}</view>
+					</view>
+				</view>
+			</block>
+			<uni-load-more :status="more"></uni-load-more>
+		</scroll-view>
+		<view class="info-bar info fixed row jc-b a-i white" :style="{ bottom: bottomSafeArea + 'px' }">
+			<view>当前第{{ page + 1 }}页</view>
+			<view style="justify-self: flex-end;">共{{ allData.length }}条记录</view>
 		</view>
-		<uni-drawer ref="drawer" :style="{ top: statusBarHeight + navBarHeight + 'px'  }">
+		<uni-drawer ref="drawer" :style="{ top: statusBarHeight + navBarHeight + 'px', bottom: bottomSafeArea + 'px' }">
 			<view>
 				<view class="drawer-content">
 					<view><input placeholder="请输入款号" v-model="style" type="text" /></view>
@@ -84,7 +83,9 @@ export default {
 			statusBarHeight: 20,
 			windowWidth: 375,
 			navBarHeight: 44,
-			indicatorStyle: `height: ${Math.round(uni.getSystemInfoSync().screenWidth / (750 / 100))}px;`
+			indicatorStyle: `height: ${Math.round(uni.getSystemInfoSync().screenWidth / (750 / 100))}px;`,
+			bodyH: 768, //主体高度,
+			bottomSafeArea: 44 // 底部安全区域高度
 		}
 	},
 	computed: {
@@ -102,12 +103,18 @@ export default {
 	methods: {
 		loadMore() {
 			if (this.length > this.page * this.pageSize) {
-				this.page += 1
-				let start = this.page * this.pageSize
-				let end = start + this.pageSize
-				let temp = this.allData.slice(start, end)
-				console.log(temp)
-				this.sourceData = this.sourceData.concat(temp)
+				this.more = 'loading'
+				setTimeout(() => {
+					this.page += 1
+					let start = this.page * this.pageSize
+					let end = start + this.pageSize
+					let temp = this.allData.slice(start, end)
+					console.log(temp)
+					this.sourceData = this.sourceData.concat(temp)
+					this.more = 'more'
+				}, 100)
+			} else {
+				this.more = 'noMore'
 			}
 		},
 		// 返回tabbar
@@ -148,8 +155,11 @@ export default {
 	},
 	created() {
 		const stateBar = uni.getSystemInfoSync()
+		console.log(stateBar)
 		// 状态栏高度 + 导航栏高度 + 分页栏高度
-		this.scrollHeight = stateBar.screenHeight - stateBar.statusBarHeight - 44 - 50
+		// this.scrollHeight = stateBar.screenHeight - stateBar.statusBarHeight - 44 - 50
+		//页面的高度 = 100vh - 状态栏 - 导航栏 - 底部安全区
+		//即
 		this.statusBarHeight = stateBar.statusBarHeight
 		this.windowWidth = stateBar.windowWidth
 		// #ifdef MP-WEIXIN
@@ -157,6 +167,9 @@ export default {
 		this.navBarHeight = capsule.bottom - this.statusBarHeight + capsule.top - this.statusBarHeight
 		this.windowWidth = capsule.left
 		// #endif
+		//主体高度 = 屏幕高度 - 安全区高度(顶部+底部) - 导航栏高度
+		this.bodyH = stateBar.screenHeight - stateBar.safeAreaInsets.top - stateBar.safeAreaInsets.bottom - this.navBarHeight - 44
+		this.bottomSafeArea = stateBar.safeAreaInsets.bottom
 	}
 }
 </script>
@@ -165,58 +178,54 @@ export default {
 .Container {
 	width: 100%;
 	box-sizing: border-box;
-	.list {
-		width: 100%;
-		background-color: white;
+
+	.scroll-view {
+		// overflow: hidden;
+		// height: calc(100vh - 188rpx);
 		box-sizing: border-box;
-		.info {
+		// flex: 1;
+		.items {
+			margin: 10rpx;
 			box-sizing: border-box;
+			background-color: #ffffff;
 			padding: 20rpx;
-			background-color: #47c8ff;
-			height: 100rpx;
-		}
-		.fixed {
-			position: fixed;
-			left: 0;
-			width: 100%;
-			z-index: 10;
-		}
-		.scroll {
-			overflow: hidden;
-			height: calc(100vh - 188rpx);
-			box-sizing: border-box;
-			.items {
-				margin: 10rpx;
-				box-sizing: border-box;
-				background-color: #ffffff;
-				padding: 20rpx;
-				box-shadow: 0 0 1px 1px #999;
-				.line {
-					.line-head {
-						background-color: #47c8ff;
-						width: 150rpx;
-						text-align: center;
-						align-self: flex-start;
-						color: white;
-					}
-					.t-a-c {
-						text-align: center;
-						border-bottom: 1rpx grey solid;
-					}
-					view {
-						width: 100%;
-						color: black;
-						min-width: 200rpx;
-					}
-					.a-r {
-						text-align: right;
-					}
+			box-shadow: 0 0 1px 1px #999;
+			.line {
+				.line-head {
+					background-color: #47c8ff;
+					width: 150rpx;
+					text-align: center;
+					align-self: flex-start;
+					color: white;
+				}
+				.t-a-c {
+					text-align: center;
+					border-bottom: 1rpx grey solid;
+				}
+				view {
+					width: 100%;
+					color: black;
+					min-width: 200rpx;
+				}
+				.a-r {
+					text-align: right;
 				}
 			}
 		}
 	}
-	uni-drawer{
-		
+	.info-bar {
+		box-sizing: border-box;
+		padding: 20rpx;
+		background-color: #47c8ff;
+		height: 44px;
+	}
+	.fixed {
+		position: fixed;
+		left: 0;
+		width: 100%;
+		z-index: 10;
+	}
+	uni-drawer {
 		.drawer-content {
 			background-color: #c2c2c2;
 			box-sizing: border-box;

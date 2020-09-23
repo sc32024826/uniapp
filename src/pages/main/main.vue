@@ -78,6 +78,13 @@ export default {
 					name: '生产单',
 					icon: '&#xe64e;',
 					url: '/pages/order/order'
+				},
+				{
+					id: 7,
+					name: '页面布局测试1111111',
+					icon: '&#xe64e;',
+					url: '/pages/pageInfo/pageInfo',
+					permission: 'development'
 				}
 			],
 			helpView: false, //是否显示帮助信息

@@ -16,7 +16,8 @@
 				</view>
 			</view>
 		</view>
-		<view class="fill-area" :style="{ height: statusBarHeight + navBarHeight + 'px' }"></view>
+		<view class="fill-area" :style="{ height: navBarHeight + 'px' }"></view>
+		<!-- statusBarHeight + -->
 	</view>
 </template>
 

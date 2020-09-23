@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<sc-nav left @goBack="goback" title="生产车间"></sc-nav>
+		<sc-nav left @goBack="goback" title="生产车间"><view @click="selectItems">选择</view></sc-nav>
 		<uni-collapse>
 			<view class="lineInfo column" v-for="(item, i) in data" :key="i">
 				<view class="row DateBar my">
@@ -20,14 +20,14 @@
 						<view class="row wrap item">
 							<view class="box" v-for="(v, k) in item.list" :key="k" v-if="item.list">
 								<checkbox class="checkbox" v-if="showSelect" :checked="v.checked" @tap="clickBox(v)"></checkbox>
-								<view @tap="clickBox(v)" class="ht" @longpress="selectItems">
+								<view @tap="clickBox(v)" class="ht">
 									<view class="row special">
 										<view :class="v.Enable * v.EnableIn == false ? 'base stop' : 'base light'"></view>
 										<view class="wd-50">{{ v.LineID }}-{{ v.StationID }}</view>
 										<view class="wd-50">{{ v.SeqName == null ? '' : v.SeqName }}</view>
 									</view>
 									<view class="row">
-										<view class="wd-50 al-c">{{ v.EmpID == null ? '' : v.EmpID }}-{{ v.Name == null ? '' : v.Name }}</view>
+										<view class="al-c">{{ v.EmpID == null ? '' : v.EmpID }}-{{ v.Name == null ? '' : v.Name }}</view>
 										<view class="wd-50 al-c">{{ v.RackCnt }}/{{ v.RackCap }}</view>
 									</view>
 								</view>
@@ -322,13 +322,14 @@ export default {
 <style lang="less" scopde>
 .container {
 	width: 100%;
-	height: 100vh;
 	text-align: center;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	overflow-y: scroll;
-
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	.scroll-view {
+		flex: 1;
+		height: 812px;
+	}
 	.lineInfo {
 		.infomation view {
 			width: 250rpx;

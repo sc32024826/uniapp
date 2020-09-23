@@ -90,7 +90,13 @@ const home = [{
 		meta:{
 			title:'连续扫码'
 		}
-		
+	},
+	{
+		path:'/pages/pageInfo/pageInfo',
+		name:'pageInfo',
+		meta:{
+			title:'页面测试'
+		}
 	}
 ]
 export default home

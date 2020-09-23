@@ -40,7 +40,7 @@
 		<!-- 已经分配方案 -->
 		<view class="plan">
 			<view class="plan-title">已分配的方案</view>
-			<scroll-view class="scroll" scroll-y><ly-tree :tree-data="data" node-key="ID" :props="defaultProps" /></scroll-view>
+			<scroll-view class="scroll-view" scroll-y><ly-tree :tree-data="data" node-key="ID" :props="defaultProps" /></scroll-view>
 		</view>
 		<view class="junpToTop" @click="junpToTop" v-show="showTop"></view>
 		<drawer v-show="render" ref="myDrawer" class="drawer" @onRequest="login"></drawer>
@@ -246,11 +246,10 @@ export default {
 <style lang="less" scoped>
 .container {
 	width: 100%;
-	height: 100vh;
+	// height: 100vh;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	z-index: 1;
 	display: flex;
 	flex-direction: column;
 
@@ -336,18 +335,17 @@ export default {
 
 	.plan {
 		display: flex;
-		flex: 1;
 		flex-direction: column;
-		height: 500rpx;
 		.plan-title {
 			box-sizing: border-box;
 			height: 96rpx;
 			padding: 22rpx;
 			background-color: #f1f1f1;
 		}
-		.scroll {
-			height: 800rpx;
+		.scroll-view {
+			// height: 800rpx;
 			overflow: hidden;
+			flex: 1;
 		}
 	}
 

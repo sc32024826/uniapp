@@ -26,13 +26,16 @@
 
 	/*每个页面公共css */
 	page {
+		box-sizing: border-box;
 		min-height: 100%;
 		display: flex;
 		font-size: 14px;
 		font-family: 'iconfont';
 		font-style: normal;
-		padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS < 11.2 */
-		padding-bottom: env(safe-area-inset-bottom); /* 兼容 iOS >= 11.2 */
+		// padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS < 11.2 */
+		// padding-bottom: env(safe-area-inset-bottom); /* 兼容 iOS >= 11.2 */
+		padding-top: constant(safe-area-inset-top); /* 兼容 iOS < 11.2 */
+		padding-top: env(safe-area-inset-top); /* 兼容 iOS >= 11.2 */
 	}
 
 	/* #ifdef MP-BAIDU */

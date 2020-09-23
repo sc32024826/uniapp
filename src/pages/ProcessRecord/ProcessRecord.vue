@@ -113,8 +113,6 @@ export default {
 	onLoad(options) {
 		if (options.code) {
 			this._requestAwait(options.code)
-		} else {
-			this.scanCode()
 		}
 	},
 	methods: {
@@ -204,7 +202,7 @@ export default {
 							// 类型处理
 							item.RecordType = item.RecordType == 3 ? '出站' : '进站'
 							let temp = ISO8601(item.Timestamp)
-							item.Timestamp = new Date(temp).format('yyyy-MM-dd HH:mm:ss')
+							item.Timestamp = new Date(temp).format('yyyy-MM-dd hh:mm:ss')
 						})
 					})
 					this.tableData = target.RackProcessingHistory

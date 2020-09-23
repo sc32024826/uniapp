@@ -73,15 +73,21 @@
 				"navigationBarTitleText": "生产线",
 				"enablePullDownRefresh": true
 			}
-		}
-	    ,{
-            "path" : "pages/scancode/scancode",
-            "style" : {
+		},
+		{
+			"path": "pages/scancode/scancode",
+			"style": {
 				"navigationBarTitleText": "连续扫码"
 			}
-        }
-        ,{
-            "path" : "pages/order/order",
+		},
+		{
+			"path": "pages/order/order",
+			"style": {
+				"navigationBarTitleText": "生产单"
+			}
+		}
+	    ,{
+            "path" : "pages/pageInfo/pageInfo",
             "style" : {}
         }
     ],
@@ -112,7 +118,7 @@
 	"globalStyle": {
 		"navigationStyle": "custom",
 		"backgroundColor": "#fff",
-		"backgroundTextStyle":"light",
+		"backgroundTextStyle": "light",
 		"usingComponents": {
 			"ly-tree-node": "/components/ly-tree/ly-tree-node"
 		}
