@@ -81,10 +81,15 @@ export default {
 				},
 				{
 					id: 7,
-					name: '页面布局测试1111111',
+					name: '横屏',
 					icon: '&#xe64e;',
-					url: '/pages/pageInfo/pageInfo',
-					permission: 'development'
+					url: '/pages/landscape/landscape'
+				},
+				{
+					id: 8,
+					name: 'box属性测试',
+					icon: '&#xe6c6;',
+					url: '/pages/boxTest/boxTest'
 				}
 			],
 			helpView: false, //是否显示帮助信息
@@ -92,20 +97,6 @@ export default {
 		}
 	},
 	methods: {
-		// 跳转页面
-		jump(item) {
-			// #ifdef H5
-			let url = item.url
-			// #endif
-			// #ifdef MP-WEIXIN
-			let url = item.wx_url
-			// #endif
-			console.log(url)
-			return
-			uni.navigateTo({
-				url: url
-			})
-		},
 		showhelp() {
 			this.helpView = !this.helpView
 		},

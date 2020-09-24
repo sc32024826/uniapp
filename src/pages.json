@@ -90,6 +90,16 @@
             "path" : "pages/pageInfo/pageInfo",
             "style" : {}
         }
+        ,{
+            "path" : "pages/landscape/landscape",
+            "style" : {
+				
+			}
+        }
+        ,{
+            "path" : "pages/boxTest/boxTest",
+            "style" : {}
+        }
     ],
 	"tabBar": {
 		"color": "#7a7e83",

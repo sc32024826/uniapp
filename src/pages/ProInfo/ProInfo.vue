@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<sc-nav left @goBack="goback" title="生产车间"><view @click="selectItems">选择</view></sc-nav>
+		<sc-nav left @goBack="goback" title="生产车间"><view @click="selectItems" class="select">选择</view></sc-nav>
 		<uni-collapse>
 			<view class="lineInfo column" v-for="(item, i) in data" :key="i">
 				<view class="row DateBar my">
@@ -326,6 +326,11 @@ export default {
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
+	.select {
+		padding: 1px 4px;
+		border-radius: 20rpx;
+		border: 1rpx white solid;
+	}
 	.scroll-view {
 		flex: 1;
 		height: 812px;

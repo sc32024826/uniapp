@@ -1,6 +1,6 @@
 <template>
 	<div class="Container">
-		<sc-nav :help="false"></sc-nav>
+		<sc-nav :help="false"><view @click="reload">刷新</view></sc-nav>
 		<view class="column primary hfull center white jc-c">
 			<view v-if="show">当前平台:{{ platform }} 不支持本应用</view>
 		</view>
@@ -19,6 +19,9 @@ export default {
 		}
 	},
 	methods: {
+		reload() {
+			location.reload()
+		},
 		async _requestAwait(data) {
 			this.$api.GetLoginfoByCode(data).then(res => {
 				if (res.data.success == true) {
@@ -31,19 +34,8 @@ export default {
 					})
 				}
 			})
-			// const [err, res] = await GetLoginfoByCode(data)
-			// uni.hideLoading()
-			// if (err) {
-			// 	console.error(err)
-			// 	uni.showModal({
-			// 		content: 'dingtalk Servers:' + err.errMsg,
-			// 		showCancel: false
-			// 	})
-			// } else {
-
-			// }
 		},
-		...mapMutations(['login']),
+		...mapMutations(['login', 'setDeviceInfo']),
 		refresh() {
 			let that = this
 			let env = dd.env.platform
@@ -102,6 +94,20 @@ export default {
 			url: '../main/main'
 		})
 		// #endif
+	},
+	created() {
+		const info = uni.getSystemInfoSync()
+		let para = {
+			safeArea: {
+				left: info.safeAreaInsets.left,
+				right: info.safeAreaInsets.right,
+				top: info.safeAreaInsets.top,
+				bottom: info.safeAreaInsets.bottom
+			},
+			width: info.screenWidth,
+			height: info.screenHeight
+		}
+		this.setDeviceInfo(para)
 	}
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
 	<view class="Container column fixed" @touchmove.stop>
-		<sc-nav left title="生产单" @goBack="goback"><view @tap="select">筛选</view></sc-nav>
+		<sc-nav left title="生产单" @goBack="goback"><view @tap="select" class="select">筛选</view></sc-nav>
 		<scroll-view class="scroll-view" scroll-y :style="{ height: bodyH + 'px' }" @scrolltolower="loadMore">
 			<block v-for="(item, index) in sourceData" :key="index">
 				<view class="items white">
@@ -44,7 +44,7 @@
 			<view>当前第{{ page + 1 }}页</view>
 			<view style="justify-self: flex-end;">共{{ allData.length }}条记录</view>
 		</view>
-		<uni-drawer ref="drawer" :style="{ top: statusBarHeight + navBarHeight + 'px', bottom: bottomSafeArea + 'px' }" >
+		<uni-drawer ref="drawer" :style="{ top: statusBarHeight + navBarHeight + 'px', bottom: bottomSafeArea + 'px' }">
 			<view class="drawer">
 				<view class="drawer-content">
 					<view><input placeholder="请输入款号" v-model="style" type="text" /></view>
@@ -125,7 +125,7 @@ export default {
 		// 获得数据
 		setData(para) {
 			uni.showLoading({
-				title:'请稍后'
+				title: '请稍后'
 			})
 			this.$api.QueryMO(para).then(res => {
 				if (res.data.success === true) {
@@ -157,7 +157,7 @@ export default {
 			this.$refs.drawer.close()
 			this.setData(para)
 		},
-		reset(){
+		reset() {
 			this.style = ''
 			this.custom = ''
 			this.status = ''
@@ -192,7 +192,11 @@ export default {
 .Container {
 	width: 100%;
 	box-sizing: border-box;
-
+	.select {
+		padding: 1px 4px;
+		border-radius: 20rpx;
+		border: 1rpx white solid;
+	}
 	.scroll-view {
 		// overflow: hidden;
 		// height: calc(100vh - 188rpx);
@@ -239,7 +243,7 @@ export default {
 		width: 100%;
 		z-index: 10;
 	}
-	.drawer{
+	.drawer {
 		display: flex;
 		flex-direction: column;
 	}

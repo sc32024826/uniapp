@@ -92,8 +92,15 @@ const home = [{
 		}
 	},
 	{
-		path:'/pages/pageInfo/pageInfo',
-		name:'pageInfo',
+		path:'/pages/landscape/landscape',
+		name:'landscape',
+		meta:{
+			title:'页面测试'
+		}
+	},
+	{
+		path:'/pages/boxTest/boxTest',
+		name:'boxTest',
 		meta:{
 			title:'页面测试'
 		}

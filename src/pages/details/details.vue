@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<sc-nav left title="站点详情" @goBack="goback"><view @tap="openDrawer">更多</view></sc-nav>
+		<sc-nav left title="站点详情" @goBack="goback"><view @tap="openDrawer" class="select">更多</view></sc-nav>
 		<view class="head">
 			<view class="row jc-b">
 				<view>当前站点:</view>
@@ -16,7 +16,7 @@
 				<view v-if="none" class="infomsg">暂无数据</view>
 				<view class="scroll1">
 					<uni-swipe-action>
-						<view v-for="(v, i) in RackData" :key="i" :class="{RackiTems:true, warn:v.Processed }" @click="JumpRecode(v.RackCode)">
+						<view v-for="(v, i) in RackData" :key="i" :class="{ RackiTems: true, warn: v.Processed }" @click="JumpRecode(v.RackCode)">
 							<uni-swipe-action-item :right-options="options" @click="bindClick($event, v)" @change="swipeChange()">
 								<view class="column full-width">
 									<view class="row line between">
@@ -35,7 +35,6 @@
 					</uni-swipe-action>
 				</view>
 			</uni-collapse-item>
-			
 		</uni-collapse>
 		<!-- 已经分配方案 -->
 		<view class="plan">
@@ -88,8 +87,8 @@ export default {
 	},
 	methods: {
 		...mapMutations(['setStationData', 'setStationEmp']),
-		clear(){
-			console.log(1);
+		clear() {
+			console.log(1)
 		},
 		// 子组件回调 登录
 		async login(param) {
@@ -98,7 +97,7 @@ export default {
 				StationGuid: param.StationGuid,
 				EmployeeGuid: param.EmployeeGuid
 			}
-			this.$api.SetStationLoginByStationGuid(para).then(res=>{
+			this.$api.SetStationLoginByStationGuid(para).then(res => {
 				if (res.data.success) {
 					uni.showModal({
 						content: res.data.msg,
@@ -128,7 +127,7 @@ export default {
 			uni.showLoading({
 				title: '请稍后'
 			})
-			this.$api.doneRack(Code).then(res=>{
+			this.$api.doneRack(Code).then(res => {
 				uni.hideLoading()
 				uni.showModal({
 					content: res.data.msg,
@@ -153,7 +152,7 @@ export default {
 				StationGuid: this.CurrentStation.guid
 			}
 			// console.log('站点方案请求', para)
-			this.$api.GetStationAssign(para).then(res=>{
+			this.$api.GetStationAssign(para).then(res => {
 				if (!res.data.success) {
 					uni.showModal({
 						content: '站点方案请求' + res.data.msg,
@@ -189,14 +188,14 @@ export default {
 				StationGuid: this.CurrentStation.guid
 			}
 			// console.log('衣架信息请求', param)
-			this.$api.QueryInStationRackInfByStationGuid(param).then(res=>{
+			this.$api.QueryInStationRackInfByStationGuid(param).then(res => {
 				if (res.data.success) {
 					// console.log(res.data)
 					if (res.data.response.length > 0) {
 						this.RackData = res.data.response
 						this.none = false
 					}
-				
+
 					uni.hideLoading()
 				} else {
 					uni.showModal({
@@ -252,7 +251,11 @@ export default {
 	text-overflow: ellipsis;
 	display: flex;
 	flex-direction: column;
-
+	.select {
+		padding: 1px 4px;
+		border-radius: 20rpx;
+		border: 1rpx white solid;
+	}
 	.head {
 		background-color: #0079ff;
 		color: white;
@@ -283,7 +286,6 @@ export default {
 			overflow: hidden;
 			text-overflow: ellipsis;
 			min-width: 230rpx;
-			
 		}
 	}
 	.warn {

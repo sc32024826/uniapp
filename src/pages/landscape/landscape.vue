@@ -1,0 +1,209 @@
+<template>
+	<view class="landscapse">
+		<sc-nav left landscapse @goBack="goback"><view @click="refresh">刷新</view></sc-nav>
+		<view class="content" :style="{width:windowWidth + 'px'}">
+			<view class="fixed">
+				<view class="head row jc-b primary white cell">
+					<view>生产单</view>
+					<view>款号</view>
+					<view>客户</view>
+					<view>针种</view>
+					<view>交期</view>
+					<view>完工工序</view>
+					<view>数量</view>
+					<view class="fg-1">备注</view>
+				</view>
+			</view>
+			<view class="fill-area"></view>
+			<block v-for="(it, index) in sourceData" :key="index">
+				<view class="item row jc-b cell">
+					<view>{{ it.MONo }}</view>
+					<view>{{ it.StyleNo }}</view>
+					<view>{{ it.CustomerName }}</view>
+					<view>{{ it.PinType }}</view>
+					<view>{{ new Date(it.DeliveryTime).format('yyyy-MM-dd') }}</view>
+					<view>{{ it.EndProcess || '' }}</view>
+					<view>{{ it.Qty }}</view>
+					<view class="fg-1">{{ it.Remark || '' }}</view>
+				</view>
+			</block>
+			<uni-load-more :status="more" v-if="allData.length > 20"></uni-load-more>
+		</view>
+	</view>
+</template>
+
+<script>
+import * as dd from 'dingtalk-jsapi'
+import { mapState } from 'vuex'
+export default {
+	data() {
+		return {
+			landscapse: false,
+			windowWidth: 724,
+			sourceData: [],
+			allData: [],
+			page: 0,
+			pageSize: 20,
+			more: 'more'
+		}
+	},
+	methods: {
+		refresh() {
+			// this.$router.go(0)
+			location.reload()
+		},
+		goback() {
+			dd.device.screen.resetView({
+				onSuccess: function(result) {
+					uni.switchTab({
+						url: '/pages/main/main'
+					})
+				},
+				onFail: function(err) {}
+			})
+		},
+		// 获得数据
+		setData(para) {
+			uni.showLoading({
+				title: '请稍后'
+			})
+			this.$api.QueryMO(para).then(res => {
+				if (res.data.success === true) {
+					console.log('查询成功')
+					this.allData = res.data.response
+					this.sourceData = this.allData.slice(0, this.pageSize)
+					uni.hideLoading()
+				} else {
+					uni.showModal({
+						content: res.data.msg,
+						showCancel: false
+					})
+				}
+			})
+		},
+		Changelandscapse() {
+			let that = this
+			let env = dd.env.platform
+			if (env != 'notInDingTalk') {
+				dd.device.screen.rotateView({
+					showStatusBar: true, // 否显示statusbar
+					clockwise: true, // 是否顺时针方向
+					onSuccess: function(result) {
+						console.log('旋转结束')
+						that.landscapse = true
+					},
+					onFail: function(err) {
+						console.log(err)
+					}
+				})
+			}
+		},
+		computeHeight() {
+			const info = uni.getSystemInfoSync()
+			if (info.platform === 'android') {
+				this.windowWidth = this.device.height - 43
+			}else{
+				this.windowWidth = this.device.height
+			}
+			console.log(this.windowWidth);
+		}
+	},
+	computed: {
+		...mapState(['device'])
+	},
+	mounted() {
+		this.setData({})
+	},
+	created() {
+		console.log('旋转')
+		this.Changelandscapse()
+		this.computeHeight()
+	},
+	onReachBottom() {
+		console.log('到底了')
+		this.more = 'loading'
+		let start = this.page * this.pageSize
+		let end = start + this.pageSize
+		let temp = this.allData.slice(start, end)
+		console.log(temp)
+		this.sourceData = this.sourceData.concat(temp)
+		this.more = 'more'
+	}
+}
+</script>
+
+<style lang="scss" scoped>
+.landscapse {
+	width: 100%;
+	box-sizing: border-box;
+	padding-left: env(safe-area-inset-left);
+	padding-right: env(safe-area-inset-right);
+	padding-bottom: env(safe-area-inset-bottom);
+	.content {
+		background-color: white;
+		// width: 100%;
+		z-index: 1;
+		.fixed {
+			width: 100%;
+			left: 0;
+			top: 44px;
+			box-sizing: border-box;
+			padding-left: env(safe-area-inset-left);
+			padding-right: env(safe-area-inset-right);
+			.head {
+				width: 100%;
+				z-index: 2;
+			}
+		}
+
+		.fill-area {
+			height: 25px;
+		}
+		.item {
+			padding-bottom: 6rpx;
+		}
+	}
+}
+.fixed {
+	position: fixed;
+}
+.fg-1 {
+	flex-grow: 1;
+}
+.fg-2 {
+	flex-grow: 2;
+}
+.cell {
+	view {
+		border: 1rpx #666666 solid;
+		min-width: 50rpx;
+		text-align: center;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		box-sizing: border-box;
+		white-space: nowrap;
+	}
+	 
+	view:nth-child(1) {
+		width: calc(12.5% + 20rpx);
+	}
+	view:nth-child(2) {
+		width: 12.5%;
+	}
+	view:nth-child(3) {
+		width: calc(12.5% - 20rpx);
+	}
+	view:nth-child(4) {
+		width: calc(12.5% - 20rpx);
+	}
+	view:nth-child(5) {
+		width: calc(12.5% + 20rpx);
+	}
+	view:nth-child(6) {
+		width: calc(12.5% - 20rpx);
+	}
+	view:nth-child(7) {
+		width: calc(12.5% - 20rpx);
+	}
+}
+</style>

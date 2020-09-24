@@ -59,9 +59,7 @@ export default {
 		this.isReady = true
 	},
 	mounted() {
-		console.log(this.userSelectStations)
 		this.selectStationGuids = this.userSelectStations.map(item => item.guid)
-		console.log(this.selectStationGuids)
 	},
 	methods: {
 		goback() {
@@ -73,7 +71,6 @@ export default {
 				id: obj.data.id,
 				name: obj.data.name
 			}
-			console.log(JSON.stringify(msg))
 		},
 		/**
 		 * @param {Object} pre 表示级别的参数  父级 空   子级 1
@@ -117,7 +114,6 @@ export default {
 				routeGuids: a,
 				opCode: 0 // 0:   1:  -1:
 			}
-			console.log(param)
 			this.$api.SetStAssignByRouteGuids(param).then(res => {
 				uni.showLoading({})
 				setTimeout(() => {
@@ -150,11 +146,9 @@ export default {
 						let last = names[names.length - 1]
 						e.name = last
 					})
-					console.log(res)
 					resolve(res)
 				}
 				if (node.level === 1) {
-					console.log('1级')
 					let param = {
 						StyleCode: node.data.name
 					}
@@ -190,12 +184,10 @@ export default {
 							})
 						}
 					})
-					console.log(temp)
 
 					resolve(temp)
 				}
 				if (node.level === 3) {
-					console.log('3级')
 					let para = node.data.relation.split(',')
 					let param = {
 						StyleCode: para[0],
@@ -212,7 +204,6 @@ export default {
 						e.name = last
 						e.leaf = true
 					})
-					console.log(res)
 					resolve(res)
 				}
 				if (node.level === 4) return resolve([])
@@ -220,7 +211,6 @@ export default {
 		},
 		handleCheck(obj) {
 			let checkedGuids = new Set()
-			console.log(JSON.stringify(obj.checkedNodes))
 
 			obj.checkedNodes.forEach(e => {
 				e.Guids.forEach(v => {
