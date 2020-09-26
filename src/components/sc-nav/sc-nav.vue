@@ -2,16 +2,17 @@
 	<view :class="{ Container: true, 'font-size': landscapse }">
 		<view class="fixed">
 			<view class="state-bar" :style="{ height: statusBarHeight + 'px' }"></view>
-			<view class="nav" :style="{ height: navBarHeight + 'px', width: windowWidth + 'px' }">
-				<view class="navi-left">
-					<view v-if="left" @tap="naviback">
+			<view class="nav" :style="{ height: navBarHeight + 'px'}">
+				<!-- , width: windowWidth + 'px' -->
+				<view class="navi-left column">
+					<view v-if="left" @click="naviback">
 						<text class="iconfont icon-back"></text>
 						<text>{{ leftBtnText }}</text>
 					</view>
 				</view>
 				<view class="navi-title">{{ title }}</view>
-				<view class="navi-right">
-					<view class="help" @tap="openHelp" v-if="help"><text class="iconfont icon-help"></text></view>
+				<view class="navi-right row">
+					<view class="help column" @click="openHelp" v-if="help"><text class="iconfont icon-help"></text></view>
 					<slot></slot>
 				</view>
 			</view>
@@ -73,20 +74,22 @@ export default {
 			this.$emit('help')
 		},
 		compute() {
-			const info = uni.getSystemInfoSync()
 			// 横屏模式
 			if (this.landscapse) {
-				// this.debugMsg = JSON.stringify({safeArea:info.safeAreaInsets,screen:{wid:info.screenWidth,hei:info.screenHeight}})
-				if (info.platform === 'android') {
-					// 安卓平台底部有43px的安全区
-					this.windowWidth = this.device.height - 43
-					console.log(this.windowWidth);
-				}else{
-					this.windowWidth = this.device.height - this.device.safeArea.top - this.device.safeArea.bottom
+				// 读取本地存储数据中的高度 即横屏模式下的宽度
+				let deviceInfo = uni.getStorageSync('deviceInfo')
+				console.log(deviceInfo)
+				if (deviceInfo.platform === 'android') {
+					this.windowWidth = deviceInfo.height - 43
+				} else {
+					this.windowWidth = deviceInfo.height - deviceInfo.safeArea.top - deviceInfo.safeArea.bottom
 				}
+				console.log('横屏,导航栏宽度: ', deviceInfo.height - 43)
 				// 高度 = 屏幕宽度
 				this.statusBarHeight = 0
 			} else {
+				const info = uni.getSystemInfoSync()
+
 				this.statusBarHeight = info.statusBarHeight
 				this.windowWidth = info.windowWidth
 
@@ -121,8 +124,6 @@ export default {
 		box-sizing: border-box;
 		background-color: #ff5500;
 		.nav {
-			// background-color: #ff5500;
-			padding: 10rpx;
 			width: 100%;
 			box-sizing: border-box;
 			display: flex;
@@ -130,10 +131,15 @@ export default {
 			align-items: center;
 			color: white;
 			.navi-left {
+				padding: 2rpx;
+				border-radius: 10rpx;
 				min-width: 100rpx;
+				height: 100%;
 				view {
 					display: flex;
 					align-items: center;
+					justify-content: center;
+					flex-grow: 1;
 				}
 			}
 			.navi-title {
@@ -141,11 +147,18 @@ export default {
 				flex: 1;
 			}
 			.navi-right {
+				height: 100%;
 				min-width: 100rpx;
 				display: flex;
 				flex-wrap: nowrap;
-				justify-content: flex-end;
+				justify-content: center;
 				align-items: center;
+				.help {
+					height: 100%;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
 			}
 		}
 	}

@@ -7,9 +7,8 @@
 	</div>
 </template>
 <script>
-import * as dd from 'dingtalk-jsapi'
 import { mapMutations } from 'vuex'
-
+import * as dd from 'dingtalk-jsapi'
 export default {
 	data() {
 		return {
@@ -35,7 +34,7 @@ export default {
 				}
 			})
 		},
-		...mapMutations(['login', 'setDeviceInfo']),
+		...mapMutations(['login']),
 		refresh() {
 			let that = this
 			let env = dd.env.platform
@@ -98,6 +97,7 @@ export default {
 	created() {
 		const info = uni.getSystemInfoSync()
 		let para = {
+			platform:info.platform,
 			safeArea: {
 				left: info.safeAreaInsets.left,
 				right: info.safeAreaInsets.right,
@@ -107,7 +107,14 @@ export default {
 			width: info.screenWidth,
 			height: info.screenHeight
 		}
-		this.setDeviceInfo(para)
+		// 将设备信息存入 本地存储中
+		uni.setStorage({
+			key: 'deviceInfo',
+			data: para,
+			success: function() {
+				console.log('设备信息本地存储成功')
+			}
+		})
 	}
 }
 </script>

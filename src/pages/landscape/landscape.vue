@@ -1,7 +1,7 @@
 <template>
 	<view class="landscapse">
-		<sc-nav left landscapse @goBack="goback"><view @click="refresh">刷新</view></sc-nav>
-		<view class="content" :style="{width:windowWidth + 'px'}">
+		<sc-nav left landscapse @goBack="goback"><view @click="search" class="rightBtn column">筛选</view></sc-nav>
+		<view class="content" :style="{ width: windowWidth + 'px' }">
 			<view class="fixed">
 				<view class="head row jc-b primary white cell">
 					<view>生产单</view>
@@ -29,6 +29,7 @@
 			</block>
 			<uni-load-more :status="more" v-if="allData.length > 20"></uni-load-more>
 		</view>
+		<sc-select></sc-select>
 	</view>
 </template>
 
@@ -48,12 +49,18 @@ export default {
 		}
 	},
 	methods: {
-		refresh() {
-			// this.$router.go(0)
-			location.reload()
+		search() {
+			
 		},
 		goback() {
+			dd.device.screen.rotateView({
+				showStatusBar: true, // 否显示statusbar
+				clockwise: true, // 是否顺时针方向
+				onSuccess: function() {},
+				onFail: function(err) {}
+			})
 			dd.device.screen.resetView({
+				showStatusBar: true,
 				onSuccess: function(result) {
 					uni.switchTab({
 						url: '/pages/main/main'
@@ -69,7 +76,6 @@ export default {
 			})
 			this.$api.QueryMO(para).then(res => {
 				if (res.data.success === true) {
-					console.log('查询成功')
 					this.allData = res.data.response
 					this.sourceData = this.allData.slice(0, this.pageSize)
 					uni.hideLoading()
@@ -82,30 +88,35 @@ export default {
 			})
 		},
 		Changelandscapse() {
-			let that = this
-			let env = dd.env.platform
-			if (env != 'notInDingTalk') {
-				dd.device.screen.rotateView({
-					showStatusBar: true, // 否显示statusbar
-					clockwise: true, // 是否顺时针方向
-					onSuccess: function(result) {
-						console.log('旋转结束')
-						that.landscapse = true
-					},
-					onFail: function(err) {
-						console.log(err)
-					}
-				})
-			}
+			return new Promise((resolve, reject) => {
+				let that = this
+				let env = dd.env.platform
+				if (env != 'notInDingTalk') {
+					dd.device.screen.rotateView({
+						showStatusBar: false, // 否显示statusbar
+						clockwise: true, // 是否顺时针方向
+						onSuccess: function() {
+							that.landscapse = true
+							resolve(true)
+						},
+						onFail: function(err) {
+							console.log(err)
+							reject(false)
+						}
+					})
+				} else {
+					reject('notInDingTalk')
+				}
+			})
 		},
 		computeHeight() {
-			const info = uni.getSystemInfoSync()
-			if (info.platform === 'android') {
-				this.windowWidth = this.device.height - 43
-			}else{
-				this.windowWidth = this.device.height
+			let deviceInfo = uni.getStorageSync('deviceInfo')
+			if (deviceInfo.platform === 'android') {
+				this.windowWidth = deviceInfo.height - 43
+			} else {
+				this.windowWidth = deviceInfo.height - deviceInfo.safeArea.top - deviceInfo.safeArea.bottom
 			}
-			console.log(this.windowWidth);
+			console.log('宽度', this.windowWidth)
 		}
 	},
 	computed: {
@@ -115,7 +126,6 @@ export default {
 		this.setData({})
 	},
 	created() {
-		console.log('旋转')
 		this.Changelandscapse()
 		this.computeHeight()
 	},
@@ -139,9 +149,12 @@ export default {
 	padding-left: env(safe-area-inset-left);
 	padding-right: env(safe-area-inset-right);
 	padding-bottom: env(safe-area-inset-bottom);
+	.rightBtn{
+		height: 100%;
+		justify-content: center;
+	}
 	.content {
 		background-color: white;
-		// width: 100%;
 		z-index: 1;
 		.fixed {
 			width: 100%;
@@ -183,26 +196,29 @@ export default {
 		box-sizing: border-box;
 		white-space: nowrap;
 	}
-	 
+
 	view:nth-child(1) {
-		width: calc(12.5% + 20rpx);
+		width: calc(12.5% + 50rpx);
 	}
 	view:nth-child(2) {
 		width: 12.5%;
 	}
 	view:nth-child(3) {
-		width: calc(12.5% - 20rpx);
+		width: calc(12.5%);
 	}
 	view:nth-child(4) {
 		width: calc(12.5% - 20rpx);
 	}
 	view:nth-child(5) {
-		width: calc(12.5% + 20rpx);
+		width: calc(12.5% + 10rpx);
 	}
 	view:nth-child(6) {
-		width: calc(12.5% - 20rpx);
+		width: calc(12.5%);
 	}
 	view:nth-child(7) {
+		width: calc(12.5% - 20rpx);
+	}
+	view:nth-child(8) {
 		width: calc(12.5% - 20rpx);
 	}
 }
