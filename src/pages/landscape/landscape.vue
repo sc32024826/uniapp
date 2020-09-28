@@ -1,7 +1,7 @@
 <template>
 	<view class="landscapse">
 		<sc-nav left landscapse @goBack="goback"><view @click="search" class="rightBtn column">筛选</view></sc-nav>
-		<view class="content" :style="{ width: windowWidth + 'px' }">
+		<view class="content">
 			<view class="fixed">
 				<view class="head row jc-b primary white cell">
 					<view>生产单</view>
@@ -46,7 +46,8 @@ export default {
 			page: 0,
 			pageSize: 20,
 			more: 'more',
-			onReSearch: false // 控制子组件 的出现
+			onReSearch: false, // 控制子组件 的出现
+			msg: ''
 		}
 	},
 	methods: {
@@ -110,15 +111,6 @@ export default {
 				}
 			})
 		},
-		computeHeight() {
-			let deviceInfo = uni.getStorageSync('deviceInfo')
-			if (deviceInfo.platform === 'android') {
-				this.windowWidth = deviceInfo.height - 43
-			} else {
-				this.windowWidth = deviceInfo.height - deviceInfo.safeArea.top - deviceInfo.safeArea.bottom
-			}
-			console.log('宽度', this.windowWidth)
-		},
 		close() {
 			this.onReSearch = false
 		},
@@ -135,7 +127,6 @@ export default {
 	},
 	created() {
 		this.Changelandscapse()
-		this.computeHeight()
 	},
 	onReachBottom() {
 		console.log('到底了')
@@ -146,6 +137,12 @@ export default {
 		console.log(temp)
 		this.sourceData = this.sourceData.concat(temp)
 		this.more = 'more'
+	},
+	onPullDownRefresh() {
+		location.reload()
+		setTimeout(() => {
+			uni.stopPullDownRefresh()
+		}, 1000)
 	}
 }
 </script>
@@ -154,9 +151,9 @@ export default {
 .landscapse {
 	width: 100%;
 	box-sizing: border-box;
-	padding-left: env(safe-area-inset-left);
-	padding-right: env(safe-area-inset-right);
-	padding-bottom: env(safe-area-inset-bottom);
+	// padding-left: env(safe-area-inset-left);
+	// padding-right: env(safe-area-inset-right);
+	// padding-bottom: env(safe-area-inset-bottom);
 	.rightBtn {
 		height: 100%;
 		justify-content: center;
@@ -164,6 +161,10 @@ export default {
 	.content {
 		background-color: white;
 		z-index: 1;
+		width: 100%;
+		padding-left: env(safe-area-inset-left);
+		padding-right: env(safe-area-inset-right);
+		box-sizing: border-box;
 		.fixed {
 			width: 100%;
 			left: 0;

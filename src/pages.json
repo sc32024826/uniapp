@@ -94,6 +94,7 @@
         ,{
             "path" : "pages/landscape/landscape",
             "style" : {
+				"enablePullDownRefresh": true
 			}
         }
         ,{

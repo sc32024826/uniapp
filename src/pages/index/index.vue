@@ -93,6 +93,10 @@ export default {
 			url: '../main/main'
 		})
 		// #endif
+		// let a = uni.getStorageSync('deviceInfo')
+		// uni.showModal({
+		// 	content:JSON.stringify(a)
+		// })
 	},
 	created() {
 		const info = uni.getSystemInfoSync()

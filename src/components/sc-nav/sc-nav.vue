@@ -7,7 +7,7 @@
 				<view class="navi-left column">
 					<view v-if="left" @click="naviback">
 						<text class="iconfont icon-back"></text>
-						<text>{{ leftBtnText + '-' + statusBarHeight}}</text>
+						<text>{{ leftBtnText }}</text>
 					</view>
 				</view>
 				<view class="navi-title">{{ title  }}</view>
@@ -99,7 +99,7 @@ export default {
 					this.navBarHeight = capsule.bottom - this.statusBarHeight + capsule.top - this.statusBarHeight
 					this.windowWidth = capsule.left
 					// #endif
-				},500)
+				},100)
 			}
 		}
 	},
