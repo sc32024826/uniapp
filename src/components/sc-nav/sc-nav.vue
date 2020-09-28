@@ -7,17 +7,17 @@
 				<view class="navi-left column">
 					<view v-if="left" @click="naviback">
 						<text class="iconfont icon-back"></text>
-						<text>{{ leftBtnText }}</text>
+						<text>{{ leftBtnText + '-' + statusBarHeight}}</text>
 					</view>
 				</view>
-				<view class="navi-title">{{ title }}</view>
+				<view class="navi-title">{{ title  }}</view>
 				<view class="navi-right row">
 					<view class="help column" @click="openHelp" v-if="help"><text class="iconfont icon-help"></text></view>
 					<slot></slot>
 				</view>
 			</view>
 		</view>
-		<view class="fill-area" :style="{ height: navBarHeight + 'px' }">{{ debugMsg }}</view>
+		<view class="fill-area" :style="{ height: navBarHeight + 'px' }"></view>
 	</view>
 </template>
 
@@ -52,7 +52,7 @@ export default {
 	},
 	data() {
 		return {
-			statusBarHeight: 20, //状态栏高度
+			statusBarHeight: 44, //状态栏高度
 			navBarHeight: 44, // 导航栏高度
 			windowWidth: 375,
 			marginLeft: 0,
@@ -63,6 +63,7 @@ export default {
 	},
 	created() {
 		this.compute()
+		console.log(this.statusBarHeight);
 	},
 	methods: {
 		// 返回上级路由
@@ -88,16 +89,17 @@ export default {
 				// 高度 = 屏幕宽度
 				this.statusBarHeight = 0
 			} else {
-				const info = uni.getSystemInfoSync()
-
-				this.statusBarHeight = info.statusBarHeight
-				this.windowWidth = info.windowWidth
-
-				// #ifdef MP-WEIXIN
-				const capsule = uni.getMenuButtonBoundingClientRect()
-				this.navBarHeight = capsule.bottom - this.statusBarHeight + capsule.top - this.statusBarHeight
-				this.windowWidth = capsule.left
-				// #endif
+				setTimeout(()=>{
+					const info = uni.getSystemInfoSync()
+					this.statusBarHeight = info.statusBarHeight
+					this.windowWidth = info.windowWidth
+					
+					// #ifdef MP-WEIXIN
+					const capsule = uni.getMenuButtonBoundingClientRect()
+					this.navBarHeight = capsule.bottom - this.statusBarHeight + capsule.top - this.statusBarHeight
+					this.windowWidth = capsule.left
+					// #endif
+				},500)
 			}
 		}
 	},

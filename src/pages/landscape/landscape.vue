@@ -29,7 +29,7 @@
 			</block>
 			<uni-load-more :status="more" v-if="allData.length > 20"></uni-load-more>
 		</view>
-		<sc-select></sc-select>
+		<sc-select v-if="onReSearch" class="reSearch" @close="close" @reSearch="reSearch"></sc-select>
 	</view>
 </template>
 
@@ -45,12 +45,13 @@ export default {
 			allData: [],
 			page: 0,
 			pageSize: 20,
-			more: 'more'
+			more: 'more',
+			onReSearch: false // 控制子组件 的出现
 		}
 	},
 	methods: {
 		search() {
-			
+			this.onReSearch = true
 		},
 		goback() {
 			dd.device.screen.rotateView({
@@ -117,6 +118,13 @@ export default {
 				this.windowWidth = deviceInfo.height - deviceInfo.safeArea.top - deviceInfo.safeArea.bottom
 			}
 			console.log('宽度', this.windowWidth)
+		},
+		close() {
+			this.onReSearch = false
+		},
+		reSearch(val) {
+			console.log(val)
+			this.setData(val)
 		}
 	},
 	computed: {
@@ -149,7 +157,7 @@ export default {
 	padding-left: env(safe-area-inset-left);
 	padding-right: env(safe-area-inset-right);
 	padding-bottom: env(safe-area-inset-bottom);
-	.rightBtn{
+	.rightBtn {
 		height: 100%;
 		justify-content: center;
 	}
@@ -175,6 +183,9 @@ export default {
 		.item {
 			padding-bottom: 6rpx;
 		}
+	}
+	.reSearch {
+		z-index: 99;
 	}
 }
 .fixed {

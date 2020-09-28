@@ -87,7 +87,7 @@ export default {
 				},
 				{
 					id: 8,
-					name: 'box属性测试',
+					name: '测试页面',
 					icon: '&#xe6c6;',
 					url: '/pages/boxTest/boxTest'
 				}
@@ -120,6 +120,12 @@ export default {
 	},
 	mounted() {
 		this.title = this.$Route.meta.title
+	},
+	onPullDownRefresh() {
+		location.reload()
+		setTimeout(function() {
+			uni.stopPullDownRefresh()
+		}, 1000)
 	}
 }
 </script>

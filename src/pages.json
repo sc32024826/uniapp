@@ -14,7 +14,8 @@
 		{
 			"path": "pages/main/main",
 			"style": {
-				"navigationBarTitleText": "ShanYing"
+				"navigationBarTitleText": "ShanYing",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
