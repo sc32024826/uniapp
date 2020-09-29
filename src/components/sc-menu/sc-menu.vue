@@ -2,7 +2,7 @@
 	<view class="container">
 		<view class="row wrap">
 			<block v-for="item in options" :key="item.id">
-				<view class="options" @tap="naviTo(item.url)" v-if="!item.permission || item.permission == ENV">
+				<view class="options" @tap="naviTo(item.url)">
 					<!-- #ifdef H5 -->
 					<text v-html="item.icon" class="icon"></text>
 					<!-- #endif -->

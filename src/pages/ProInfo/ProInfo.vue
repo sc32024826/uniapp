@@ -11,7 +11,7 @@
 						<view>运行状态:{{ item.Status == 1 ? '停止' : item.Status == 2 ? '运行' : '演示' }}</view>
 					</view>
 					<button class="runStop" @tap="lineOption(item)" :type="item.bt.type" :loading="item.bt.load" :disabled="item.bt.disabled">
-						<text class="iconfont">{{ item.bt.text == '停止' ? '&#xe74b;' : '&#xe65b;' }}</text>
+						<text class="iconfont">{{ item.bt.text == '停止' ? '&#xe74b;' : '' }}</text>
 						{{ item.bt.text }}
 					</button>
 				</view>
@@ -346,9 +346,10 @@ export default {
 			color: white;
 
 			.runStop {
-				width: 300rpx;
+				width: 350rpx;
 				margin-right: 10rpx;
 				border-radius: 30rpx;
+				font-size: 14px;
 			}
 		}
 

@@ -83,13 +83,8 @@ export default {
 					id: 7,
 					name: '横屏',
 					icon: '&#xe64e;',
-					url: '/pages/landscape/landscape'
-				},
-				{
-					id: 8,
-					name: '测试页面',
-					icon: '&#xe6c6;',
-					url: '/pages/boxTest/boxTest'
+					url: '/pages/landscape/landscape',
+					
 				}
 			],
 			helpView: false, //是否显示帮助信息
