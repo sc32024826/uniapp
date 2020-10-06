@@ -194,8 +194,8 @@ export default {
 	box-sizing: border-box;
 	.select {
 		padding: 1px 4px;
-		border-radius: 20rpx;
-		border: 1rpx white solid;
+		// border-radius: 20rpx;
+		// border: 1rpx white solid;
 	}
 	.scroll-view {
 		// overflow: hidden;

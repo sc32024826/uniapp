@@ -22,7 +22,6 @@ router.beforeEach((to, from, next) => {
 		document.title = to.meta.title
 	}
 	//#endif
-	console.log(to);
 	if (to.name == 'index') {
 		next()
 	} else if (to.name === 'workTable') {

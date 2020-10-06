@@ -55,21 +55,28 @@ export default {
 			this.onReSearch = true
 		},
 		goback() {
-			dd.device.screen.rotateView({
-				showStatusBar: true, // 否显示statusbar
-				clockwise: true, // 是否顺时针方向
-				onSuccess: function() {},
-				onFail: function(err) {}
-			})
-			dd.device.screen.resetView({
-				showStatusBar: true,
-				onSuccess: function(result) {
-					uni.switchTab({
-						url: '/pages/main/main'
-					})
-				},
-				onFail: function(err) {}
-			})
+			let env = dd.env.platform
+			if (env != 'notInDingTalk') {
+				dd.device.screen.rotateView({
+					showStatusBar: true, // 否显示statusbar
+					clockwise: true, // 是否顺时针方向
+					onSuccess: function() {},
+					onFail: function(err) {}
+				})
+				dd.device.screen.resetView({
+					showStatusBar: true,
+					onSuccess: function(result) {
+						uni.switchTab({
+							url: '/pages/main/main'
+						})
+					},
+					onFail: function(err) {}
+				})
+			} else {
+				uni.switchTab({
+					url: '../main/main'
+				})
+			}
 		},
 		// 获得数据
 		setData(para) {
@@ -90,26 +97,21 @@ export default {
 			})
 		},
 		Changelandscapse() {
-			return new Promise((resolve, reject) => {
-				let that = this
-				let env = dd.env.platform
-				if (env != 'notInDingTalk') {
-					dd.device.screen.rotateView({
-						showStatusBar: false, // 否显示statusbar
-						clockwise: true, // 是否顺时针方向
-						onSuccess: function() {
-							that.landscapse = true
-							resolve(true)
-						},
-						onFail: function(err) {
-							console.log(err)
-							reject(false)
-						}
-					})
-				} else {
-					reject('notInDingTalk')
-				}
-			})
+			let that = this
+			let env = dd.env.platform
+			if (env != 'notInDingTalk') {
+				dd.device.screen.rotateView({
+					showStatusBar: false, // 否显示statusbar
+					clockwise: true, // 是否顺时针方向
+					onSuccess: function() {
+						that.landscapse = true
+						resolve(true)
+					},
+					onFail: function(err) {
+						console.log(err)
+					}
+				})
+			}
 		},
 		close() {
 			this.onReSearch = false

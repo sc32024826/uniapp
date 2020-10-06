@@ -63,7 +63,7 @@ export default {
 	},
 	created() {
 		this.compute()
-		console.log(this.statusBarHeight);
+		// console.log(this.statusBarHeight);
 	},
 	methods: {
 		// 返回上级路由
