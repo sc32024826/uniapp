@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<sc-nav left title="生产线" @goBack="goback"></sc-nav>
+		<sc-nav left title="生产线" @goBack="goback" @on-help="help"></sc-nav>
 		<view>
 			<work-line :lines="lines"></work-line>
 			<more-info :details="details"></more-info>
@@ -61,6 +61,9 @@ export default {
 			uni.switchTab({
 				url: '/pages/main/main'
 			})
+		},
+		help(){
+			console.log('show help');
 		}
 	},
 	mounted() {

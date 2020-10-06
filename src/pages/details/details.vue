@@ -14,7 +14,7 @@
 		<uni-collapse>
 			<uni-collapse-item title="站内衣架" :open="true" class="collapseitem">
 				<view v-if="none" class="infomsg">暂无数据</view>
-				<view class="scroll1">
+				<view class="scroll">
 					<uni-swipe-action>
 						<view v-for="(v, i) in RackData" :key="i" :class="{ RackiTems: true, warn: v.Processed }" @click="JumpRecode(v.RackCode)">
 							<uni-swipe-action-item :right-options="options" @click="bindClick($event, v)" @change="swipeChange()">
@@ -253,11 +253,12 @@ export default {
 	flex-direction: column;
 	.select {
 		padding: 1px 4px;
-		border-radius: 20rpx;
-		border: 1rpx white solid;
+		// border-radius: 20rpx;
+		// border: 1rpx white solid;
 	}
 	.head {
-		background-color: #0079ff;
+		// background-color: #0079ff;
+		background-image: linear-gradient(to right, #0079ff, #55aaff);
 		color: white;
 		padding-left: 30rpx;
 		padding-top: 20rpx;
@@ -267,7 +268,9 @@ export default {
 			margin-right: 20rpx;
 		}
 	}
-
+	.scroll{
+		touch-action: none;
+	}
 	.infomsg {
 		width: 100%;
 		text-align: center;
@@ -292,12 +295,14 @@ export default {
 		background-color: #ffaa00 !important;
 	}
 	.RackiTems:nth-child(even) {
-		background-color: #666666;
+		// background-color: #666666;
+		background-image: linear-gradient(to right, #666666, #55aaff);
 		color: white;
 	}
 
 	.RackiTems:nth-child(odd) {
 		background-color: #55aaff;
+		background-image: linear-gradient(to right, #55aaff, #666666);
 		color: white;
 	}
 

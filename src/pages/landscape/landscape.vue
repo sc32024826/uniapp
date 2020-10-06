@@ -185,6 +185,10 @@ export default {
 		}
 		.item {
 			padding-bottom: 6rpx;
+			box-sizing: border-box;
+			&:nth-child(odd) {
+				background-color: #aaffff;
+			}
 		}
 	}
 	.reSearch {

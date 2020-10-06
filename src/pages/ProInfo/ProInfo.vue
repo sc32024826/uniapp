@@ -328,8 +328,8 @@ export default {
 	flex-direction: column;
 	.select {
 		padding: 1px 4px;
-		border-radius: 20rpx;
-		border: 1rpx white solid;
+		// border-radius: 20rpx;
+		// border: 1rpx white solid;
 	}
 	.scroll-view {
 		flex: 1;

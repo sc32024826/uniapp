@@ -1,7 +1,7 @@
 <template>
 	<div class="Container">
 		<sc-nav :help="false"><view @click="reload">刷新</view></sc-nav>
-		<view class="column primary hfull center white jc-c">
+		<view class="column hfull center white jc-c">
 			<view v-if="show">当前平台:{{ platform }} 不支持本应用</view>
 		</view>
 	</div>
@@ -101,7 +101,7 @@ export default {
 	created() {
 		const info = uni.getSystemInfoSync()
 		let para = {
-			platform:info.platform,
+			platform: info.platform,
 			safeArea: {
 				left: info.safeAreaInsets.left,
 				right: info.safeAreaInsets.right,
@@ -129,5 +129,6 @@ export default {
 	justify-content: center;
 	align-items: center;
 	text-align: center;
+	background-image: linear-gradient(to right bottom, #00aaff, #55ffff);
 }
 </style>

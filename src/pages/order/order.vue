@@ -108,7 +108,7 @@ export default {
 					let start = this.page * this.pageSize
 					let end = start + this.pageSize
 					let temp = this.allData.slice(start, end)
-					console.log(temp)
+					// console.log(temp) 
 					this.sourceData = this.sourceData.concat(temp)
 					this.more = 'more'
 				}, 100)
@@ -169,7 +169,7 @@ export default {
 	},
 	created() {
 		const stateBar = uni.getSystemInfoSync()
-		console.log(stateBar)
+		// console.log(stateBar)
 		// 状态栏高度 + 导航栏高度 + 分页栏高度
 		// this.scrollHeight = stateBar.screenHeight - stateBar.statusBarHeight - 44 - 50
 		//页面的高度 = 100vh - 状态栏 - 导航栏 - 底部安全区

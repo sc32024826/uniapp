@@ -2,7 +2,7 @@
 	<view :class="{ Container: true, 'font-size': landscapse }">
 		<view class="fixed">
 			<view class="state-bar" :style="{ height: statusBarHeight + 'px' }"></view>
-			<view class="nav" :style="{ height: navBarHeight + 'px'}">
+			<view class="nav" :style="{ height: navBarHeight + 'px' }">
 				<!-- , width: windowWidth + 'px' -->
 				<view class="navi-left column">
 					<view v-if="left" @click="naviback">
@@ -10,7 +10,7 @@
 						<text>{{ leftBtnText }}</text>
 					</view>
 				</view>
-				<view class="navi-title">{{ title  }}</view>
+				<view class="navi-title">{{ title }}</view>
 				<view class="navi-right row">
 					<view class="help column" @click="openHelp" v-if="help"><text class="iconfont icon-help"></text></view>
 					<slot></slot>
@@ -72,7 +72,7 @@ export default {
 		},
 		// 打开帮助页面
 		openHelp() {
-			this.$emit('help')
+			this.$emit('on-help')
 		},
 		compute() {
 			// 横屏模式
@@ -89,17 +89,17 @@ export default {
 				// 高度 = 屏幕宽度
 				this.statusBarHeight = 0
 			} else {
-				setTimeout(()=>{
+				setTimeout(() => {
 					const info = uni.getSystemInfoSync()
 					this.statusBarHeight = info.statusBarHeight
 					this.windowWidth = info.windowWidth
-					
+
 					// #ifdef MP-WEIXIN
 					const capsule = uni.getMenuButtonBoundingClientRect()
 					this.navBarHeight = capsule.bottom - this.statusBarHeight + capsule.top - this.statusBarHeight
 					this.windowWidth = capsule.left
 					// #endif
-				},100)
+				}, 100)
 			}
 		}
 	},

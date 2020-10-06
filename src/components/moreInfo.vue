@@ -27,7 +27,7 @@
 				<view>{{ v.InStationQty }}</view>
 			</view>
 		</block>
-		<view class="primary white items row">
+		<view class="primary white row total">
 			<view>合计</view>
 			<view>{{ OnlineCount }}</view>
 			<view>{{ OnlineQty }}</view>
@@ -120,6 +120,17 @@ $wd-5: calc(100vw / 5);
 	padding: 20rpx 0;
 	margin: 2rpx 0;
 
+	view {
+		width: $wd-5;
+	}
+	&:nth-child(odd) {
+		background-image: linear-gradient(to right, grey, white);
+	}
+}
+.total{
+	text-align: center;
+	padding: 20rpx 0;
+	margin: 2rpx 0;
 	view {
 		width: $wd-5;
 	}
