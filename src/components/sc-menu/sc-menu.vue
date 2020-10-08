@@ -56,7 +56,7 @@ $wd-4: calc((100vw - 48rpx) / 4);
 		color: white;
 		margin: 6rpx;
 		border-radius: 10rpx;
-		padding: 10rpx 0;
+		padding: 12rpx 0;
 		box-shadow: 4px 4px 6px #2C405A;
 
 		.icon {
